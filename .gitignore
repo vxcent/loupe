@@ -1,0 +1,23 @@
+# secrets — never commit
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# experiment outputs
+results/*.csv
+results/*.png
+*.sqlite
+*.db
+
+# os
+.DS_Store
+
+# original artifact lives in reference/ inside the repo
+virse-systems-monorepo-report.md
