@@ -154,6 +154,13 @@ deployment-topology dimension that flips a finding in production. Report the
 precision. A small-N grounded tier (dockerized live targets where the oracle is
 *did the exploit actually fire*) is the future fidelity check.
 
+## Design
+
+`docs/SELF-EVOLVING.md` — what self-evolving means for a validator (a governed
+loop, not memory accumulation), how PenPal's per-decision assumptions+confidence
+log grounds it, the memory-pollution threat + layered defense, and the
+2025–2026 literature map.
+
 ## Layout
 
 ```
