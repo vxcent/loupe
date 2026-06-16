@@ -86,24 +86,38 @@ overlaid curves.
 
 ![sample curve](docs/sample-owasp-curve.png)
 
+In the lower panel both memory arms sit pinned at recall = 1.0 / suppression = 0.0
+across the whole run, while the baseline leaks 10–27% of real findings.
+
 | arm | bp_rate | recall | suppression_error |
 |-----|--------:|-------:|------------------:|
-| memory-off (baseline)        | 0.381 | 0.886 | 0.114 |
-| memory-on / raw-verdicts     | **0.365** | **0.909** | **0.091** |
-| memory-on / distilled-lessons | 0.382 | 0.773 | 0.227 |
+| memory-off (baseline)         | 0.375 | 0.909 | 0.091 |
+| memory-on / raw-verdicts      | **0.353** | **1.000** | **0.000** |
+| memory-on / distilled-lessons | 0.371 | **1.000** | **0.000** |
 
-Two honest takeaways, both useful:
-- **Raw-verdict memory** edged the baseline on all three (bp down, recall up,
-  suppression down) — a faint positive signal.
-- **Distilled-lessons memory *hurt*** — the LLM-written rules over-generalized,
-  and you can watch recall collapse / suppression spike around findings 45–55 in
-  the lower panel. The bottleneck is the *distiller writing predicates that are
-  too broad*, exactly the failure the guardrail exists to catch.
+### What the loop-engineering knob bought us
 
-With ~6 cases per class over 72 findings, the "curve" mostly reflects local class
-mix, not accumulated learning — there isn't enough within-class recurrence to
-bend it. **This is a wiring + direction check; a trustworthy curve needs the full
-~2,700 cases and a tighter distiller.**
+The first version of the distiller wrote *unconditional* rules and **backfired** —
+distilled-lessons suppression hit 0.227 (it marked real findings benign because a
+class sibling was). Tightening the distiller to emit **conditional, guarded**
+rules ("benign ONLY IF control X is present; else exploitable") and making the
+validator **apply a lesson only when its precondition holds** fixed it:
+
+| arm | suppression_error before | after |
+|-----|--------:|--------:|
+| memory-on / distilled-lessons | 0.227 | **0.000** |
+
+That is the whole thesis in miniature: it is not *memory* that helps, it is a
+*well-engineered loop* — the same memory with a sloppy distiller is net-harmful.
+
+### Honest caveats
+
+- The benefit here lands mostly on **recall** (memory reinforces confirmed-real
+  classes), not on the benign-positive axis — bp_rate moved within noise.
+- Temperature-0 is not perfectly deterministic; the baseline drifted ~0.02
+  between identical runs. At N=72 (~6 cases/class) bp_rate deltas under ~0.03 are
+  not trustworthy. **A real conclusion needs the full ~2,700 cases and multiple
+  seeds for error bars.** This is a wiring + direction check.
 
 ## Honest scope
 

@@ -28,8 +28,12 @@ VALIDATOR_SYSTEM = (
 def _lessons_block(lessons: List[Lesson]) -> str:
     if not lessons:
         return ""
-    lines = ["\nVERIFIED PRIOR LESSONS for this finding's class "
-             "(grounded in past confirmed outcomes — weigh them heavily):"]
+    lines = ["\nVERIFIED PRIOR LESSONS for this finding's class. Apply a lesson "
+             "ONLY if its stated precondition/control actually holds in THIS "
+             "finding's context. If that control is absent, unclear, or you "
+             "cannot confirm it here, the lesson does NOT apply — judge the "
+             "finding on its own merits (a class sibling being benign does not "
+             "make this one benign):"]
     for ls in lessons:
         lines.append(
             f"- [{ls.verdict.upper()}] {ls.rule} (grounding: {ls.grounding})"
@@ -54,11 +58,17 @@ def build_validate_messages(finding: Finding, lessons: List[Lesson]) -> list[dic
 
 
 DISTILL_SYSTEM = (
-    "You distill a single REUSABLE lesson from one validated finding whose true "
-    "outcome is now known. The lesson must generalize to other findings of the "
-    "same class (same CWE + root cause), not just this instance. Be specific "
-    "about the PRECONDITION under which the verdict holds, so it does not "
-    "over-generalize and suppress a genuinely exploitable case.\n"
+    "You distill ONE reusable, CONDITIONAL lesson from a finding whose true "
+    "outcome is now known. The lesson must name the SPECIFIC code-level control "
+    "or precondition that decided the verdict — the exact sanitizer / validator "
+    "/ guard / encoder visible in the context, or the exact reason it was "
+    "missing — and be phrased so it fires for a NEW finding ONLY when that same "
+    "control/precondition is present.\n"
+    "A BENIGN lesson MUST take the form: 'benign ONLY IF <specific control X> is "
+    "present; otherwise treat as exploitable.' Never mark a whole class benign "
+    "unconditionally — siblings in the same class are frequently still "
+    "exploitable. Prefer a NARROW rule that misses some transfers over a broad "
+    "one that could suppress a real vulnerability.\n"
     'Respond ONLY with JSON: {"rule": str, "grounding": str, "confidence": 0..1}.'
 )
 
