@@ -24,3 +24,4 @@ virse-systems-monorepo-report.md
 
 # OWASP Benchmark checkout
 benchmark/
+results/*.log

@@ -82,6 +82,29 @@ overlaid curves.
   sparse/shallow checkout (sources + answer key only). The fixture is only a
   wiring check.
 
+## Sample result (72-case OWASP slice — directional, not conclusive)
+
+![sample curve](docs/sample-owasp-curve.png)
+
+| arm | bp_rate | recall | suppression_error |
+|-----|--------:|-------:|------------------:|
+| memory-off (baseline)        | 0.381 | 0.886 | 0.114 |
+| memory-on / raw-verdicts     | **0.365** | **0.909** | **0.091** |
+| memory-on / distilled-lessons | 0.382 | 0.773 | 0.227 |
+
+Two honest takeaways, both useful:
+- **Raw-verdict memory** edged the baseline on all three (bp down, recall up,
+  suppression down) — a faint positive signal.
+- **Distilled-lessons memory *hurt*** — the LLM-written rules over-generalized,
+  and you can watch recall collapse / suppression spike around findings 45–55 in
+  the lower panel. The bottleneck is the *distiller writing predicates that are
+  too broad*, exactly the failure the guardrail exists to catch.
+
+With ~6 cases per class over 72 findings, the "curve" mostly reflects local class
+mix, not accumulated learning — there isn't enough within-class recurrence to
+bend it. **This is a wiring + direction check; a trustworthy curve needs the full
+~2,700 cases and a tighter distiller.**
+
 ## Honest scope
 
 This validates the **learning mechanism** on labeled findings. It does **not**
