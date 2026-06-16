@@ -21,6 +21,9 @@ owasp:          ## real learning curve on a 72-case OWASP slice (+ plot)
 pollution:      ## deterministic memory-pollution defense matrix (no API key)
 	python experiments/pollution.py
 
+gepa:           ## evolve the distiller prompt (GEPA-lite, Together AI)
+	python experiments/gepa_distiller.py --owasp-dir benchmark --limit 60 --generations 4
+
 clean:
 	rm -f results/*.csv results/*.png
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

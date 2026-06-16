@@ -37,6 +37,7 @@ class TogetherLLM:
         self.model = model
         self.temperature = temperature
         self.seed = seed
+        self.distill_system = prompts.DISTILL_SYSTEM  # GEPA mutates this
 
     def _chat(self, messages: list[dict]) -> tuple[str, int]:
         resp = self.client.chat.completions.create(
@@ -63,7 +64,8 @@ class TogetherLLM:
         )
 
     def distill(self, finding: Finding, true_label: str) -> Lesson:
-        msgs = prompts.build_distill_messages(finding, true_label)
+        msgs = prompts.build_distill_messages(finding, true_label,
+                                              system=self.distill_system)
         txt, _ = self._chat(msgs)
         d = prompts.parse_json_obj(txt)
         return Lesson(

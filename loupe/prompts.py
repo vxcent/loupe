@@ -73,7 +73,8 @@ DISTILL_SYSTEM = (
 )
 
 
-def build_distill_messages(finding: Finding, true_label: str) -> list[dict]:
+def build_distill_messages(finding: Finding, true_label: str,
+                           system: str = DISTILL_SYSTEM) -> list[dict]:
     user = (
         f"Finding class: {finding.cwe} / {finding.class_key}\n"
         f"Title: {finding.title}\n"
@@ -83,7 +84,7 @@ def build_distill_messages(finding: Finding, true_label: str) -> list[dict]:
         + "\n\nWrite the reusable lesson."
     )
     return [
-        {"role": "system", "content": DISTILL_SYSTEM},
+        {"role": "system", "content": system},
         {"role": "user", "content": user},
     ]
 

@@ -155,7 +155,41 @@ From the vuln-validation literature pass:
 
 ---
 
-## 6. Roadmap
+## 6. The second loop: prompt evolution (GEPA)
+
+There are two things that can evolve here, and they're complementary — the survey
+taxonomy's "evolve **memory**" vs "evolve **prompts**":
+
+- **Inner / online — memory** (this doc's core): per-class verified lessons
+  accumulate at test time.
+- **Outer / offline — prompts** (GEPA): the *fixed* textual scaffolding — the
+  distiller and validator instructions — is optimized against the benchmark
+  metric, once, before deployment.
+
+**GEPA** (*Reflective Prompt Evolution Can Outperform RL*, Agrawal et al. 2025;
+arXiv 2507.19457 — verify) does the outer loop with two moves: **reflective
+mutation** (the LLM reads execution traces + natural-language feedback and
+rewrites the instruction, a far richer signal than scalar RL reward) and
+**Pareto selection** (keep a *frontier* of candidates that each win on different
+instances/objectives, instead of collapsing to one scalar-best prompt).
+
+Why it fits Loupe specifically:
+1. **The v1→v2 distiller fix was a manual GEPA step** — observe suppression
+   spike, reflect, rewrite to conditional rules. GEPA automates exactly that.
+2. **Our pass condition is multi-objective** (bp_rate ↓ AND recall flat AND
+   suppression low). GEPA's Pareto frontier is built to *not* crush that tradeoff
+   into one number — the failure mode of "just minimize bp_rate."
+3. We already emit the **textual feedback** GEPA feeds on ("suppressed real F
+   because lesson X over-generalized"), straight from the suppression analysis.
+
+Target the **distiller prompt** first (current bottleneck). Caveats: it tunes
+static prompts, not the deployment-flip reasoning that is the novelty; optimizing
+on OWASP risks overfitting to OWASP's sanitizer-style FPs (use a held-out split);
+and it needs a *trustworthy* metric, so it belongs **after** the eval is scaled.
+Skeleton: `experiments/gepa_distiller.py` (hand-rolled GEPA-lite, dependency-light;
+DSPy's `dspy.GEPA` is the off-the-shelf alternative).
+
+## 7. Roadmap
 
 **Built:** single-stage validator ablation; verified-lesson memory; conditional
 distiller; assumption-scoped retrieval + write-gate; pollution defense matrix.
@@ -170,6 +204,8 @@ distiller; assumption-scoped retrieval + write-gate; pollution defense matrix.
    on verdict-distribution shift.
 4. **Scale the curve.** Full OWASP + multi-seed error bars on the benign-positive
    axis (the axis that matters to PenPal), now that pollution is controlled.
+5. **GEPA the distiller** (§6) — auto-evolve the distiller prompt against a Pareto
+   of (bp_rate, recall, suppression) on a held-out split. *After* step 4.
 
 ---
 
@@ -180,6 +216,8 @@ Verified 2024–2025 anchors: ExpeL (2308.10144), AWM (2409.07429), A-MEM
 (2510.04618), MUSE (2510.08002); PoisonedRAG (2402.07867), AgentPoison
 (2407.12784), ReliabilityRAG (2509.23519), SEDM (2509.09498), Misevolve
 (2509.26354); MAPTA (2508.20816), ZeroFalse (2510.02534), CVE-Bench (2503.17332).
+
+Prompt evolution: GEPA (2507.19457 — verify).
 
 Title-verified 2025–2026 (re-pull PDFs before quoting figures): DAM (2512.21567),
 MemoryGraft (2512.16962), memory-poisoning defense (2601.05504), AUQ

@@ -63,6 +63,9 @@ bash scripts/get_owasp.sh                       # sparse/shallow checkout -> ./b
 python eval.py --backend together --owasp-dir benchmark \
     --limit 72 --shuffle --window 24 --plot --out results/owasp_curve.csv
 # narrow to a few classes to cut cost:  --categories pathtraver,sqli,xss
+
+# evolve the distiller prompt (GEPA-lite: reflective + Pareto over bp/recall/supp)
+python experiments/gepa_distiller.py --owasp-dir benchmark --limit 60 --generations 4
 ```
 
 Output: a per-arm summary table + `results/<name>.csv` (long format: arm, i,
