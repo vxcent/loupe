@@ -21,3 +21,6 @@ results/*.png
 
 # original artifact lives in reference/ inside the repo
 virse-systems-monorepo-report.md
+
+# OWASP Benchmark checkout
+benchmark/

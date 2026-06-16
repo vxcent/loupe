@@ -54,13 +54,20 @@ helps, not memory per se":
 pip install -r requirements.txt
 cp .env.example .env   # add TOGETHER_API_KEY
 
+# fixture (14 findings — wiring check only)
 python eval.py --backend mock                  # offline plumbing demo (not a result)
 python eval.py --backend together              # real run on the fixture
-python eval.py --backend together --limit 6    # cheap real smoke test
+
+# OWASP Benchmark (the real learning curve)
+bash scripts/get_owasp.sh                       # sparse/shallow checkout -> ./benchmark
+python eval.py --backend together --owasp-dir benchmark \
+    --limit 72 --shuffle --window 24 --plot --out results/owasp_curve.csv
+# narrow to a few classes to cut cost:  --categories pathtraver,sqli,xss
 ```
 
-Output: a per-arm summary table + `results/curve.csv` (long format: arm, i,
-bp_rate, recall, suppression_error) ready to plot.
+Output: a per-arm summary table + `results/<name>.csv` (long format: arm, i,
+bp_rate, recall, suppression_error), and with `--plot` a `<name>.png` of the
+overlaid curves.
 
 ## Data
 
@@ -68,9 +75,12 @@ bp_rate, recall, suppression_error) ready to plot.
   **transfer structure** (multiple findings per root-cause class) and **2 traps**
   (a `/admin/` endpoint and a search-pod SSRF that *are* exploitable despite
   sharing a class with benign siblings). Traps punish lazy over-generalization.
-- `loupe/data.py::load_owasp` — stub + steps to scale to the **OWASP Benchmark**
-  (~2,700 labeled true/false-positive cases), which is what gives a statistically
-  trustworthy learning curve. The fixture is only a wiring check.
+- `loupe/data.py::load_owasp` — maps the **OWASP Benchmark** (~2,700 labeled
+  true/false-positive Java cases) into Findings; `class_key` = category so
+  findings of the same sink share a class and memory can transfer. This is what
+  gives a statistically trustworthy learning curve. `scripts/get_owasp.sh` does a
+  sparse/shallow checkout (sources + answer key only). The fixture is only a
+  wiring check.
 
 ## Honest scope
 

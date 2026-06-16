@@ -42,18 +42,29 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--backend", default="mock", choices=["mock", "together"])
     ap.add_argument("--model", default="meta-llama/Llama-3.3-70B-Instruct-Turbo")
-    ap.add_argument("--data", default="data/fixture.jsonl")
+    ap.add_argument("--data", default="data/fixture.jsonl", help="JSONL findings")
+    ap.add_argument("--owasp-dir", default="", help="use OWASP Benchmark at this dir")
+    ap.add_argument("--categories", default="", help="comma list, OWASP only")
     ap.add_argument("--limit", type=int, default=0, help="cap # findings (cost)")
+    ap.add_argument("--shuffle", action="store_true", help="seeded interleave")
     ap.add_argument("--window", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--temperature", type=float, default=0.0)
     ap.add_argument("--out", default="results/curve.csv")
+    ap.add_argument("--plot", action="store_true", help="also render <out>.png")
     args = ap.parse_args()
 
     load_dotenv()
-    findings = data.load(args.data)
-    if args.limit:
-        findings = findings[: args.limit]
+    if args.owasp_dir:
+        cats = [c.strip() for c in args.categories.split(",") if c.strip()] or None
+        findings = data.load_owasp(
+            args.owasp_dir, categories=cats, limit=args.limit,
+            shuffle_seed=args.seed if args.shuffle else None,
+        )
+    else:
+        findings = data.load(args.data)
+        if args.limit:
+            findings = findings[: args.limit]
 
     print(f"backend={args.backend} model={args.model if args.backend=='together' else '-'} "
           f"findings={len(findings)}\n")
@@ -74,6 +85,13 @@ def main():
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     write_curve_csv(args.out, arms_records, window=args.window)
     print(f"\ncurves -> {args.out}")
+
+    if args.plot:
+        from loupe.plot import plot_curve
+        png = args.out.rsplit(".", 1)[0] + ".png"
+        plot_curve(args.out, png)
+        print(f"plot   -> {png}")
+
     print("PASS condition: a memory arm shows lower bp_rate than baseline "
           "AND suppression_error stays ~flat.")
 

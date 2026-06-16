@@ -1,4 +1,4 @@
-.PHONY: setup smoke run clean
+.PHONY: setup smoke run owasp-data owasp clean
 
 setup:
 	pip install -r requirements.txt
@@ -10,6 +10,13 @@ smoke:          ## offline plumbing demo (no API key needed)
 
 run:            ## real run on the fixture via Together AI
 	python eval.py --backend together
+
+owasp-data:     ## sparse/shallow checkout of the OWASP Benchmark
+	bash scripts/get_owasp.sh
+
+owasp:          ## real learning curve on a 72-case OWASP slice (+ plot)
+	python eval.py --backend together --owasp-dir benchmark \
+		--limit 72 --shuffle --window 24 --plot --out results/owasp_curve.csv
 
 clean:
 	rm -f results/*.csv results/*.png

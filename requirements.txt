@@ -1,1 +1,2 @@
 openai>=1.30.0
+matplotlib>=3.6   # optional, only for --plot
