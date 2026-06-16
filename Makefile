@@ -24,6 +24,9 @@ pollution:      ## deterministic memory-pollution defense matrix (no API key)
 gepa:           ## evolve the distiller prompt (GEPA-lite, Together AI)
 	python experiments/gepa_distiller.py --owasp-dir benchmark --limit 60 --generations 4
 
+scale:          ## trustworthy multi-seed curve (300 cases x 3 arms x 3 seeds)
+	python experiments/scale.py --owasp-dir benchmark --limit 300 --seeds 3 --workers 8
+
 clean:
 	rm -f results/*.csv results/*.png
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

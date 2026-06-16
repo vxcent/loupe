@@ -40,14 +40,22 @@ class TogetherLLM:
         self.distill_system = prompts.DISTILL_SYSTEM  # GEPA mutates this
 
     def _chat(self, messages: list[dict]) -> tuple[str, int]:
-        resp = self.client.chat.completions.create(
-            model=self.model, messages=messages,
-            temperature=self.temperature, seed=self.seed,
-            response_format={"type": "json_object"},
-        )
-        txt = resp.choices[0].message.content or ""
-        tok = getattr(resp, "usage", None)
-        return txt, (tok.total_tokens if tok else 0)
+        import time
+        last = None
+        for attempt in range(5):  # resilience for concurrent/scaled runs
+            try:
+                resp = self.client.chat.completions.create(
+                    model=self.model, messages=messages,
+                    temperature=self.temperature, seed=self.seed,
+                    response_format={"type": "json_object"},
+                )
+                txt = resp.choices[0].message.content or ""
+                tok = getattr(resp, "usage", None)
+                return txt, (tok.total_tokens if tok else 0)
+            except Exception as e:  # rate limit / transient — back off and retry
+                last = e
+                time.sleep(min(2 ** attempt, 16))
+        raise last
 
     def validate(self, finding: Finding, lessons: List[Lesson]) -> Verdict:
         msgs = prompts.build_validate_messages(finding, lessons)

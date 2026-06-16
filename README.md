@@ -66,6 +66,9 @@ python eval.py --backend together --owasp-dir benchmark \
 
 # evolve the distiller prompt (GEPA-lite: reflective + Pareto over bp/recall/supp)
 python experiments/gepa_distiller.py --owasp-dir benchmark --limit 60 --generations 4
+
+# trustworthy multi-seed curve with error bars (runs arm x seed concurrently)
+python experiments/scale.py --owasp-dir benchmark --limit 300 --seeds 3 --workers 8
 ```
 
 Output: a per-arm summary table + `results/<name>.csv` (long format: arm, i,
