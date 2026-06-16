@@ -30,6 +30,8 @@ class LoopConfig:
     distill: str = "lesson"      # "lesson" (LLM generalizes) | "raw" (store verdict)
     cadence: str = "online"      # "online" (write each) | "batch" (write after pass)
     retrieval: str = "exact"     # "exact" | "loose"
+    write_gate: bool = False     # refuse unconditional benign lessons at write time
+    scope_assumptions: bool = False  # apply a benign lesson only if its control holds
     label: str = "memory-on"     # display name for the curve
 
     @classmethod
@@ -38,7 +40,8 @@ class LoopConfig:
 
 
 def run_arm(findings: List[Finding], llm, cfg: LoopConfig) -> List[dict]:
-    mem = Memory()
+    mem = Memory(write_gate=cfg.write_gate,
+                 scope_assumptions=cfg.scope_assumptions)
     pending = []  # for batch cadence
     records: List[dict] = []
 
@@ -61,6 +64,10 @@ def run_arm(findings: List[Finding], llm, cfg: LoopConfig) -> List[dict]:
         if cfg.memory:
             lesson = (llm.distill(f, f.label) if cfg.distill == "lesson"
                       else _raw_lesson(f))
+            # scope a benign lesson to the assumptions that held when verified,
+            # so retrieval can refuse it on a sibling lacking that control.
+            if lesson.verdict == "benign" and not lesson.required_assumptions:
+                lesson.required_assumptions = list(f.assumptions)
             if cfg.cadence == "online":
                 mem.add(lesson)
             else:
@@ -79,4 +86,5 @@ def _raw_lesson(f: Finding):
         predicate_key=f.predicate_key, cwe=f.cwe, verdict=f.label,
         category=f.benign_category, rule=f"{f.class_key}: {f.label}",
         grounding="verified outcome (raw)", source_finding_id=f.id,
+        required_assumptions=list(f.assumptions) if f.label == "benign" else [],
     )

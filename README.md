@@ -119,6 +119,32 @@ That is the whole thesis in miniature: it is not *memory* that helps, it is a
   not trustworthy. **A real conclusion needs the full ~2,700 cases and multiple
   seeds for error bars.** This is a wiring + direction check.
 
+## Pollution resistance (the memory-safety experiment)
+
+`python experiments/pollution.py` — the worry: a lesson learned from one case is
+retrieved for the whole class, so a wrong/over-broad ("poisoned") lesson can
+silently suppress a REAL bug that shares the class. We model PenPal's per-decision
+**assumptions** on each finding, scope benign lessons to the control they depend
+on, and test a defense matrix:
+
+```
+defense regime            poison?  corruption  benign_kept
+none (auto-apply)             yes 2/2 = 1.00  5/5 = 1.00
+write-gate only                no 2/2 = 1.00  5/5 = 1.00
+scope only                    yes 2/2 = 1.00  5/5 = 1.00
+write-gate + scope             no 0/2 = 0.00  5/5 = 1.00
+flag-don't-flip only          yes 0/2 = 0.00  5/5 = 1.00
+full defense                   no 0/2 = 0.00  5/5 = 1.00
+```
+
+**No single layer suffices** — write-gate stops the poison but the clean lesson
+still misfires unscoped; scope alone lets the unconditional poison through.
+`write-gate + scope` (or `flag-don't-flip`, which re-grounds from the finding's
+own assumptions instead of trusting a lesson's claim) drives corruption to 0
+**without** losing the legitimate benign-suppression benefit. The defenses are
+drawn from the 2025–2026 agent-memory-safety literature (write-time admission >
+retrieval filtering; assumption-scoped retrieval; lesson-flags-don't-flip).
+
 ## Honest scope
 
 This validates the **learning mechanism** on labeled findings. It does **not**

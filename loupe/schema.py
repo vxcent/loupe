@@ -29,11 +29,20 @@ class Finding:
     class_key: str           # root-cause class — the unit of transfer (memory groups by this)
     label: str               # ground truth: "real" | "benign"  (NOT shown to validator)
     benign_category: Optional[str] = None  # why benign, if benign (NOT shown)
+    assumptions: list[str] = field(default_factory=list)
+    # environmental facts true of THIS finding (e.g. ["route:internal","mesh:mtls"]).
+    # Models PenPal's per-decision assumption log. The trap of a class differs from
+    # its benign siblings precisely in its assumptions — that difference is what
+    # assumption-scoping uses to refuse a sibling's benign lesson.
 
     @property
     def predicate_key(self) -> str:
         """Key memory retrieves on: a lesson about (cwe, class) applies here."""
         return f"{self.cwe}::{self.class_key}"
+
+    @property
+    def assumption_fingerprint(self) -> str:
+        return "|".join(sorted(self.assumptions))
 
 
 @dataclass
@@ -57,6 +66,22 @@ class Lesson:
     source_finding_id: str
     category: Optional[str] = None
     confidence: float = 1.0
+    required_assumptions: list[str] = field(default_factory=list)
+    # the control(s) that must hold for a BENIGN lesson to apply. A benign lesson
+    # with an empty set claims a whole class is unconditionally safe — that is the
+    # poison/over-generalization shape the write-gate rejects.
+
+    def applies_to(self, finding: "Finding") -> bool:
+        """Assumption-scoping: a benign lesson fires only when every control it
+        depends on is present in the finding's assumptions. Real lessons are not
+        scoped (reinforcing 'exploitable' never suppresses a real bug)."""
+        if self.verdict != "benign":
+            return True
+        return all(a in finding.assumptions for a in self.required_assumptions)
+
+    def is_admissible(self) -> bool:
+        """Write-gate: refuse a benign lesson that names no precondition."""
+        return self.verdict != "benign" or len(self.required_assumptions) > 0
 
     def to_row(self) -> dict:
         return asdict(self)
@@ -67,6 +92,7 @@ def finding_from_dict(d: dict) -> Finding:
         id=d["id"], cwe=d["cwe"], title=d["title"], location=d.get("location", ""),
         claim=d["claim"], context=d.get("context", ""), class_key=d["class_key"],
         label=d["label"], benign_category=d.get("benign_category"),
+        assumptions=d.get("assumptions", []),
     )
 
 

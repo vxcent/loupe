@@ -1,4 +1,4 @@
-.PHONY: setup smoke run owasp-data owasp clean
+.PHONY: setup smoke run owasp-data owasp pollution clean
 
 setup:
 	pip install -r requirements.txt
@@ -17,6 +17,9 @@ owasp-data:     ## sparse/shallow checkout of the OWASP Benchmark
 owasp:          ## real learning curve on a 72-case OWASP slice (+ plot)
 	python eval.py --backend together --owasp-dir benchmark \
 		--limit 72 --shuffle --window 24 --plot --out results/owasp_curve.csv
+
+pollution:      ## deterministic memory-pollution defense matrix (no API key)
+	python experiments/pollution.py
 
 clean:
 	rm -f results/*.csv results/*.png
