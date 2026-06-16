@@ -1,0 +1,901 @@
+arm,i,bp_mean,bp_std,recall_mean,supp_mean
+memory-off (baseline),1,0.0000,0.0000,1.0000,0.0000
+memory-off (baseline),2,0.0000,0.0000,1.0000,0.0000
+memory-off (baseline),3,0.3333,0.0000,1.0000,0.0000
+memory-off (baseline),4,0.2500,0.0000,1.0000,0.0000
+memory-off (baseline),5,0.4000,0.0000,1.0000,0.0000
+memory-off (baseline),6,0.3333,0.0000,1.0000,0.0000
+memory-off (baseline),7,0.4286,0.0000,1.0000,0.0000
+memory-off (baseline),8,0.3750,0.0000,1.0000,0.0000
+memory-off (baseline),9,0.4444,0.0000,1.0000,0.0000
+memory-off (baseline),10,0.4444,0.0000,1.0000,0.0000
+memory-off (baseline),11,0.5000,0.0000,1.0000,0.0000
+memory-off (baseline),12,0.4545,0.0000,1.0000,0.0000
+memory-off (baseline),13,0.5000,0.0000,1.0000,0.0000
+memory-off (baseline),14,0.5385,0.0000,1.0000,0.0000
+memory-off (baseline),15,0.5714,0.0000,1.0000,0.0000
+memory-off (baseline),16,0.6000,0.0000,1.0000,0.0000
+memory-off (baseline),17,0.5625,0.0000,1.0000,0.0000
+memory-off (baseline),18,0.5882,0.0000,1.0000,0.0000
+memory-off (baseline),19,0.6111,0.0000,1.0000,0.0000
+memory-off (baseline),20,0.5789,0.0000,1.0000,0.0000
+memory-off (baseline),21,0.5500,0.0000,1.0000,0.0000
+memory-off (baseline),22,0.5238,0.0000,1.0000,0.0000
+memory-off (baseline),23,0.5238,0.0000,1.0000,0.0000
+memory-off (baseline),24,0.5455,0.0000,1.0000,0.0000
+memory-off (baseline),25,0.5520,0.0093,1.0000,0.0000
+memory-off (baseline),26,0.5713,0.0085,1.0000,0.0000
+memory-off (baseline),27,0.5889,0.0079,1.0000,0.0000
+memory-off (baseline),28,0.5656,0.0080,1.0000,0.0000
+memory-off (baseline),29,0.5821,0.0074,1.0000,0.0000
+memory-off (baseline),30,0.5974,0.0069,1.0000,0.0000
+memory-off (baseline),31,0.5764,0.0070,1.0000,0.0000
+memory-off (baseline),32,0.5764,0.0070,1.0000,0.0000
+memory-off (baseline),33,0.5908,0.0065,1.0000,0.0000
+memory-off (baseline),34,0.5713,0.0066,1.0000,0.0000
+memory-off (baseline),35,0.5850,0.0062,1.0000,0.0000
+memory-off (baseline),36,0.5669,0.0062,1.0000,0.0000
+memory-off (baseline),37,0.5669,0.0062,0.9333,0.0667
+memory-off (baseline),38,0.5499,0.0063,0.9375,0.0625
+memory-off (baseline),39,0.5339,0.0063,0.9412,0.0588
+memory-off (baseline),40,0.5188,0.0064,0.9444,0.0556
+memory-off (baseline),41,0.5188,0.0064,0.9444,0.0556
+memory-off (baseline),42,0.5471,0.0060,0.9412,0.0588
+memory-off (baseline),43,0.5188,0.0064,0.9444,0.0556
+memory-off (baseline),44,0.5188,0.0064,0.9444,0.0556
+memory-off (baseline),45,0.4905,0.0067,0.9474,0.0526
+memory-off (baseline),46,0.4905,0.0067,0.9474,0.0526
+memory-off (baseline),47,0.4622,0.0071,0.9500,0.0500
+memory-off (baseline),48,0.4622,0.0071,0.9500,0.0500
+memory-off (baseline),49,0.4622,0.0071,0.9500,0.0500
+memory-off (baseline),50,0.4770,0.0067,0.9500,0.0500
+memory-off (baseline),51,0.4494,0.0071,0.9524,0.0476
+memory-off (baseline),52,0.4494,0.0071,0.9524,0.0476
+memory-off (baseline),53,0.4494,0.0071,0.9524,0.0476
+memory-off (baseline),54,0.4219,0.0074,0.9545,0.0455
+memory-off (baseline),55,0.4219,0.0074,0.9545,0.0455
+memory-off (baseline),56,0.4219,0.0074,0.9545,0.0455
+memory-off (baseline),57,0.4219,0.0074,0.9545,0.0455
+memory-off (baseline),58,0.3944,0.0078,0.9565,0.0435
+memory-off (baseline),59,0.3944,0.0078,0.9565,0.0435
+memory-off (baseline),60,0.4056,0.0079,0.9130,0.0870
+memory-off (baseline),61,0.4056,0.0079,0.9130,0.0870
+memory-off (baseline),62,0.4056,0.0079,0.9130,0.0870
+memory-off (baseline),63,0.3944,0.0078,0.9167,0.0833
+memory-off (baseline),64,0.3669,0.0081,0.9200,0.0800
+memory-off (baseline),65,0.3784,0.0000,0.9200,0.0800
+memory-off (baseline),66,0.3784,0.0000,0.9200,0.0800
+memory-off (baseline),67,0.3784,0.0000,0.9200,0.0800
+memory-off (baseline),68,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),69,0.3784,0.0000,0.9200,0.0800
+memory-off (baseline),70,0.3514,0.0000,0.9231,0.0769
+memory-off (baseline),71,0.3514,0.0000,0.9231,0.0769
+memory-off (baseline),72,0.3684,0.0000,0.9231,0.0769
+memory-off (baseline),73,0.3421,0.0000,0.9259,0.0741
+memory-off (baseline),74,0.3684,0.0000,0.9231,0.0769
+memory-off (baseline),75,0.3684,0.0000,0.9231,0.0769
+memory-off (baseline),76,0.3784,0.0000,0.9200,0.0800
+memory-off (baseline),77,0.3947,0.0000,0.9583,0.0417
+memory-off (baseline),78,0.3947,0.0000,0.9583,0.0417
+memory-off (baseline),79,0.3947,0.0000,0.9583,0.0417
+memory-off (baseline),80,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),81,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),82,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),83,0.4737,0.0000,0.9524,0.0476
+memory-off (baseline),84,0.4737,0.0000,0.9524,0.0476
+memory-off (baseline),85,0.4737,0.0000,0.9524,0.0476
+memory-off (baseline),86,0.5000,0.0000,0.9500,0.0500
+memory-off (baseline),87,0.5000,0.0000,0.9500,0.0500
+memory-off (baseline),88,0.5263,0.0000,0.9474,0.0526
+memory-off (baseline),89,0.5000,0.0000,0.9500,0.0500
+memory-off (baseline),90,0.4865,0.0000,0.9500,0.0500
+memory-off (baseline),91,0.5135,0.0000,0.9474,0.0526
+memory-off (baseline),92,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),93,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),94,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),95,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),96,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),97,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),98,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),99,0.5405,0.0000,0.9444,0.0556
+memory-off (baseline),100,0.5263,0.0000,1.0000,0.0000
+memory-off (baseline),101,0.5526,0.0000,1.0000,0.0000
+memory-off (baseline),102,0.5526,0.0000,1.0000,0.0000
+memory-off (baseline),103,0.5789,0.0000,1.0000,0.0000
+memory-off (baseline),104,0.5789,0.0000,1.0000,0.0000
+memory-off (baseline),105,0.5526,0.0000,1.0000,0.0000
+memory-off (baseline),106,0.5263,0.0000,1.0000,0.0000
+memory-off (baseline),107,0.5000,0.0000,1.0000,0.0000
+memory-off (baseline),108,0.5000,0.0000,1.0000,0.0000
+memory-off (baseline),109,0.5263,0.0000,1.0000,0.0000
+memory-off (baseline),110,0.5526,0.0000,1.0000,0.0000
+memory-off (baseline),111,0.5676,0.0000,0.9412,0.0588
+memory-off (baseline),112,0.5676,0.0000,0.9412,0.0588
+memory-off (baseline),113,0.5676,0.0000,0.9412,0.0588
+memory-off (baseline),114,0.5676,0.0000,0.9412,0.0588
+memory-off (baseline),115,0.5676,0.0000,0.9412,0.0588
+memory-off (baseline),116,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),117,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),118,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),119,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),120,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),121,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),122,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),123,0.5526,0.0000,0.9444,0.0556
+memory-off (baseline),124,0.5789,0.0000,0.9412,0.0588
+memory-off (baseline),125,0.5946,0.0000,0.8824,0.1176
+memory-off (baseline),126,0.5676,0.0000,0.8889,0.1111
+memory-off (baseline),127,0.5946,0.0000,0.8824,0.1176
+memory-off (baseline),128,0.5676,0.0000,0.8889,0.1111
+memory-off (baseline),129,0.5946,0.0000,0.8824,0.1176
+memory-off (baseline),130,0.5789,0.0000,0.8889,0.1111
+memory-off (baseline),131,0.5789,0.0000,0.8889,0.1111
+memory-off (baseline),132,0.5526,0.0000,0.8947,0.1053
+memory-off (baseline),133,0.5263,0.0000,0.9000,0.1000
+memory-off (baseline),134,0.5263,0.0000,0.9000,0.1000
+memory-off (baseline),135,0.5263,0.0000,0.9000,0.1000
+memory-off (baseline),136,0.5263,0.0000,0.9000,0.1000
+memory-off (baseline),137,0.5263,0.0000,0.9000,0.1000
+memory-off (baseline),138,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),139,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),140,0.5676,0.0000,0.8889,0.1111
+memory-off (baseline),141,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),142,0.5676,0.0000,0.8889,0.1111
+memory-off (baseline),143,0.5676,0.0000,0.8889,0.1111
+memory-off (baseline),144,0.5946,0.0000,0.8824,0.1176
+memory-off (baseline),145,0.5946,0.0000,0.8824,0.1176
+memory-off (baseline),146,0.6111,0.0000,0.8235,0.1765
+memory-off (baseline),147,0.6389,0.0000,0.8125,0.1875
+memory-off (baseline),148,0.6111,0.0000,0.8235,0.1765
+memory-off (baseline),149,0.5833,0.0000,0.8333,0.1667
+memory-off (baseline),150,0.5556,0.0000,0.8421,0.1579
+memory-off (baseline),151,0.5676,0.0000,0.8889,0.1111
+memory-off (baseline),152,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),153,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),154,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),155,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),156,0.5405,0.0000,0.8947,0.1053
+memory-off (baseline),157,0.5135,0.0000,0.9000,0.1000
+memory-off (baseline),158,0.5135,0.0000,0.9000,0.1000
+memory-off (baseline),159,0.5278,0.0000,0.8500,0.1500
+memory-off (baseline),160,0.5000,0.0000,0.8571,0.1429
+memory-off (baseline),161,0.5000,0.0000,0.8571,0.1429
+memory-off (baseline),162,0.4722,0.0000,0.8636,0.1364
+memory-off (baseline),163,0.4444,0.0000,0.8696,0.1304
+memory-off (baseline),164,0.4167,0.0000,0.8750,0.1250
+memory-off (baseline),165,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),166,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),167,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),168,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),169,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),170,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),171,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),172,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),173,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),174,0.4444,0.0000,0.9091,0.0909
+memory-off (baseline),175,0.4444,0.0000,0.9091,0.0909
+memory-off (baseline),176,0.4167,0.0000,0.9130,0.0870
+memory-off (baseline),177,0.4444,0.0000,0.9091,0.0909
+memory-off (baseline),178,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),179,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),180,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),181,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),182,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),183,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),184,0.3784,0.0000,0.9200,0.0800
+memory-off (baseline),185,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),186,0.3947,0.0000,0.9583,0.0417
+memory-off (baseline),187,0.3947,0.0000,0.9583,0.0417
+memory-off (baseline),188,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),189,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),190,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),191,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),192,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),193,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),194,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),195,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),196,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),197,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),198,0.4595,0.0000,0.9091,0.0909
+memory-off (baseline),199,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),200,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),201,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),202,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),203,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),204,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),205,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),206,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),207,0.4474,0.0000,0.9545,0.0455
+memory-off (baseline),208,0.4211,0.0000,0.9565,0.0435
+memory-off (baseline),209,0.4324,0.0000,0.9130,0.0870
+memory-off (baseline),210,0.4054,0.0000,0.9167,0.0833
+memory-off (baseline),211,0.4272,0.0074,0.9130,0.0870
+memory-off (baseline),212,0.4272,0.0074,0.9130,0.0870
+memory-off (baseline),213,0.4272,0.0074,0.9130,0.0870
+memory-off (baseline),214,0.4424,0.0070,0.9130,0.0870
+memory-off (baseline),215,0.4158,0.0074,0.9167,0.0833
+memory-off (baseline),216,0.4272,0.0074,0.8750,0.1250
+memory-off (baseline),217,0.3999,0.0078,0.8800,0.1200
+memory-off (baseline),218,0.3999,0.0078,0.8800,0.1200
+memory-off (baseline),219,0.4272,0.0074,0.8750,0.1250
+memory-off (baseline),220,0.4272,0.0074,0.8750,0.1250
+memory-off (baseline),221,0.4272,0.0074,0.8750,0.1250
+memory-off (baseline),222,0.4111,0.0079,0.8750,0.1250
+memory-off (baseline),223,0.4392,0.0075,0.8696,0.1304
+memory-off (baseline),224,0.4672,0.0071,0.8636,0.1364
+memory-off (baseline),225,0.4672,0.0071,0.8636,0.1364
+memory-off (baseline),226,0.4807,0.0071,0.8182,0.1818
+memory-off (baseline),227,0.4807,0.0071,0.8182,0.1818
+memory-off (baseline),228,0.4807,0.0071,0.8182,0.1818
+memory-off (baseline),229,0.4518,0.0075,0.8261,0.1739
+memory-off (baseline),230,0.4807,0.0071,0.8182,0.1818
+memory-off (baseline),231,0.5095,0.0067,0.8095,0.1905
+memory-off (baseline),232,0.5095,0.0067,0.8095,0.1905
+memory-off (baseline),233,0.5095,0.0067,0.8095,0.1905
+memory-off (baseline),234,0.5095,0.0067,0.8095,0.1905
+memory-off (baseline),235,0.5095,0.0067,0.8095,0.1905
+memory-off (baseline),236,0.5384,0.0063,0.8000,0.2000
+memory-off (baseline),237,0.5513,0.0060,0.8421,0.1579
+memory-off (baseline),238,0.5283,0.0117,0.8333,0.1667
+memory-off (baseline),239,0.5566,0.0117,0.8246,0.1754
+memory-off (baseline),240,0.5566,0.0117,0.8246,0.1754
+memory-off (baseline),241,0.5849,0.0117,0.8148,0.1852
+memory-off (baseline),242,0.5849,0.0117,0.8148,0.1852
+memory-off (baseline),243,0.6132,0.0118,0.8039,0.1961
+memory-off (baseline),244,0.6415,0.0118,0.7917,0.2083
+memory-off (baseline),245,0.6132,0.0118,0.8039,0.1961
+memory-off (baseline),246,0.6132,0.0118,0.8039,0.1961
+memory-off (baseline),247,0.6132,0.0118,0.8039,0.1961
+memory-off (baseline),248,0.6132,0.0118,0.8039,0.1961
+memory-off (baseline),249,0.5963,0.0114,0.8627,0.1373
+memory-off (baseline),250,0.6239,0.0115,0.8542,0.1458
+memory-off (baseline),251,0.6274,0.0081,0.8542,0.1458
+memory-off (baseline),252,0.6450,0.0086,0.7917,0.2083
+memory-off (baseline),253,0.6169,0.0082,0.8039,0.1961
+memory-off (baseline),254,0.6169,0.0082,0.8039,0.1961
+memory-off (baseline),255,0.6169,0.0082,0.8039,0.1961
+memory-off (baseline),256,0.6274,0.0081,0.8542,0.1458
+memory-off (baseline),257,0.6274,0.0081,0.8542,0.1458
+memory-off (baseline),258,0.6274,0.0081,0.8542,0.1458
+memory-off (baseline),259,0.6274,0.0081,0.8542,0.1458
+memory-off (baseline),260,0.6274,0.0081,0.8542,0.1458
+memory-off (baseline),261,0.6001,0.0078,0.8627,0.1373
+memory-off (baseline),262,0.6107,0.0077,0.8627,0.1373
+memory-off (baseline),263,0.5842,0.0074,0.8704,0.1296
+memory-off (baseline),264,0.5728,0.0074,0.8704,0.1296
+memory-off (baseline),265,0.5728,0.0074,0.8704,0.1296
+memory-off (baseline),266,0.5842,0.0074,0.9216,0.0784
+memory-off (baseline),267,0.5842,0.0074,0.9216,0.0784
+memory-off (baseline),268,0.5728,0.0074,0.9216,0.0784
+memory-off (baseline),269,0.5889,0.0079,0.9167,0.0833
+memory-off (baseline),270,0.5770,0.0079,0.8627,0.1373
+memory-off (baseline),271,0.5770,0.0079,0.8627,0.1373
+memory-off (baseline),272,0.6059,0.0083,0.8542,0.1458
+memory-off (baseline),273,0.5942,0.0084,0.8039,0.1961
+memory-off (baseline),274,0.5645,0.0080,0.8148,0.1852
+memory-off (baseline),275,0.5942,0.0084,0.8039,0.1961
+memory-off (baseline),276,0.5942,0.0084,0.8039,0.1961
+memory-off (baseline),277,0.5942,0.0084,0.8039,0.1961
+memory-off (baseline),278,0.6176,0.0000,0.8125,0.1875
+memory-off (baseline),279,0.6176,0.0000,0.8125,0.1875
+memory-off (baseline),280,0.6176,0.0000,0.8125,0.1875
+memory-off (baseline),281,0.6176,0.0000,0.8125,0.1875
+memory-off (baseline),282,0.5882,0.0000,0.8235,0.1765
+memory-off (baseline),283,0.5882,0.0000,0.8235,0.1765
+memory-off (baseline),284,0.5588,0.0000,0.8333,0.1667
+memory-off (baseline),285,0.5758,0.0000,0.7778,0.2222
+memory-off (baseline),286,0.6061,0.0000,0.7647,0.2353
+memory-off (baseline),287,0.6061,0.0000,0.7647,0.2353
+memory-off (baseline),288,0.6061,0.0000,0.7647,0.2353
+memory-off (baseline),289,0.6061,0.0000,0.7647,0.2353
+memory-off (baseline),290,0.5758,0.0000,0.7778,0.2222
+memory-off (baseline),291,0.5758,0.0000,0.7778,0.2222
+memory-off (baseline),292,0.5882,0.0000,0.8235,0.1765
+memory-off (baseline),293,0.5882,0.0000,0.8235,0.1765
+memory-off (baseline),294,0.5588,0.0000,0.8333,0.1667
+memory-off (baseline),295,0.5882,0.0000,0.8235,0.1765
+memory-off (baseline),296,0.5588,0.0000,0.8333,0.1667
+memory-off (baseline),297,0.5588,0.0000,0.8333,0.1667
+memory-off (baseline),298,0.5588,0.0000,0.8333,0.1667
+memory-off (baseline),299,0.5588,0.0000,0.8333,0.1667
+memory-off (baseline),300,0.5588,0.0000,0.8333,0.1667
+memory / raw-verdicts,1,0.0000,0.0000,1.0000,0.0000
+memory / raw-verdicts,2,0.0000,0.0000,1.0000,0.0000
+memory / raw-verdicts,3,0.3333,0.0000,1.0000,0.0000
+memory / raw-verdicts,4,0.2500,0.0000,1.0000,0.0000
+memory / raw-verdicts,5,0.4000,0.0000,1.0000,0.0000
+memory / raw-verdicts,6,0.3333,0.0000,1.0000,0.0000
+memory / raw-verdicts,7,0.4286,0.0000,1.0000,0.0000
+memory / raw-verdicts,8,0.3750,0.0000,1.0000,0.0000
+memory / raw-verdicts,9,0.4444,0.0000,1.0000,0.0000
+memory / raw-verdicts,10,0.4444,0.0000,1.0000,0.0000
+memory / raw-verdicts,11,0.5000,0.0000,1.0000,0.0000
+memory / raw-verdicts,12,0.4545,0.0000,1.0000,0.0000
+memory / raw-verdicts,13,0.5000,0.0000,1.0000,0.0000
+memory / raw-verdicts,14,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,15,0.5714,0.0000,1.0000,0.0000
+memory / raw-verdicts,16,0.6000,0.0000,1.0000,0.0000
+memory / raw-verdicts,17,0.5625,0.0000,1.0000,0.0000
+memory / raw-verdicts,18,0.5882,0.0000,1.0000,0.0000
+memory / raw-verdicts,19,0.6111,0.0000,1.0000,0.0000
+memory / raw-verdicts,20,0.5789,0.0000,1.0000,0.0000
+memory / raw-verdicts,21,0.5500,0.0000,1.0000,0.0000
+memory / raw-verdicts,22,0.5238,0.0000,1.0000,0.0000
+memory / raw-verdicts,23,0.5455,0.0000,1.0000,0.0000
+memory / raw-verdicts,24,0.5652,0.0000,1.0000,0.0000
+memory / raw-verdicts,25,0.5833,0.0000,1.0000,0.0000
+memory / raw-verdicts,26,0.6000,0.0000,1.0000,0.0000
+memory / raw-verdicts,27,0.6154,0.0000,1.0000,0.0000
+memory / raw-verdicts,28,0.5926,0.0000,1.0000,0.0000
+memory / raw-verdicts,29,0.6071,0.0000,1.0000,0.0000
+memory / raw-verdicts,30,0.6207,0.0000,1.0000,0.0000
+memory / raw-verdicts,31,0.6000,0.0000,1.0000,0.0000
+memory / raw-verdicts,32,0.6129,0.0000,1.0000,0.0000
+memory / raw-verdicts,33,0.6250,0.0000,1.0000,0.0000
+memory / raw-verdicts,34,0.6061,0.0000,1.0000,0.0000
+memory / raw-verdicts,35,0.6176,0.0000,1.0000,0.0000
+memory / raw-verdicts,36,0.6000,0.0000,1.0000,0.0000
+memory / raw-verdicts,37,0.5833,0.0000,1.0000,0.0000
+memory / raw-verdicts,38,0.5676,0.0000,1.0000,0.0000
+memory / raw-verdicts,39,0.5526,0.0000,1.0000,0.0000
+memory / raw-verdicts,40,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,41,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,42,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,43,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,44,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,45,0.5128,0.0000,1.0000,0.0000
+memory / raw-verdicts,46,0.5128,0.0000,1.0000,0.0000
+memory / raw-verdicts,47,0.4872,0.0000,1.0000,0.0000
+memory / raw-verdicts,48,0.4872,0.0000,1.0000,0.0000
+memory / raw-verdicts,49,0.4872,0.0000,1.0000,0.0000
+memory / raw-verdicts,50,0.5000,0.0000,1.0000,0.0000
+memory / raw-verdicts,51,0.4750,0.0000,1.0000,0.0000
+memory / raw-verdicts,52,0.4750,0.0000,1.0000,0.0000
+memory / raw-verdicts,53,0.4750,0.0000,1.0000,0.0000
+memory / raw-verdicts,54,0.4500,0.0000,1.0000,0.0000
+memory / raw-verdicts,55,0.4500,0.0000,1.0000,0.0000
+memory / raw-verdicts,56,0.4500,0.0000,1.0000,0.0000
+memory / raw-verdicts,57,0.4500,0.0000,1.0000,0.0000
+memory / raw-verdicts,58,0.4250,0.0000,1.0000,0.0000
+memory / raw-verdicts,59,0.4250,0.0000,1.0000,0.0000
+memory / raw-verdicts,60,0.4286,0.0051,0.9855,0.0145
+memory / raw-verdicts,61,0.4286,0.0051,0.9855,0.0145
+memory / raw-verdicts,62,0.4286,0.0051,0.9855,0.0145
+memory / raw-verdicts,63,0.4034,0.0048,0.9861,0.0139
+memory / raw-verdicts,64,0.3782,0.0045,0.9867,0.0133
+memory / raw-verdicts,65,0.3782,0.0045,0.9867,0.0133
+memory / raw-verdicts,66,0.3782,0.0045,0.9867,0.0133
+memory / raw-verdicts,67,0.3782,0.0045,0.9867,0.0133
+memory / raw-verdicts,68,0.4034,0.0048,0.9861,0.0139
+memory / raw-verdicts,69,0.3782,0.0045,0.9867,0.0133
+memory / raw-verdicts,70,0.3530,0.0042,0.9872,0.0128
+memory / raw-verdicts,71,0.3530,0.0042,0.9872,0.0128
+memory / raw-verdicts,72,0.3530,0.0042,0.9872,0.0128
+memory / raw-verdicts,73,0.3278,0.0039,0.9877,0.0123
+memory / raw-verdicts,74,0.3530,0.0042,0.9872,0.0128
+memory / raw-verdicts,75,0.3530,0.0042,0.9872,0.0128
+memory / raw-verdicts,76,0.3782,0.0045,0.9867,0.0133
+memory / raw-verdicts,77,0.4034,0.0048,0.9861,0.0139
+memory / raw-verdicts,78,0.4034,0.0048,0.9861,0.0139
+memory / raw-verdicts,79,0.4034,0.0048,0.9861,0.0139
+memory / raw-verdicts,80,0.4286,0.0051,0.9855,0.0145
+memory / raw-verdicts,81,0.4538,0.0054,0.9848,0.0152
+memory / raw-verdicts,82,0.4538,0.0054,0.9848,0.0152
+memory / raw-verdicts,83,0.4791,0.0057,0.9841,0.0159
+memory / raw-verdicts,84,0.4791,0.0057,0.9841,0.0159
+memory / raw-verdicts,85,0.4791,0.0057,0.9841,0.0159
+memory / raw-verdicts,86,0.5043,0.0060,0.9833,0.0167
+memory / raw-verdicts,87,0.5043,0.0060,0.9833,0.0167
+memory / raw-verdicts,88,0.5295,0.0063,0.9825,0.0175
+memory / raw-verdicts,89,0.5043,0.0060,0.9833,0.0167
+memory / raw-verdicts,90,0.4915,0.0060,0.9833,0.0167
+memory / raw-verdicts,91,0.5173,0.0064,0.9825,0.0175
+memory / raw-verdicts,92,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,93,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,94,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,95,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,96,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,97,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,98,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,99,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,100,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,101,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,102,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,103,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,104,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,105,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,106,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,107,0.5128,0.0000,1.0000,0.0000
+memory / raw-verdicts,108,0.5128,0.0000,1.0000,0.0000
+memory / raw-verdicts,109,0.5385,0.0000,1.0000,0.0000
+memory / raw-verdicts,110,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,111,0.5691,0.0070,0.9804,0.0196
+memory / raw-verdicts,112,0.5691,0.0070,0.9804,0.0196
+memory / raw-verdicts,113,0.5691,0.0070,0.9804,0.0196
+memory / raw-verdicts,114,0.5691,0.0070,0.9804,0.0196
+memory / raw-verdicts,115,0.5691,0.0070,0.9804,0.0196
+memory / raw-verdicts,116,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,117,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,118,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,119,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,120,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,121,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,122,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,123,0.5432,0.0067,0.9815,0.0185
+memory / raw-verdicts,124,0.5691,0.0070,0.9804,0.0196
+memory / raw-verdicts,125,0.5842,0.0074,0.9216,0.0784
+memory / raw-verdicts,126,0.5576,0.0070,0.9259,0.0741
+memory / raw-verdicts,127,0.5842,0.0074,0.9216,0.0784
+memory / raw-verdicts,128,0.5576,0.0070,0.9259,0.0741
+memory / raw-verdicts,129,0.5842,0.0074,0.9216,0.0784
+memory / raw-verdicts,130,0.5691,0.0070,0.9259,0.0741
+memory / raw-verdicts,131,0.5691,0.0070,0.9259,0.0741
+memory / raw-verdicts,132,0.5432,0.0067,0.9298,0.0702
+memory / raw-verdicts,133,0.5173,0.0064,0.9333,0.0667
+memory / raw-verdicts,134,0.5173,0.0064,0.9333,0.0667
+memory / raw-verdicts,135,0.5173,0.0064,0.9333,0.0667
+memory / raw-verdicts,136,0.5173,0.0064,0.9333,0.0667
+memory / raw-verdicts,137,0.5173,0.0064,0.9333,0.0667
+memory / raw-verdicts,138,0.5432,0.0067,0.9298,0.0702
+memory / raw-verdicts,139,0.5432,0.0067,0.9298,0.0702
+memory / raw-verdicts,140,0.5691,0.0070,0.9259,0.0741
+memory / raw-verdicts,141,0.5432,0.0067,0.9298,0.0702
+memory / raw-verdicts,142,0.5691,0.0070,0.9259,0.0741
+memory / raw-verdicts,143,0.5691,0.0070,0.9259,0.0741
+memory / raw-verdicts,144,0.5949,0.0073,0.9216,0.0784
+memory / raw-verdicts,145,0.5949,0.0073,0.9216,0.0784
+memory / raw-verdicts,146,0.6107,0.0077,0.8627,0.1373
+memory / raw-verdicts,147,0.6373,0.0080,0.8542,0.1458
+memory / raw-verdicts,148,0.6107,0.0077,0.8627,0.1373
+memory / raw-verdicts,149,0.5842,0.0074,0.8704,0.1296
+memory / raw-verdicts,150,0.5576,0.0070,0.8772,0.1228
+memory / raw-verdicts,151,0.5789,0.0000,0.8889,0.1111
+memory / raw-verdicts,152,0.5526,0.0000,0.8947,0.1053
+memory / raw-verdicts,153,0.5526,0.0000,0.8947,0.1053
+memory / raw-verdicts,154,0.5526,0.0000,0.8947,0.1053
+memory / raw-verdicts,155,0.5526,0.0000,0.8947,0.1053
+memory / raw-verdicts,156,0.5526,0.0000,0.8947,0.1053
+memory / raw-verdicts,157,0.5263,0.0000,0.9000,0.1000
+memory / raw-verdicts,158,0.5263,0.0000,0.9000,0.1000
+memory / raw-verdicts,159,0.5311,0.0067,0.8833,0.1167
+memory / raw-verdicts,160,0.5045,0.0064,0.8889,0.1111
+memory / raw-verdicts,161,0.5045,0.0064,0.8889,0.1111
+memory / raw-verdicts,162,0.4780,0.0060,0.8939,0.1061
+memory / raw-verdicts,163,0.4514,0.0057,0.8986,0.1014
+memory / raw-verdicts,164,0.4248,0.0054,0.9028,0.0972
+memory / raw-verdicts,165,0.4397,0.0054,0.9420,0.0580
+memory / raw-verdicts,166,0.4397,0.0054,0.9420,0.0580
+memory / raw-verdicts,167,0.4139,0.0051,0.9444,0.0556
+memory / raw-verdicts,168,0.4397,0.0054,0.9420,0.0580
+memory / raw-verdicts,169,0.4139,0.0051,0.9444,0.0556
+memory / raw-verdicts,170,0.4397,0.0054,0.9420,0.0580
+memory / raw-verdicts,171,0.4139,0.0051,0.9444,0.0556
+memory / raw-verdicts,172,0.4139,0.0051,0.9444,0.0556
+memory / raw-verdicts,173,0.4397,0.0054,0.9420,0.0580
+memory / raw-verdicts,174,0.4514,0.0057,0.9394,0.0606
+memory / raw-verdicts,175,0.4514,0.0057,0.9394,0.0606
+memory / raw-verdicts,176,0.4248,0.0054,0.9420,0.0580
+memory / raw-verdicts,177,0.4514,0.0057,0.9394,0.0606
+memory / raw-verdicts,178,0.4248,0.0054,0.9420,0.0580
+memory / raw-verdicts,179,0.3983,0.0050,0.9444,0.0556
+memory / raw-verdicts,180,0.3983,0.0050,0.9444,0.0556
+memory / raw-verdicts,181,0.4248,0.0054,0.9420,0.0580
+memory / raw-verdicts,182,0.4248,0.0054,0.9420,0.0580
+memory / raw-verdicts,183,0.3983,0.0050,0.9444,0.0556
+memory / raw-verdicts,184,0.3717,0.0047,0.9467,0.0533
+memory / raw-verdicts,185,0.3983,0.0050,0.9444,0.0556
+memory / raw-verdicts,186,0.3880,0.0048,0.9861,0.0139
+memory / raw-verdicts,187,0.3880,0.0048,0.9861,0.0139
+memory / raw-verdicts,188,0.4139,0.0051,0.9855,0.0145
+memory / raw-verdicts,189,0.4397,0.0054,0.9848,0.0152
+memory / raw-verdicts,190,0.4397,0.0054,0.9848,0.0152
+memory / raw-verdicts,191,0.4139,0.0051,0.9855,0.0145
+memory / raw-verdicts,192,0.4139,0.0051,0.9855,0.0145
+memory / raw-verdicts,193,0.4397,0.0054,0.9848,0.0152
+memory / raw-verdicts,194,0.4397,0.0054,0.9848,0.0152
+memory / raw-verdicts,195,0.4139,0.0051,0.9855,0.0145
+memory / raw-verdicts,196,0.4139,0.0051,0.9855,0.0145
+memory / raw-verdicts,197,0.4248,0.0054,0.9420,0.0580
+memory / raw-verdicts,198,0.4514,0.0057,0.9394,0.0606
+memory / raw-verdicts,199,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,200,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,201,0.4211,0.0000,0.9565,0.0435
+memory / raw-verdicts,202,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,203,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,204,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,205,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,206,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,207,0.4474,0.0000,0.9545,0.0455
+memory / raw-verdicts,208,0.4211,0.0000,0.9565,0.0435
+memory / raw-verdicts,209,0.4324,0.0000,0.9130,0.0870
+memory / raw-verdicts,210,0.4054,0.0000,0.9167,0.0833
+memory / raw-verdicts,211,0.4324,0.0000,0.9130,0.0870
+memory / raw-verdicts,212,0.4324,0.0000,0.9130,0.0870
+memory / raw-verdicts,213,0.4324,0.0000,0.9130,0.0870
+memory / raw-verdicts,214,0.4474,0.0000,0.9130,0.0870
+memory / raw-verdicts,215,0.4211,0.0000,0.9167,0.0833
+memory / raw-verdicts,216,0.4211,0.0000,0.9167,0.0833
+memory / raw-verdicts,217,0.3947,0.0000,0.9200,0.0800
+memory / raw-verdicts,218,0.3947,0.0000,0.9200,0.0800
+memory / raw-verdicts,219,0.4211,0.0000,0.9167,0.0833
+memory / raw-verdicts,220,0.4211,0.0000,0.9167,0.0833
+memory / raw-verdicts,221,0.4211,0.0000,0.9167,0.0833
+memory / raw-verdicts,222,0.4054,0.0000,0.9167,0.0833
+memory / raw-verdicts,223,0.4324,0.0000,0.9130,0.0870
+memory / raw-verdicts,224,0.4595,0.0000,0.9091,0.0909
+memory / raw-verdicts,225,0.4595,0.0000,0.9091,0.0909
+memory / raw-verdicts,226,0.4595,0.0000,0.9091,0.0909
+memory / raw-verdicts,227,0.4595,0.0000,0.9091,0.0909
+memory / raw-verdicts,228,0.4595,0.0000,0.9091,0.0909
+memory / raw-verdicts,229,0.4324,0.0000,0.9130,0.0870
+memory / raw-verdicts,230,0.4595,0.0000,0.9091,0.0909
+memory / raw-verdicts,231,0.4865,0.0000,0.9048,0.0952
+memory / raw-verdicts,232,0.4865,0.0000,0.9048,0.0952
+memory / raw-verdicts,233,0.4865,0.0000,0.9048,0.0952
+memory / raw-verdicts,234,0.4865,0.0000,0.9048,0.0952
+memory / raw-verdicts,235,0.4865,0.0000,0.9048,0.0952
+memory / raw-verdicts,236,0.5135,0.0000,0.9000,0.1000
+memory / raw-verdicts,237,0.5263,0.0000,0.9474,0.0526
+memory / raw-verdicts,238,0.5000,0.0000,0.9500,0.0500
+memory / raw-verdicts,239,0.5263,0.0000,0.9474,0.0526
+memory / raw-verdicts,240,0.5263,0.0000,0.9474,0.0526
+memory / raw-verdicts,241,0.5526,0.0000,0.9444,0.0556
+memory / raw-verdicts,242,0.5526,0.0000,0.9444,0.0556
+memory / raw-verdicts,243,0.5789,0.0000,0.9412,0.0588
+memory / raw-verdicts,244,0.6053,0.0000,0.9375,0.0625
+memory / raw-verdicts,245,0.5789,0.0000,0.9412,0.0588
+memory / raw-verdicts,246,0.5789,0.0000,0.9412,0.0588
+memory / raw-verdicts,247,0.5789,0.0000,0.9412,0.0588
+memory / raw-verdicts,248,0.5789,0.0000,0.9412,0.0588
+memory / raw-verdicts,249,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,250,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,251,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,252,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,253,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,254,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,255,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,256,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,257,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,258,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,259,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,260,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,261,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,262,0.5750,0.0000,1.0000,0.0000
+memory / raw-verdicts,263,0.5500,0.0000,1.0000,0.0000
+memory / raw-verdicts,264,0.5500,0.0000,1.0000,0.0000
+memory / raw-verdicts,265,0.5500,0.0000,1.0000,0.0000
+memory / raw-verdicts,266,0.5750,0.0000,1.0000,0.0000
+memory / raw-verdicts,267,0.5750,0.0000,1.0000,0.0000
+memory / raw-verdicts,268,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,269,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,270,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,271,0.5641,0.0000,1.0000,0.0000
+memory / raw-verdicts,272,0.5897,0.0000,1.0000,0.0000
+memory / raw-verdicts,273,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,274,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,275,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,276,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,277,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,278,0.6001,0.0073,0.9583,0.0417
+memory / raw-verdicts,279,0.6001,0.0073,0.9583,0.0417
+memory / raw-verdicts,280,0.6001,0.0073,0.9583,0.0417
+memory / raw-verdicts,281,0.6001,0.0073,0.9583,0.0417
+memory / raw-verdicts,282,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,283,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,284,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,285,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,286,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,287,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,288,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,289,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,290,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,291,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,292,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,293,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,294,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,295,0.5740,0.0070,0.9608,0.0392
+memory / raw-verdicts,296,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,297,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,298,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,299,0.5479,0.0067,0.9630,0.0370
+memory / raw-verdicts,300,0.5479,0.0067,0.9630,0.0370
+memory / distilled-lessons,1,0.0000,0.0000,1.0000,0.0000
+memory / distilled-lessons,2,0.0000,0.0000,1.0000,0.0000
+memory / distilled-lessons,3,0.3333,0.0000,1.0000,0.0000
+memory / distilled-lessons,4,0.2500,0.0000,1.0000,0.0000
+memory / distilled-lessons,5,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,6,0.3333,0.0000,1.0000,0.0000
+memory / distilled-lessons,7,0.4286,0.0000,1.0000,0.0000
+memory / distilled-lessons,8,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,9,0.4444,0.0000,1.0000,0.0000
+memory / distilled-lessons,10,0.4444,0.0000,1.0000,0.0000
+memory / distilled-lessons,11,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,12,0.4545,0.0000,1.0000,0.0000
+memory / distilled-lessons,13,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,14,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,15,0.5714,0.0000,1.0000,0.0000
+memory / distilled-lessons,16,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,17,0.5625,0.0000,1.0000,0.0000
+memory / distilled-lessons,18,0.5882,0.0000,1.0000,0.0000
+memory / distilled-lessons,19,0.6111,0.0000,1.0000,0.0000
+memory / distilled-lessons,20,0.5789,0.0000,1.0000,0.0000
+memory / distilled-lessons,21,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,22,0.5238,0.0000,1.0000,0.0000
+memory / distilled-lessons,23,0.5455,0.0000,1.0000,0.0000
+memory / distilled-lessons,24,0.5652,0.0000,1.0000,0.0000
+memory / distilled-lessons,25,0.5833,0.0000,1.0000,0.0000
+memory / distilled-lessons,26,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,27,0.6154,0.0000,1.0000,0.0000
+memory / distilled-lessons,28,0.5926,0.0000,1.0000,0.0000
+memory / distilled-lessons,29,0.6071,0.0000,1.0000,0.0000
+memory / distilled-lessons,30,0.6207,0.0000,1.0000,0.0000
+memory / distilled-lessons,31,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,32,0.6129,0.0000,1.0000,0.0000
+memory / distilled-lessons,33,0.6250,0.0000,1.0000,0.0000
+memory / distilled-lessons,34,0.6061,0.0000,1.0000,0.0000
+memory / distilled-lessons,35,0.6176,0.0000,1.0000,0.0000
+memory / distilled-lessons,36,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,37,0.5833,0.0000,1.0000,0.0000
+memory / distilled-lessons,38,0.5676,0.0000,1.0000,0.0000
+memory / distilled-lessons,39,0.5526,0.0000,1.0000,0.0000
+memory / distilled-lessons,40,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,41,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,42,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,43,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,44,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,45,0.5128,0.0000,1.0000,0.0000
+memory / distilled-lessons,46,0.5128,0.0000,1.0000,0.0000
+memory / distilled-lessons,47,0.4872,0.0000,1.0000,0.0000
+memory / distilled-lessons,48,0.4872,0.0000,1.0000,0.0000
+memory / distilled-lessons,49,0.4872,0.0000,1.0000,0.0000
+memory / distilled-lessons,50,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,51,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,52,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,53,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,54,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,55,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,56,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,57,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,58,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,59,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,60,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,61,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,62,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,63,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,64,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,65,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,66,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,67,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,68,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,69,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,70,0.3500,0.0000,1.0000,0.0000
+memory / distilled-lessons,71,0.3500,0.0000,1.0000,0.0000
+memory / distilled-lessons,72,0.3500,0.0000,1.0000,0.0000
+memory / distilled-lessons,73,0.3250,0.0000,1.0000,0.0000
+memory / distilled-lessons,74,0.3500,0.0000,1.0000,0.0000
+memory / distilled-lessons,75,0.3500,0.0000,1.0000,0.0000
+memory / distilled-lessons,76,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,77,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,78,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,79,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,80,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,81,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,82,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,83,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,84,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,85,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,86,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,87,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,88,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,89,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,90,0.4872,0.0000,1.0000,0.0000
+memory / distilled-lessons,91,0.5128,0.0000,1.0000,0.0000
+memory / distilled-lessons,92,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,93,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,94,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,95,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,96,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,97,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,98,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,99,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,100,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,101,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,102,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,103,0.5897,0.0000,1.0000,0.0000
+memory / distilled-lessons,104,0.5897,0.0000,1.0000,0.0000
+memory / distilled-lessons,105,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,106,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,107,0.5128,0.0000,1.0000,0.0000
+memory / distilled-lessons,108,0.5128,0.0000,1.0000,0.0000
+memory / distilled-lessons,109,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,110,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,111,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,112,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,113,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,114,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,115,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,116,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,117,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,118,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,119,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,120,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,121,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,122,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,123,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,124,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,125,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,126,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,127,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,128,0.5385,0.0000,1.0000,0.0000
+memory / distilled-lessons,129,0.5641,0.0000,1.0000,0.0000
+memory / distilled-lessons,130,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,131,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,132,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,133,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,134,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,135,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,136,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,137,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,138,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,139,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,140,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,141,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,142,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,143,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,144,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,145,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,146,0.5799,0.0070,0.9804,0.0196
+memory / distilled-lessons,147,0.6051,0.0073,0.9792,0.0208
+memory / distilled-lessons,148,0.5799,0.0070,0.9804,0.0196
+memory / distilled-lessons,149,0.5547,0.0066,0.9815,0.0185
+memory / distilled-lessons,150,0.5295,0.0063,0.9825,0.0175
+memory / distilled-lessons,151,0.5547,0.0066,0.9815,0.0185
+memory / distilled-lessons,152,0.5295,0.0063,0.9825,0.0175
+memory / distilled-lessons,153,0.5295,0.0063,0.9825,0.0175
+memory / distilled-lessons,154,0.5295,0.0063,0.9825,0.0175
+memory / distilled-lessons,155,0.5295,0.0063,0.9825,0.0175
+memory / distilled-lessons,156,0.5295,0.0063,0.9825,0.0175
+memory / distilled-lessons,157,0.5043,0.0060,0.9833,0.0167
+memory / distilled-lessons,158,0.5043,0.0060,0.9833,0.0167
+memory / distilled-lessons,159,0.5043,0.0060,0.9833,0.0167
+memory / distilled-lessons,160,0.4791,0.0057,0.9841,0.0159
+memory / distilled-lessons,161,0.4791,0.0057,0.9841,0.0159
+memory / distilled-lessons,162,0.4538,0.0054,0.9848,0.0152
+memory / distilled-lessons,163,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,164,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,165,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,166,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,167,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,168,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,169,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,170,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,171,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,172,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,173,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,174,0.4538,0.0054,0.9848,0.0152
+memory / distilled-lessons,175,0.4538,0.0054,0.9848,0.0152
+memory / distilled-lessons,176,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,177,0.4538,0.0054,0.9848,0.0152
+memory / distilled-lessons,178,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,179,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,180,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,181,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,182,0.4286,0.0051,0.9855,0.0145
+memory / distilled-lessons,183,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,184,0.3782,0.0045,0.9867,0.0133
+memory / distilled-lessons,185,0.4034,0.0048,0.9861,0.0139
+memory / distilled-lessons,186,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,187,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,188,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,189,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,190,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,191,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,192,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,193,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,194,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,195,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,196,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,197,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,198,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,199,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,200,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,201,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,202,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,203,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,204,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,205,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,206,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,207,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,208,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,209,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,210,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,211,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,212,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,213,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,214,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,215,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,216,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,217,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,218,0.3750,0.0000,1.0000,0.0000
+memory / distilled-lessons,219,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,220,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,221,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,222,0.4000,0.0000,1.0000,0.0000
+memory / distilled-lessons,223,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,224,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,225,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,226,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,227,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,228,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,229,0.4250,0.0000,1.0000,0.0000
+memory / distilled-lessons,230,0.4500,0.0000,1.0000,0.0000
+memory / distilled-lessons,231,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,232,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,233,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,234,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,235,0.4750,0.0000,1.0000,0.0000
+memory / distilled-lessons,236,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,237,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,238,0.5000,0.0000,1.0000,0.0000
+memory / distilled-lessons,239,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,240,0.5250,0.0000,1.0000,0.0000
+memory / distilled-lessons,241,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,242,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,243,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,244,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,245,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,246,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,247,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,248,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,249,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,250,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,251,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,252,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,253,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,254,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,255,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,256,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,257,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,258,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,259,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,260,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,261,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,262,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,263,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,264,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,265,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,266,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,267,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,268,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,269,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,270,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,271,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,272,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,273,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,274,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,275,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,276,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,277,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,278,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,279,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,280,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,281,0.6000,0.0000,1.0000,0.0000
+memory / distilled-lessons,282,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,283,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,284,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,285,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,286,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,287,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,288,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,289,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,290,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,291,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,292,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,293,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,294,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,295,0.5750,0.0000,1.0000,0.0000
+memory / distilled-lessons,296,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,297,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,298,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,299,0.5500,0.0000,1.0000,0.0000
+memory / distilled-lessons,300,0.5500,0.0000,1.0000,0.0000

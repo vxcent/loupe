@@ -202,8 +202,11 @@ distiller; assumption-scoped retrieval + write-gate; pollution defense matrix.
    time decay, and empirical correctness credit/blame on later outcomes (SEDM).
 3. **Consensus + drift monitor.** Conflict resolution over a class's lessons; alarm
    on verdict-distribution shift.
-4. **Scale the curve.** Full OWASP + multi-seed error bars on the benign-positive
-   axis (the axis that matters to PenPal), now that pollution is controlled.
+4. **Scale the curve.** ✅ Done — 300 cases × 3 seeds (`experiments/scale.py`).
+   Verdict: the benign-positive axis barely moves (memory isn't an FP-cutter on
+   OWASP); the real, compounding benefit is **recall** — distilled-lessons hold
+   recall ~1.0 while baseline degrades to ~0.80. distilled > raw > baseline,
+   error bars ±0.003. The deployment-context FP axis still needs the grounded tier.
 5. **GEPA the distiller** (§6) — auto-evolve the distiller prompt against a Pareto
    of (bp_rate, recall, suppression) on a held-out split. *After* step 4.
 

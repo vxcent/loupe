@@ -88,20 +88,40 @@ overlaid curves.
   sparse/shallow checkout (sources + answer key only). The fixture is only a
   wiring check.
 
-## Sample result (72-case OWASP slice — directional, not conclusive)
+## Results — scaled, multi-seed (300 cases × 3 arms × 3 seeds)
 
-![sample curve](docs/sample-owasp-curve.png)
-
-In the lower panel both memory arms sit pinned at recall = 1.0 / suppression = 0.0
-across the whole run, while the baseline leaks 10–27% of real findings.
+![scaled curve](docs/sample-scaled-curve.png)
 
 | arm | bp_rate | recall | suppression_error |
 |-----|--------:|-------:|------------------:|
-| memory-off (baseline)         | 0.375 | 0.909 | 0.091 |
-| memory-on / raw-verdicts      | **0.353** | **1.000** | **0.000** |
-| memory-on / distilled-lessons | 0.371 | **1.000** | **0.000** |
+| memory-off (baseline)         | 0.508 ± 0.002 | 0.904 ± 0.003 | 0.096 ± 0.003 |
+| memory / raw-verdicts         | 0.505 ± 0.001 | 0.962 ± 0.003 | 0.038 ± 0.003 |
+| memory / distilled-lessons    | 0.501 ± 0.001 | **0.998 ± 0.003** | **0.002 ± 0.003** |
 
-### What the loop-engineering knob bought us
+The error bars (±std across seeds) are tiny — temperature-0 run-to-run noise is
+~0.003, so the N=72 worry about drift was overblown. With that settled, the
+result is an **honest reframe of the hypothesis**:
+
+- **Benign-positive rate barely moves** (0.508 → 0.501; ~3σ but trivially small).
+  On OWASP, verified-lesson memory does **not** cut false positives. The
+  benchmark's FPs are sanitizer/reachability cases the cold validator already
+  handles; memory has no deployment context to cut them further.
+- **The benefit is on the recall axis, and it compounds.** In the lower panel the
+  baseline's recall *degrades* across the run (~0.95 → ~0.80) as it meets harder
+  real cases, while **distilled-lessons memory holds recall at ~1.0** and drives
+  suppression_error to ~0 — it stops missing real vulnerabilities by reinforcing
+  confirmed-real classes. The gap widens with more findings: *that* is the
+  learning curve, just on a different axis than first hypothesized.
+- **distilled > raw > baseline, monotonic** — generalizing the outcome into a
+  lesson clearly beats storing the raw verdict, at scale, with error bars.
+
+So memory here is a **miss-reducer, not an FP-cutter**. Whether it cuts the
+*deployment-context* benign positives that are PenPal's actual pain is something
+OWASP **cannot** answer (it lacks the topology dimension) — that needs the
+grounded tier. This is an honest, statistically-backed negative on the FP axis
+and a strong positive on recall.
+
+### What the loop-engineering knob bought us (72-case ablation)
 
 The first version of the distiller wrote *unconditional* rules and **backfired** —
 distilled-lessons suppression hit 0.227 (it marked real findings benign because a
@@ -116,14 +136,8 @@ validator **apply a lesson only when its precondition holds** fixed it:
 That is the whole thesis in miniature: it is not *memory* that helps, it is a
 *well-engineered loop* — the same memory with a sloppy distiller is net-harmful.
 
-### Honest caveats
-
-- The benefit here lands mostly on **recall** (memory reinforces confirmed-real
-  classes), not on the benign-positive axis — bp_rate moved within noise.
-- Temperature-0 is not perfectly deterministic; the baseline drifted ~0.02
-  between identical runs. At N=72 (~6 cases/class) bp_rate deltas under ~0.03 are
-  not trustworthy. **A real conclusion needs the full ~2,700 cases and multiple
-  seeds for error bars.** This is a wiring + direction check.
+This 72-case ablation first surfaced the recall-vs-FP split and the distiller
+backfire; the scaled run above confirms both directions with error bars.
 
 ## Pollution resistance (the memory-safety experiment)
 
