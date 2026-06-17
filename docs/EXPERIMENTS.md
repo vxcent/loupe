@@ -18,34 +18,45 @@ arXiv 2606.16420), the closest published system.
 | E4 | **GEPA-lite distiller evolution** | reflective mutation + Pareto over (bp, recall, supp) | loop runs; evolved prompt independently **rediscovered a fail-open recall bias** | Prompt-evolution (offline) is a real complementary lever; multi-objective Pareto fits our joint pass condition. |
 | E5 | **Mini-Cybench evolve** (local, grounded) | 3 pure-Python challenges, reviser + tournament, DeepSeek-V4-Pro | baseline 0.67 (weak-XOR fails) → reviser distilled the **known-plaintext crib tactic** → tournament accepted (round 2) → **1.00**, no self-deception, no degradation | Self-evolving playbook **works** when the failure has a crisp, learnable tactic. Transfer unproven (held-out ceilinged at baseline). |
 | E6 | **Real Cybench evolve** (Dockerized) | 3 very-easy tasks, 2 rounds, 10 iters, DeepSeek-V4-Pro | baseline **2/3** → both revisions **0/3** (rejected) → final **2/3** | Tournament guardrail **works** (rejected net-harmful revisions). Full-rewrite reviser was **harmful** — cross-category pollution + context-collapse. |
-| E7 | **2×2 ablation, Phase A (diagonal)** | real Cybench, A1 rewrite×global vs A4 item×scoped, 4 tasks × reps 2 × 1 round | empty-playbook baselines **0.38 / 0.50** (noise — identical conditions); **both round-1 candidates → 0.00** | Neither fix helped — and the *reason* isn't integration/injection. The reflected "submit immediately / output the flag and stop" tactic induced **find-but-never-submit** (`not_answered`) across all tasks: the agent computed the flag, echoed "done," and never used `Answer:`. Proxy-gaming **self-deception**, caught by the flag oracle. **Bottleneck = reflection grounding, upstream of the 2×2.** |
+| E7 | **2×2 ablation, Phase A (diagonal)** | real Cybench, A1 rewrite×global vs A4 item×scoped, 4 tasks × reps 2 × 1 round | empty baselines **0.38 / 0.50** (noise); both round-1 candidates → **0.00** | **INCONCLUSIVE — confounded by harness gaps.** Per-run inspection shows the two arms failed *differently* and reps=2 is too noisy to attribute a cause. See correction below. |
 
-### E7 redirect — the 2×2 wasn't testable yet
+### E7 correction — the result is inconclusive, not a clean finding
 
-Phase A did **not** disprove H1/H2 — it revealed a **prerequisite**: the Reflector
-produced a *misspecified* tactic ("output the flag and stop") that both arms
-swallowed, collapsing them to 0.00 *before* integration/injection differences could
-matter. The lesson optimized a **proxy** ("output the flag") instead of the true
-success criterion (**submit via the `Answer:` protocol**), and the agent gamed the
-proxy. Per the design note's own stopping rule (don't attribute a non-effect),
-**we do NOT run Phase B.** The real next lever, in priority:
+An initial reading of E7 claimed "a misspecified reflected tactic caused
+find-but-never-submit across both arms (proxy-gaming self-deception)." **Per-run log
+inspection refuted that.** Across the 8 Primary Knowledge runs:
 
-1. **Ground the Reflector in the success criterion.** Tactics must reference the
-   *actual* terminal action (submit via `Answer:`), never an ambiguous proxy
-   ("output"/"stop"). Add a check that a proposed tactic can't reduce grounded
-   submission.
-2. **Measure self-deception as a first-class metric** in the harness
-   (declared-done-but-`not_answered`) — it was the failure mode and we only logged
-   binary solve.
-3. **More reps** — empty-playbook baselines differed 0.38 vs 0.50 on identical
-   conditions; reps = 2 is too noisy to read.
-4. *Then* the 2×2 (incrementality × scoping) becomes meaningful — once a single
-   reflected tactic can't poison every arm.
+- **rewrite × global** round-1: the agent **never even solved** (`found_flag=0`) —
+  context overload from a 20-bullet all-category playbook, *not* a submission
+  failure.
+- **item × scoped** round-1: the agent **solved but didn't submit**
+  (`found_flag=1, submitted=0`) — but its *empty-playbook* baseline was already
+  flaky (1 solve / 1 wrong-submit), so at reps=2 this isn't attributable to the
+  (clean, on-topic) injected tactic.
 
-This is itself a headline result for the thesis: **self-improvement made the agent
-worse by reinforcing a misspecified proxy, and the grounded oracle caught it** —
-concrete evidence that *grounding the lesson in the true criterion* is the load-
-bearing requirement, not the editing/injection mechanics.
+So the two arms have **different** failure modes, and the experiment is **too
+under-instrumented and too noisy to attribute a cause.** The real culprits are
+harness corners we cut:
+
+1. **Binary-solve metric** silently merges three distinct outcomes — *didn't solve*,
+   *solved-but-didn't-submit*, *submitted-wrong*. Each has a different fix.
+   **→ instrument all three separately.**
+2. **reps = 2 is uninterpretable** (the empty baseline alone gives solve/wrong on
+   identical conditions). **→ raise reps / add tasks.**
+3. **Submit-protocol not handled.** DeepSeek-V4-Pro computes the flag, then `echo`s
+   "done" and burns its `iters=10` budget instead of using Cybench's `Answer:`
+   protocol. **→ detect found-flag and nudge submission, and/or raise the iteration budget.**
+
+What *does* survive: (a) the **tournament backstop** correctly rejected both
+candidates (no degradation shipped) — confirmed a 3rd time; and (b) a verbose
+**global** playbook plausibly causes **derailment** (rewrite×global never solved),
+loosely favoring scoping — but confounded. **No claim about reflection grounding or
+self-deception is supported by E7.** Fix the three harness gaps, then the 2×2
+becomes testable.
+
+**Lesson for us:** the binary metric produced a clean-looking but *wrong* story; the
+grounded per-run logs corrected it. Instrument the failure taxonomy before running
+the next iteration.
 
 Supporting infra proven along the way: OWASP loader, multi-seed concurrent runner,
 Together/DeepSeek-V4-Pro routing into Cybench, evidence-tiered oracle (T1/T2/T3),
