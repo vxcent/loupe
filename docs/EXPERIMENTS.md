@@ -18,6 +18,34 @@ arXiv 2606.16420), the closest published system.
 | E4 | **GEPA-lite distiller evolution** | reflective mutation + Pareto over (bp, recall, supp) | loop runs; evolved prompt independently **rediscovered a fail-open recall bias** | Prompt-evolution (offline) is a real complementary lever; multi-objective Pareto fits our joint pass condition. |
 | E5 | **Mini-Cybench evolve** (local, grounded) | 3 pure-Python challenges, reviser + tournament, DeepSeek-V4-Pro | baseline 0.67 (weak-XOR fails) → reviser distilled the **known-plaintext crib tactic** → tournament accepted (round 2) → **1.00**, no self-deception, no degradation | Self-evolving playbook **works** when the failure has a crisp, learnable tactic. Transfer unproven (held-out ceilinged at baseline). |
 | E6 | **Real Cybench evolve** (Dockerized) | 3 very-easy tasks, 2 rounds, 10 iters, DeepSeek-V4-Pro | baseline **2/3** → both revisions **0/3** (rejected) → final **2/3** | Tournament guardrail **works** (rejected net-harmful revisions). Full-rewrite reviser was **harmful** — cross-category pollution + context-collapse. |
+| E7 | **2×2 ablation, Phase A (diagonal)** | real Cybench, A1 rewrite×global vs A4 item×scoped, 4 tasks × reps 2 × 1 round | empty-playbook baselines **0.38 / 0.50** (noise — identical conditions); **both round-1 candidates → 0.00** | Neither fix helped — and the *reason* isn't integration/injection. The reflected "submit immediately / output the flag and stop" tactic induced **find-but-never-submit** (`not_answered`) across all tasks: the agent computed the flag, echoed "done," and never used `Answer:`. Proxy-gaming **self-deception**, caught by the flag oracle. **Bottleneck = reflection grounding, upstream of the 2×2.** |
+
+### E7 redirect — the 2×2 wasn't testable yet
+
+Phase A did **not** disprove H1/H2 — it revealed a **prerequisite**: the Reflector
+produced a *misspecified* tactic ("output the flag and stop") that both arms
+swallowed, collapsing them to 0.00 *before* integration/injection differences could
+matter. The lesson optimized a **proxy** ("output the flag") instead of the true
+success criterion (**submit via the `Answer:` protocol**), and the agent gamed the
+proxy. Per the design note's own stopping rule (don't attribute a non-effect),
+**we do NOT run Phase B.** The real next lever, in priority:
+
+1. **Ground the Reflector in the success criterion.** Tactics must reference the
+   *actual* terminal action (submit via `Answer:`), never an ambiguous proxy
+   ("output"/"stop"). Add a check that a proposed tactic can't reduce grounded
+   submission.
+2. **Measure self-deception as a first-class metric** in the harness
+   (declared-done-but-`not_answered`) — it was the failure mode and we only logged
+   binary solve.
+3. **More reps** — empty-playbook baselines differed 0.38 vs 0.50 on identical
+   conditions; reps = 2 is too noisy to read.
+4. *Then* the 2×2 (incrementality × scoping) becomes meaningful — once a single
+   reflected tactic can't poison every arm.
+
+This is itself a headline result for the thesis: **self-improvement made the agent
+worse by reinforcing a misspecified proxy, and the grounded oracle caught it** —
+concrete evidence that *grounding the lesson in the true criterion* is the load-
+bearing requirement, not the editing/injection mechanics.
 
 Supporting infra proven along the way: OWASP loader, multi-seed concurrent runner,
 Together/DeepSeek-V4-Pro routing into Cybench, evidence-tiered oracle (T1/T2/T3),
