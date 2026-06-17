@@ -35,7 +35,7 @@ anti-forgetting and evidence tiering. Here's where we stand against each choice.
 |-----------|---------|----------------|---------|
 | Core loop | audit→eval→revise→tournament | same | ✅ **matched** |
 | Tournament selection | candidate must beat current-best on the batch (arg max) | implemented; **validated on real Cybench** (rejected harm) | ✅ **matched & confirmed** |
-| Reviser edits | **incremental delta-edits** + grow-and-refine | **full rewrite each round** | ❌ **diverged — recalibrate to incremental** (E6 shows the cost) |
+| Reviser edits | **incremental edits** — commit on a base; playbook accumulates across revisions [EH-1..4] | **full rewrite each round** | ❌ **diverged — recalibrate to incremental** (E6 shows the cost) |
 | Playbook structure | modular per-class guides (definition · discovery · validation · **FP-traps** · evidence checklist) | flat markdown blob | ❌ **adopt modular per-category structure** |
 | Scoping | per-class guides (only relevant class applies) | global injection (all guidance, every task) | ❌ **adopt scoping** — and go further with Loupe's **assumption-scoping** |
 | Anti-forgetting | BM25 **replay** of historical cases | none | ⚠️ **adopt replay** |
@@ -45,6 +45,26 @@ anti-forgetting and evidence tiering. Here's where we stand against each choice.
 | Ground-truth signal | open-source **advisories** (code-level) | **flag-capture** (exploit) + OWASP labels | ↔ **we're more exploit-grounded**; both miss deployment context |
 | Transfer to weak models | demonstrated | untested here | ⬜ open |
 | Diagnosis | logs revisions | **didn't log rejected candidates** | ⚠️ **fix: log candidates** |
+
+### Citations for the reviser-edit difference
+
+From EvoHunt (arXiv 2606.16420; quotes pulled from the HTML — verify against the
+PDF before formal citation):
+
+- **[EH-1]** "The reviser edits the playbook repository and must commit the result
+  on top of the selected base."
+- **[EH-2]** "EvoHunt stores the playbook as a Git repository rather than a prompt
+  string."
+- **[EH-3]** "Starting from empty, both evolved playbooks reach 1,616 and 2,177
+  lines of agent-authored audit procedure across 38 accepted revisions."
+- **[EH-4]** "A valid adapter edit adds or rewrites target-environment execution
+  guidance without altering Ps⋆." (section-targeted; preserves the rest)
+
+Together these establish *incremental, accumulating* revision (commit-on-base,
+growing Git repo, section-scoped edits) — the opposite of our current full
+rewrite. **Caveat on terminology:** the phrases "grow-and-refine" and "context
+collapse" are **ACE's** (arXiv 2510.04618), used here only as the name for this
+mechanism — they are *not* EvoHunt's words and are not attributed to it.
 
 ### What EvoHunt does NOT do — our differentiation to keep
 
@@ -72,8 +92,10 @@ exactly what to change.
 Concrete reviser/loop changes, in priority order:
 
 1. **Incremental edits, not rewrite.** The reviser ADDS/REVISES a small section,
-   keeping the rest of the playbook intact (EvoHunt delta-edits; ACE grow-and-
-   refine; avoids context collapse).
+   keeping the rest of the playbook intact — EvoHunt commits each edit on top of a
+   base and the playbook accumulates across revisions [EH-1..4]; ACE's
+   "grow-and-refine" is the same idea and warns that periodic full rewrites cause
+   "context collapse" (arXiv 2510.04618).
 2. **Modular, per-category playbook** with EvoHunt's section schema, and **inject
    only the section matching the task's category** (scoping). This is EvoHunt's
    structure + Loupe's assumption-scoping in one move — directly fixes E6's
