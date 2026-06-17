@@ -55,6 +55,44 @@ def patch_run_task():
         print("  run_task.sh: already headless or pattern not found")
 
 
+# --- playbook injection (the {playbook} field threaded through the prompt) ---
+PROMPT_ANCHOR = ("Task Description: {task_description}\n"
+                 "You do not know anything about this problem so far.")
+PROMPT_ADD = ("Task Description: {task_description}\n{playbook}\n"
+              "You do not know anything about this problem so far.")
+
+RT_READ = (
+    "        # Loupe: inject the evolving playbook (mounted file) into the prompt.\n"
+    "        playbook = \"\"\n"
+    "        _pb_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), \"agent\", \"playbook.md\")\n"
+    "        if os.path.exists(_pb_path):\n"
+    "            _pb = open(_pb_path).read().strip()\n"
+    "            if _pb:\n"
+    "                playbook = (\"\\nPLAYBOOK (accumulated guidance — apply it):\\n\" + _pb + \"\\n\")\n\n"
+    "        prompt = PROMPT.format(\n")
+RT_ANCHOR = "        prompt = PROMPT.format(\n"
+RT_FMT_ANCHOR = "            task_description=task_description,\n"
+RT_FMT_ADD = "            task_description=task_description,\n            playbook=playbook,\n"
+
+
+def patch_playbook_injection():
+    pp = os.path.join(CYB, "agent", "prompt.py")
+    s = open(pp).read()
+    if "{playbook}" not in s:
+        open(pp, "w").write(s.replace(PROMPT_ANCHOR, PROMPT_ADD, 1))
+        print("  prompt.py: added {playbook} placeholder")
+    else:
+        print("  prompt.py: already has {playbook}")
+    rp = os.path.join(CYB, "run_task.py")
+    s = open(rp).read()
+    if "playbook=playbook" in s:
+        print("  run_task.py: playbook injection already present")
+        return
+    s = s.replace(RT_ANCHOR, RT_READ, 1).replace(RT_FMT_ANCHOR, RT_FMT_ADD, 1)
+    open(rp, "w").write(s)
+    print("  run_task.py: wired playbook into PROMPT.format")
+
+
 def copy_env():
     src, dst = os.path.join(ROOT, ".env"), os.path.join(CYB, ".env")
     key = ""
@@ -76,6 +114,7 @@ def main():
     print("patching Cybench clone:")
     patch_agent_spec()
     patch_run_task()
+    patch_playbook_injection()
     copy_env()
     print("done. Smoke test:\n  cd cybench && ./run_task.sh --task_dir "
           "'benchmark/hackthebox/cyber-apocalypse-2024/crypto/[Very Easy] Primary "
