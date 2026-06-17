@@ -90,7 +90,7 @@ overlaid curves.
 
 ## Results — scaled, multi-seed (300 cases × 3 arms × 3 seeds)
 
-![scaled curve](docs/sample-scaled-curve.png)
+![scaled curve](docs/samples/owasp-scaled-300.png)
 
 | arm | bp_rate | recall | suppression_error |
 |-----|--------:|-------:|------------------:|
@@ -182,7 +182,7 @@ round   accepted  train_solve  test_solve  self_decep
 
 The empty-playbook agent fails weak-XOR (T3 — it brute-forces one key per step and
 runs out). From the failure trace the reviser distilled a **generalizable tactic**
-(`docs/sample-evolved-playbook.md`):
+(`docs/samples/mini-cybench-evolved-playbook.md`):
 
 > *If the key is a single byte, compute the XOR of the ciphertext with the crib
 > `flag{` to recover the key byte directly … avoids iterating the key space.*
@@ -206,7 +206,11 @@ deployment-topology dimension that flips a finding in production. Report the
 precision. A small-N grounded tier (dockerized live targets where the oracle is
 *did the exploit actually fire*) is the future fidelity check.
 
-## Design
+## Design & docs
+
+**Start at [`docs/README.md`](docs/README.md)** — the index with reading order and
+the artifact map. [`docs/REPLICATE.md`](docs/REPLICATE.md) has exact commands to
+reproduce every finding by hand. Key docs:
 
 - `docs/EXPERIMENTS.md` — **the experiment ledger** (E1–E6 results) and an explicit
   **recalibration against EvoHunt** (what we matched, diverged on, and should
