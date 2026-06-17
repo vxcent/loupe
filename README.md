@@ -208,10 +208,15 @@ precision. A small-N grounded tier (dockerized live targets where the oracle is
 
 ## Design
 
-`docs/SELF-EVOLVING.md` — what self-evolving means for a validator (a governed
-loop, not memory accumulation), how PenPal's per-decision assumptions+confidence
-log grounds it, the memory-pollution threat + layered defense, and the
-2025–2026 literature map.
+- `docs/EXPERIMENTS.md` — **the experiment ledger** (E1–E6 results) and an explicit
+  **recalibration against EvoHunt** (what we matched, diverged on, and should
+  adopt). Start here for "where are we."
+- `docs/SELF-EVOLVING.md` — what self-evolving means for a validator (a governed
+  loop, not memory accumulation), how PenPal's per-decision assumptions+confidence
+  log grounds it, the memory-pollution threat + layered defense, and the
+  2025–2026 literature map.
+- `docs/CYBENCH.md` — the real-Cybench integration (proven), how to reproduce it,
+  and the first evolve-run result.
 
 ## Layout
 
