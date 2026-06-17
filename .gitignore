@@ -27,3 +27,6 @@ benchmark/
 results/*.log
 results/*.txt
 results/*.md
+
+# Cybench clone
+cybench/
