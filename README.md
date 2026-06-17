@@ -217,6 +217,9 @@ precision. A small-N grounded tier (dockerized live targets where the oracle is
   2025–2026 literature map.
 - `docs/CYBENCH.md` — the real-Cybench integration (proven), how to reproduce it,
   and the first evolve-run result.
+- `docs/EXPERIMENT-NEXT.md` — locked design for the next iteration: a 2×2 ablation
+  (full-rewrite vs incremental × global vs scoped injection) with the ACE/EvoHunt
+  reconciliation decided up front, so the next run attributes a cause.
 
 ## Layout
 
