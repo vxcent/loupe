@@ -27,6 +27,9 @@ gepa:           ## evolve the distiller prompt (GEPA-lite, Together AI)
 scale:          ## trustworthy multi-seed curve (300 cases x 3 arms x 3 seeds)
 	python experiments/scale.py --owasp-dir benchmark --limit 300 --seeds 3 --workers 8
 
+cyber-baseline: ## mini-Cybench: empty-playbook baseline over the grounded suite
+	python -m experiments.cyber.run
+
 clean:
 	rm -f results/*.csv results/*.png
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

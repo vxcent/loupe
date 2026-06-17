@@ -57,6 +57,24 @@ class TogetherLLM:
                 time.sleep(min(2 ** attempt, 16))
         raise last
 
+    def raw_chat(self, messages: list[dict], max_tokens: int = 800,
+                 temperature: float | None = None) -> str:
+        """Free-text completion (no JSON response_format) for the agent loop."""
+        import time
+        last = None
+        for attempt in range(5):
+            try:
+                resp = self.client.chat.completions.create(
+                    model=self.model, messages=messages, seed=self.seed,
+                    temperature=self.temperature if temperature is None else temperature,
+                    max_tokens=max_tokens,
+                )
+                return resp.choices[0].message.content or ""
+            except Exception as e:
+                last = e
+                time.sleep(min(2 ** attempt, 16))
+        raise last
+
     def validate(self, finding: Finding, lessons: List[Lesson]) -> Verdict:
         msgs = prompts.build_validate_messages(finding, lessons)
         txt, tok = self._chat(msgs)
