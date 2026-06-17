@@ -26,3 +26,4 @@ virse-systems-monorepo-report.md
 benchmark/
 results/*.log
 results/*.txt
+results/*.md

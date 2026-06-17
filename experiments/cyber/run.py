@@ -40,7 +40,7 @@ def run_suite(playbook: str, llm, max_steps: int, reps: int = 1):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="meta-llama/Llama-3.3-70B-Instruct-Turbo")
+    ap.add_argument("--model", default="deepseek-ai/DeepSeek-V4-Pro")
     ap.add_argument("--playbook", default="", help="path to a playbook .md (else empty)")
     ap.add_argument("--max-steps", type=int, default=12)
     ap.add_argument("--reps", type=int, default=1, help="rollouts per challenge")

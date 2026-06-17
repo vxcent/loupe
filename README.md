@@ -165,6 +165,38 @@ own assumptions instead of trusting a lesson's claim) drives corruption to 0
 drawn from the 2025–2026 agent-memory-safety literature (write-time admission >
 retrieval filtering; assumption-scoped retrieval; lesson-flags-don't-flip).
 
+## EvoHunt transplant — self-evolving playbook on a grounded oracle (mini-Cybench)
+
+`experiments/cyber/` transplants EvoHunt's audit→evaluate→**revise**→tournament
+loop onto a tool-using pentest agent, grounded by a deterministic flag oracle
+(local, pure-Python challenges — no Docker; swappable with real Cybench). The
+evaluator uses EvoHunt-style **evidence tiering** (T1 flag / T2 vuln-triggered /
+T3 claim-without-proof) and tracks **self-deception** (claimed-solved but wrong).
+
+```
+round   accepted  train_solve  test_solve  self_decep
+0(base)    -          0.67        1.00        0.00
+2          YES        1.00        1.00        0.00     <- revision accepted
+4          no         1.00        1.00        0.00
+```
+
+The empty-playbook agent fails weak-XOR (T3 — it brute-forces one key per step and
+runs out). From the failure trace the reviser distilled a **generalizable tactic**
+(`docs/sample-evolved-playbook.md`):
+
+> *If the key is a single byte, compute the XOR of the ciphertext with the crib
+> `flag{` to recover the key byte directly … avoids iterating the key space.*
+
+The tournament accepted it (round 2 only), train solve went **0.67 → 1.00**, no
+self-deception, no degradation. The loop self-improves, grounded by an oracle it
+can't fool — even DeepSeek-V4-Pro fails weak-XOR without the playbook, so the lift
+comes from learned procedure, not model power (EvoHunt's thesis).
+
+**Honest limits:** small-N and single-rep (noisy); **transfer is unproven here** —
+the held-out suite was already at 1.00 at baseline (ceiling), so it can't show the
+tactic lifting unseen challenges. Needs harder/more held-out challenges + reps for
+a real transfer curve, then real Cybench as the fidelity tier.
+
 ## Honest scope
 
 This validates the **learning mechanism** on labeled findings. It does **not**

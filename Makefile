@@ -33,3 +33,6 @@ cyber-baseline: ## mini-Cybench: empty-playbook baseline over the grounded suite
 clean:
 	rm -f results/*.csv results/*.png
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +
+
+cyber-evolve:   ## EvoHunt transplant: self-evolving playbook (reviser + tournament)
+	python -m experiments.cyber.evolve --rounds 4
