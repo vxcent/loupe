@@ -30,3 +30,4 @@ results/*.md
 
 # Cybench clone
 cybench/
+results/selfevolve_candidates/
