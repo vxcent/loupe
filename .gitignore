@@ -31,3 +31,4 @@ results/*.md
 # Cybench clone
 cybench/
 results/selfevolve_candidates/
+results/evohunt_candidates/
