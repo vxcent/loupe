@@ -1,0 +1,66 @@
+tasks=4 reps=3 rounds=3 iters=15 injection=scoped
+
+round 0 (empty playbook):
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      found_not_submitted  [Very Easy] PackedAway
+      solved               [Very Easy] PackedAway
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+  -> solve_rate 0.58  {'solved': 7, 'found_not_submitted': 1, 'wrong_submit': 0, 'no_solve': 4}
+
+round 1: +2 tactic(s) (bullets=2); scoring candidate:
+      solved               [Very Easy] Primary Knowledge
+      wrong_submit         [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      wrong_submit         [Very Easy] Dynastic
+      wrong_submit         [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      no_solve             [Very Easy] PackedAway
+      found_not_submitted  [Very Easy] PackedAway
+      found_not_submitted  [Very Easy] PackedAway
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+  round 1: candidate solve_rate 0.25 {'solved': 3, 'found_not_submitted': 2, 'wrong_submit': 3, 'no_solve': 4} -> rejected (best 0.58)
+
+round 2: +2 tactic(s) (bullets=2); scoring candidate:
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      no_solve             [Very Easy] PackedAway
+      solved               [Very Easy] PackedAway
+      solved               [Very Easy] PackedAway
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+  round 2: candidate solve_rate 0.67 {'solved': 8, 'found_not_submitted': 0, 'wrong_submit': 0, 'no_solve': 4} -> ACCEPTED (best 0.67)
+
+round 3: +2 tactic(s) (bullets=4); scoring candidate:
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Dynastic
+      wrong_submit         [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Very Easy] LootStash
+      wrong_submit         [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+  round 3: candidate solve_rate 0.42 {'solved': 5, 'found_not_submitted': 0, 'wrong_submit': 2, 'no_solve': 5} -> rejected (best 0.67)
+
+=== SUMMARY ===
+baseline solve_rate 0.58 -> final 0.67  (found_not_submitted 1 -> 0)
+trace -> results/cybench_selfevolve.csv | best playbook -> results/selfevolve_best_playbook.md
+EXIT 0

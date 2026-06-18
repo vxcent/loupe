@@ -33,7 +33,8 @@ findings; real Cybench exploits).
 | `mini-cybench-evolved-playbook.md` / `mini-cybench-evolution.csv` | E5 — the local-substrate evolve (learned the XOR crib tactic) |
 | `cybench-evolve-E6.log` | E6 — first real-Cybench evolve |
 | `cybench-ablation-E7.log` | E7 — the 2×2 diagonal (inconclusive; harness-confounded) |
-| `selfevolve-*` | E8 — the instrumented self-evolve run |
+| `cybench-selfevolve-E8.log` / `selfevolve-E8.csv` | **E8 — the meaningful self-evolve (0.58→0.67, tournament-gated)** |
+| `selfevolve-best-playbook.md` | E8 — what self-evolution learned (submit-discipline + a reversing tactic) |
 
 ## The codebase, at a glance
 

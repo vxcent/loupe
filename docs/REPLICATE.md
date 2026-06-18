@@ -80,9 +80,12 @@ python -m experiments.cyber.cybench_selfevolve --rounds 3 --reps 3 --iters 15
 This is the run that fixes E7's confounds: a **failure taxonomy**
 (solved / found_not_submitted / wrong_submit / no_solve) instead of binary solve,
 a **grounded** reflector (tactics anchored to the real `Answer:` submission), reps≥3,
-and candidate logging. Expect: **solve_rate rises and found_not_submitted falls**
-from baseline to final, with the tournament accepting beneficial revisions.
-(Several hours, real Together spend. See EXPERIMENTS.md E8 for the numbers.)
+and candidate logging. Observed: **solve_rate 0.58 → 0.67**, `found_not_submitted`
+**1 → 0**; the tournament accepted the 1 beneficial round and rejected 2 harmful
+ones (without it the final would be 0.42 < baseline). The accepted playbook learned
+a submit-discipline rule + a `strace`/`ltrace` reversing tactic; LootStash stayed a
+hard floor. (Several hours, real Together spend; reps 3 is still noisy — see
+EXPERIMENTS.md E8 for the full read.)
 
 ### (diagnostic) E6 / E7 — the runs that motivated E8
 

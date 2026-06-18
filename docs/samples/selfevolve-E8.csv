@@ -1,0 +1,5 @@
+round,accepted,solve_rate,solved,found_not_submitted,wrong_submit,no_solve
+0,base,0.583,7,1,0,4
+1,no,0.250,3,2,3,4
+2,yes,0.667,8,0,0,4
+3,no,0.417,5,0,2,5
