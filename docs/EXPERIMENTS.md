@@ -101,7 +101,7 @@ Magnitude-wise this is in line with EvoHunt's own modest reported gains (e.g.
 not dramatic jumps. The headline is that the **full loop works** — reflect → curate
 → tournament-select → net gain — where E6/E7 only showed it failing or confounded.
 
-| E9 | **EvoHunt-shaped, held-out (the faithful reproduction)** | single-run *breadth* (not reps), **train/held-out FP-transfer split**, rotating batch + replay, Pbest/Pcand tournament with **precision-guarded** score, iters 10, verify+finalize reflector | held-out solve **0.56 → 0.78** (+0.22); `found_not_submitted` **1 → 0**; `wrong_submit` 0 → 0; **precision 1.00 → 1.00** | **Meaningful held-out improvement via the methodology.** A *general* "verify-then-mandatorily-submit" tactic learned on TRAIN **transferred** to an unseen task (Dynastic `found_not_submitted`→solved). Required fixing a **suppression trap** first (see below). The §8.3.1 "learn to finalize/judge" effect, suppression-guarded. N small (9 held-out rollouts); higher-rep confirmation pending. |
+| E9 | **EvoHunt-shaped, held-out (the faithful reproduction + the §8.3.1 effect)** | single-run *breadth*, **train/held-out FP-transfer split**, rotating batch, precision-guarded tournament, iters 10, verify+finalize reflector. Confirmed at reps 5 (N=15). | held-out (frozen): solve **0.53→0.67**; **`wrong_submit` (FP) 3→0**; **precision 0.73→1.00** | **§8.3.1 reproduced on Cybench: false positives eliminated, precision → 1.00.** A *general* verify-then-submit tactic learned on TRAIN **transferred** to an unseen FP-prone task (Dynastic 2/5→5/5: 3 wrong-submits → correct solves). Ceiling task unaffected (5/5, no over-refraining), wall unchanged — clean attribution. Required fixing a **suppression trap** first (run 1 collapse, see below). |
 
 ### E9 detail — reproducing EvoHunt's shape and its §8.3.1 effect
 
@@ -109,9 +109,23 @@ Built to EvoHunt's actual design (the recalibration): **breadth not reps** (each
 
 **The suppression trap (run 1, and its fix).** First run, the score was `qualified = solved − wrong_submit` and the verify tactic said "don't submit unless independently re-derived." Result: **held-out collapsed 0.78 → 0.00** — every solved task became `found_not_submitted`. The metric had a degenerate optimum (never-submit = 0 beats wrong-submit = negative), and the tournament literally accepted a candidate for turning a `wrong_submit` into a `no_solve`. This is the **same "suppress everything to fake low FP" failure as the OWASP `suppression_error` guardrail**, and exactly what the verifier-gaming literature (RLVR reward-hacking, 2604.15149) warns about. Two fixes: (1) `qualified = solved − 0.5·wrong_submit` so **solving always beats silence**; (2) reflector makes **submission mandatory** ("one quick sanity check, then SUBMIT; not submitting = automatic failure") — verify *then* submit, never instead of.
 
-**Run 2 (fixed):** the evolved playbook's top, general bullet — *"the moment you have a plausible flag, do ONE quick sanity check then your VERY NEXT action MUST be Answer: <flag>"* — transferred to held-out and converted Dynastic's `found_not_submitted` into a verified solve, lifting solve rate 0.56 → 0.78 with **precision preserved** (no false-positive inflation) and **no collapse**.
+**Run 2 + confirmation (the result).** The evolved playbook's top general bullet —
+*"the moment you have a plausible flag, do ONE quick sanity check then your VERY NEXT
+action MUST be Answer: <flag>"* — transferred from train to held-out. A reps-5
+confirmation (N=15) revealed the clean §8.3.1 signal: at baseline the unseen
+FP-prone task **Dynastic false-submits 3 of 5** (the agent submits a garbled/decoy
+cipher decode → precision 0.73); the frozen evolved playbook **eliminates all 3
+false positives** (`wrong_submit` 3→0, **precision 0.73→1.00**) and converts them to
+correct solves (Dynastic 2/5→5/5, solve 0.53→0.67). The ceiling task stays 5/5
+(**no over-refraining**) and the wall stays 0 (**no false improvement**), so the
+whole effect is attributable to verification-before-submission on the FP-prone task.
 
-**Honest caveats:** N is small (9 held-out rollouts); the clean, attributable win is Dynastic 2/3→3/3 via the transferred tactic; LootStash's single solve is likely noise. The result's value is the *mechanism + transfer + precision-preservation*, corroborated by E8's independent finding, not the raw scalar. This is the §8.3.1 effect on Cybench: the playbook learned to **finalize/judge** its findings (eliminate the unfinalized failure) *without* over-claiming (precision held at 1.00) — once the suppression trap was designed out.
+This is **EvoHunt §8.3.1 reproduced on Cybench**: evolution taught the agent to
+*judge/verify* its findings — precision jumps while the (already-ceilinged) easy
+solves don't move — exactly "qualification triples while match rate barely moves,"
+and a held-out *transfer* result, not in-sample. **Caveat:** still small N (15) on a
+3-task held-out; the value is the mechanism + transfer + clean attribution, not the
+absolute scalar. And it only worked *after* designing out the suppression trap.
 
 Supporting infra proven along the way: OWASP loader, multi-seed concurrent runner,
 Together/DeepSeek-V4-Pro routing into Cybench, evidence-tiered oracle (T1/T2/T3),

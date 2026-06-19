@@ -1,0 +1,40 @@
+confirm: held-out=3 reps=5 iters=10 (playbook bullets=4)
+
+=== empty baseline ===
+      wrong_submit         [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      wrong_submit         [Very Easy] Dynastic
+      wrong_submit         [Very Easy] Dynastic
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      solved               [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+=== frozen evolved ===
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+
+=== CONFIRM RESULT ===
+  baseline  solve_rate 0.53  found_not_submitted 0 wrong_submit 3  precision 0.73  {'solved': 8, 'found_not_submitted': 0, 'wrong_submit': 3, 'no_solve': 4}
+  evolved   solve_rate 0.67  found_not_submitted 0 wrong_submit 0  precision 1.00  {'solved': 10, 'found_not_submitted': 0, 'wrong_submit': 0, 'no_solve': 5}
+  delta solve_rate +0.13 | found_not_submitted 0->0 | wrong_submit 3->0
+EXIT 0
