@@ -1,2 +1,4 @@
 openai>=1.30.0
 matplotlib>=3.6   # optional, only for --plot
+dspy>=3.2   # optional, for experiments/gepa_validator.py (real GEPA)
+trio>=0.30  # avoids an old-trio traceback crash under dspy

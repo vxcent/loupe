@@ -1,0 +1,44 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Decide whether a flagged SAST finding is a REAL exploitable vulnerability\nor a FALSE POSITIVE (vulnerable-looking but not actually exploitable — e.g.\nthe tainted value is sanitized or the sink is unreachable). Reason about the\nactual data/control flow before deciding.",
+      "fields": [
+        {
+          "prefix": "Rule Id:",
+          "description": "${rule_id}"
+        },
+        {
+          "prefix": "Code Context:",
+          "description": "${code_context}"
+        },
+        {
+          "prefix": "Finding Desc:",
+          "description": "${finding_desc}"
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Verdict:",
+          "description": "exactly one of: real | false_positive"
+        },
+        {
+          "prefix": "Rationale:",
+          "description": "the flow evidence for the verdict"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.11",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}
