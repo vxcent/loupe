@@ -36,7 +36,10 @@ def load_dotenv(path=".env"):
 
 def build_examples(owasp_dir, n, seed):
     import dspy
-    findings = load_owasp(owasp_dir, limit=0, shuffle_seed=seed)
+    # context_chars=6500 captures the FULL servlet (avg 4178, ~max 5500) — the
+    # sink/sanitizer that decides real-vs-FP lives near the END of the method, so the
+    # old 1600-char cutoff hid exactly the discriminative evidence.
+    findings = load_owasp(owasp_dir, limit=0, shuffle_seed=seed, context_chars=6500)
     rng = random.Random(seed)
     rng.shuffle(findings)
     real = [f for f in findings if f.label == "real"]
@@ -50,7 +53,7 @@ def build_examples(owasp_dir, n, seed):
     for f in bal:
         label = "real" if f.label == "real" else "false_positive"
         exs.append(dspy.Example(
-            rule_id=f.cwe, code_context=f.context[:1500], finding_desc=f.title,
+            rule_id=f.cwe, code_context=f.context, finding_desc=f.title,  # full method
             label=label,
         ).with_inputs("rule_id", "code_context", "finding_desc"))
     return exs
@@ -140,6 +143,7 @@ def main():
     ap.add_argument("--n", type=int, default=160)
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--auto", default="light", choices=["light", "medium", "heavy"])
+    ap.add_argument("--max-calls", type=int, default=0, help="hard metric-call cap (overrides --auto)")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
     load_dotenv()
@@ -167,6 +171,8 @@ def main():
     gkw = dict(metric=fp_metric, reflection_lm=refl_lm, track_stats=True)
     if args.smoke:
         gkw["max_metric_calls"] = 25       # hard cap so smoke is small
+    elif args.max_calls:
+        gkw["max_metric_calls"] = args.max_calls
     else:
         gkw["auto"] = args.auto
     gepa = dspy.GEPA(**gkw)

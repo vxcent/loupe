@@ -174,6 +174,36 @@ and a held-out *transfer* result, not in-sample. **Caveat:** still small N (15) 
 3-task held-out; the value is the mechanism + transfer + clean attribution, not the
 absolute scalar. And it only worked *after* designing out the suppression trap.
 
+| E10 | **GEPA/DSPy validator for OWASP FP reduction** | real `dspy.GEPA` (ICLR'26) optimizing a real-vs-FP validator; balanced 50/50, suppression-proof accuracy metric, DeepSeek-V4-Pro; held-out precision/recall/fp_rate | **The FP lever is CONTEXT, not the prompt.** Truncated source→sink → bal_acc **0.52** / precision 0.56 / fp_rate 0.15 (GEPA can't help — it keeps the seed). **Full method → bal_acc 0.94 / precision 1.00 / fp_rate 0.00 with NO optimization — false positives eliminated.** | Validates the literature (ZeroFalse/IRIS feed the LLM the *dataflow path*, not raw code). Also hit + fixed BOTH degenerate optima (all-flag / all-suppress) via balanced data + an un-gameable metric. |
+
+### E10 detail — the real FP lever, and two degenerate-optimum lessons
+
+We wired **real `dspy.GEPA`** (ICLR 2026) to optimize a validator that labels OWASP
+findings real-vs-false-positive, to chase an FP-reduction win on the one axis with
+abundant labeled FPs. Two things happened, both instructive.
+
+**Both degenerate optima, and the fix.** The first run gamed an asymmetric metric the
+*opposite* way E9 did: on a 94-real/66-FP pool, "always say real" scores 0.59 and
+beats discriminating, so GEPA evolved a flag-everything prompt (`fp_rate 0.12→1.00`).
+Together with E9's "all-suppress" collapse, that's both extremes of the same trap. The
+literature-prescribed fix (Nubank LLM-judge, the DSPy trusted-monitor tutorial):
+**balance the data 50/50 + a pure-accuracy metric** so both blanket strategies score
+0.50 and only real discrimination wins.
+
+**The finding: context dominates the prompt.** With the fix, GEPA *kept the seed prompt*
+(no candidate beat it) and held-out `balanced_accuracy` stayed at **0.52 ≈ chance** —
+even DeepSeek-V4-Pro couldn't discriminate. The cause wasn't the optimizer: we were
+**truncating the OWASP file at 1600 chars** (avg file 4178), and in OWASP the
+sink/sanitizer that decides real-vs-FP lives near the *end* of the method — so we hid
+the discriminative evidence. Giving the **full method** flipped the same model, with
+**no optimization**, from 0.52 → **0.94 balanced accuracy, precision 1.00, fp_rate
+0.00** — false positives eliminated. So for LLM-based FP reduction on OWASP, the
+dominant lever is **feeding the source→sink context**, exactly as ZeroFalse (2510.02534)
+and IRIS (ICLR'25) do; prompt optimization is secondary (its marginal value *on top of*
+good context is being measured in a capped GEPA-on-full-context run). This also
+re-explains **E1**: memory wasn't an FP-cutter on OWASP partly because the validator
+never had the discriminative context to begin with.
+
 Supporting infra proven along the way: OWASP loader, multi-seed concurrent runner,
 Together/DeepSeek-V4-Pro routing into Cybench, evidence-tiered oracle (T1/T2/T3),
 self-deception metric, full reproducible Cybench integration (`setup_cybench.py`).
