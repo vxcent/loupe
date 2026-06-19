@@ -7,10 +7,11 @@ findings; real Cybench exploits).
 
 ## Read in this order
 
-1. **[EXPERIMENTS.md](EXPERIMENTS.md)** — the spine. The full **experiment ledger
-   (E1–E8)**: each setup, result, and honest takeaway, plus the
-   **recalibration against EvoHunt** (what we matched, diverged on, adopted). If
-   you read one file, read this.
+1. **[EXPERIMENTS.md](EXPERIMENTS.md)** — the spine. Opens with **§0 Provenance &
+   credibility** (every implemented feature → its peer-reviewed source paper, venue,
+   and GitHub, credibility-tiered — read this to judge how solid each idea is and to
+   dig into the papers). Then the full **experiment ledger (E1–E9)** and the
+   **recalibration against EvoHunt**. If you read one file, read this.
 2. **[REPLICATE.md](REPLICATE.md)** — exact commands to reproduce each meaningful
    finding by hand, with expected output and where results land.
 3. **[SELF-EVOLVING.md](SELF-EVOLVING.md)** — the design/theory: what

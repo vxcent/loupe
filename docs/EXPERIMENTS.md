@@ -8,6 +8,53 @@ arXiv 2606.16420), the closest published system.
 
 ---
 
+## 0. Provenance & credibility — what each feature is, and where it's from
+
+Honest framing: **the overall blueprint (EvoHunt) is a fresh, unvetted preprint, but
+almost every mechanism we actually implemented traces to a peer-reviewed, well-cited
+paper.** So the credibility rests on the *components*, not the inspiration. Each row:
+the feature in our code, a plain-English description, and the source (venue · arXiv ·
+GitHub) so you can dig in.
+
+### Tier 1 — peer-reviewed anchors (load-bearing, battle-tested)
+
+| Feature (in our code) | In plain terms | Source |
+|---|---|---|
+| **Reflector** — `reflect()` turns a failed run into a lesson | After a failed attempt, write down what went wrong and a fix to try next time | **Reflexion**, NeurIPS 2023 ([2303.11366](https://arxiv.org/abs/2303.11366), [github ~3.2k](https://github.com/noahshinn/reflexion)) + **Self-Refine**, NeurIPS 2023 ([2303.17651](https://arxiv.org/abs/2303.17651)) |
+| **Lesson memory** — distill, keep, dedup tactics | A notebook of tactics; reinforce ones that work, drop ones that don't | **ExpeL**, AAAI 2024 ([2308.10144](https://arxiv.org/abs/2308.10144), [LeapLabTHU/ExpeL](https://github.com/LeapLabTHU/ExpeL)) |
+| **Grounded benchmark** — Cybench flag oracle | Real CTF challenges with an un-foolable pass/fail (capture the flag) | **Cybench**, ICLR 2025 (Oral) ([2408.08926](https://arxiv.org/abs/2408.08926), [cybench/cybench](https://github.com/andyzorigin/cybench)) |
+| **FP/TP benchmark** — `loupe/data.py::load_owasp` | A standard suite labeling each finding real vs false-alarm | **OWASP Benchmark** (industry standard, not a paper; [BenchmarkJava ~808](https://github.com/OWASP-Benchmark/BenchmarkJava)) |
+| **Verification step** — verify before submit | A separate check ("is this actually correct?") before trusting an answer | **Generative Verifiers / GenRM**, ICLR 2025 ([2408.15240](https://arxiv.org/abs/2408.15240)) |
+| **Pollution threat → our defenses** (`experiments/pollution.py`) | A few bad memories can hijack a retrieval agent → why we scope / write-gate / flag-don't-flip | **PoisonedRAG**, USENIX Security 2025 ([2402.07867](https://arxiv.org/abs/2402.07867)) + **AgentPoison**, NeurIPS 2024 ([2407.12784](https://arxiv.org/abs/2407.12784)) |
+| **Skill-library idea** (dual-memory, future) | Accumulate reusable executable skills, not just prose | **Voyager**, NeurIPS 2023 ([2305.16291](https://arxiv.org/abs/2305.16291), [github ~7k](https://github.com/MineDojo/Voyager)) |
+
+### Tier 2 — peer-reviewed but very recent (ICLR 2026)
+
+| Feature | In plain terms | Source |
+|---|---|---|
+| **Incremental edits, no rewrite** (the E6→E8 fix) | Add a bullet; don't rewrite the whole playbook (rewriting erases hard-won detail = "context collapse") | **ACE (Agentic Context Engineering)**, ICLR 2026 ([2510.04618](https://arxiv.org/abs/2510.04618)) |
+| **Prompt evolution + Pareto** (`gepa_distiller.py`) | Auto-rewrite the prompt from its mistakes, keeping versions that win on different objectives | **GEPA**, ICLR 2026 (Oral) ([2507.19457](https://arxiv.org/abs/2507.19457), [gepa-ai/gepa](https://github.com/gepa-ai/gepa)) — lineage: **DSPy**, ICLR 2024 ([stanfordnlp/dspy ~35k](https://github.com/stanfordnlp/dspy)) |
+
+### Tier 3 — widely used in production, paper not peer-reviewed
+
+| Feature | In plain terms | Source |
+|---|---|---|
+| **Write-gate** (`Memory.add` admit/refuse) | Gate what enters memory instead of storing everything | **Mem0** (preprint [2504.19413](https://arxiv.org/abs/2504.19413); but [mem0ai/mem0 ~59k stars](https://github.com/mem0ai/mem0) — heavy production use) |
+
+### Tier 4 — the inspiration: fresh, UNVETTED preprint (treat as hypothesis)
+
+| Feature | In plain terms | Source |
+|---|---|---|
+| **Self-evolving playbook + branch tournament + evidence tiers (T1/T2/T3) + §8.3.1 "learn to judge/verify"** | The overall blueprint we reproduced (E6–E9) | **EvoHunt** ([2606.16420](https://arxiv.org/abs/2606.16420)) — **days-old June-2026 preprint, no GitHub, no external validation, NOT peer-reviewed** |
+
+**Bottom line:** treat EvoHunt's *specific claims* (and the other 26xx preprints the
+research surfaced) as hypotheses we are testing, not established fact. But the parts
+doing the work — reflection (Reflexion/Self-Refine), experiential lesson memory
+(ExpeL), incremental context editing (ACE), the grounded benchmark (Cybench), the
+verifier (GenRM), and the poisoning threat model (PoisonedRAG/AgentPoison) — are all
+top-venue, peer-reviewed, and reproducible with public code. Our E8/E9 results are an
+*assembly* of credible components under a fresh blueprint.
+
 ## 1. Experiment ledger
 
 | # | Experiment | Setup | Result | Honest takeaway |
