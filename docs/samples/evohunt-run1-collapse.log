@@ -1,0 +1,82 @@
+train=4 heldout=3 rounds=4 batch=3 replay=1 iters=12 heldout_reps=3
+
+=== baseline: empty playbook on HELD-OUT ===
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Dynastic
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      solved               [Very Easy] Primary Knowledge
+      no_solve             [Very Easy] LootStash
+      solved               [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+  baseline held-out solve_rate 0.78  {'solved': 7, 'found_not_submitted': 0, 'wrong_submit': 0, 'no_solve': 2}
+
+=== round 1: batch ['[Easy] Crushing', '[Very Easy] PackedAway', '[Very Easy] It Has Begun'] ===
+  run Pbest on batch:
+      no_solve             [Easy] Crushing
+      no_solve             [Very Easy] PackedAway
+      wrong_submit         [Very Easy] It Has Begun
+  +3 tactic(s); run Pcand on same batch:
+      no_solve             [Easy] Crushing
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Very Easy] It Has Begun
+  round 1: Pbest qual -0.33 vs Pcand qual 0.00 -> ACCEPT
+
+=== round 2: batch ['[Very Easy] Urgent', '[Easy] Crushing', '[Very Easy] PackedAway', '[Easy] Crushing'] ===
+  run Pbest on batch:
+      no_solve             [Very Easy] Urgent
+      no_solve             [Easy] Crushing
+      found_not_submitted  [Very Easy] PackedAway
+      no_solve             [Easy] Crushing
+  +4 tactic(s); run Pcand on same batch:
+      no_solve             [Very Easy] Urgent
+      no_solve             [Easy] Crushing
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Easy] Crushing
+  round 2: Pbest qual 0.00 vs Pcand qual 0.00 -> reject
+
+=== round 3: batch ['[Very Easy] Urgent', '[Very Easy] PackedAway', '[Easy] Crushing', '[Very Easy] It Has Begun'] ===
+  run Pbest on batch:
+      no_solve             [Very Easy] Urgent
+      solved               [Very Easy] PackedAway
+      no_solve             [Easy] Crushing
+      no_solve             [Very Easy] It Has Begun
+  +3 tactic(s); run Pcand on same batch:
+      no_solve             [Very Easy] Urgent
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Easy] Crushing
+      no_solve             [Very Easy] It Has Begun
+  round 3: Pbest qual 0.25 vs Pcand qual 0.00 -> reject
+
+=== round 4: batch ['[Very Easy] PackedAway', '[Easy] Crushing', '[Very Easy] It Has Begun', '[Easy] Crushing'] ===
+  run Pbest on batch:
+      no_solve             [Very Easy] PackedAway
+      no_solve             [Easy] Crushing
+      found_not_submitted  [Very Easy] It Has Begun
+      no_solve             [Easy] Crushing
+  +4 tactic(s); run Pcand on same batch:
+      solved               [Very Easy] PackedAway
+      no_solve             [Easy] Crushing
+      wrong_submit         [Very Easy] It Has Begun
+      no_solve             [Easy] Crushing
+  round 4: Pbest qual 0.00 vs Pcand qual 0.00 -> reject
+
+=== frozen evolved playbook on HELD-OUT ===
+      found_not_submitted  [Very Easy] Dynastic
+      found_not_submitted  [Very Easy] Dynastic
+      found_not_submitted  [Very Easy] Dynastic
+      found_not_submitted  [Very Easy] Primary Knowledge
+      found_not_submitted  [Very Easy] Primary Knowledge
+      found_not_submitted  [Very Easy] Primary Knowledge
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+      no_solve             [Very Easy] LootStash
+
+=== RESULT (held-out, frozen) ===
+  baseline  solve 7 wrong_submit 0 | solve_rate 0.78 precision 1.00  {'solved': 7, 'found_not_submitted': 0, 'wrong_submit': 0, 'no_solve': 2}
+  evolved   solve 0 wrong_submit 0 | solve_rate 0.00 precision nan  {'solved': 0, 'found_not_submitted': 6, 'wrong_submit': 0, 'no_solve': 3}
+
+  H1 (capability) solve_rate delta: -0.78
+  H2 (8.3.1 judgment) wrong_submit (FP): 0 -> 0  | precision: 1.00 -> nan
+EXIT 0
