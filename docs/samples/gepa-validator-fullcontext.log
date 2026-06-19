@@ -1,0 +1,157 @@
+examples=120 (real=60, fp=60)  train=40 val=40 test=40
+
+=== seed validator on held-out test ===
+  {'tp': 16, 'fp': 2, 'tn': 18, 'fn': 4, 'bad': 0, 'precision': 0.8888888888888888, 'recall': 0.8, 'fp_rate': 0.1, 'bal_acc': 0.8500000000000001, 'f1': 0.8421052631578948}
+
+=== GEPA optimizing (FP-asymmetric metric, pareto) ===
+2026/06/19 10:04:08 INFO dspy.teleprompt.gepa.gepa: Running GEPA for approx 120 metric calls of the program. This amounts to 1.50 full evals on the train+val set.
+2026/06/19 10:04:08 INFO dspy.teleprompt.gepa.gepa: Using 40 examples for tracking Pareto scores. You can consider using a smaller sample of the valset to allow GEPA to explore more diverse solutions within the same budget. GEPA requires you to provide the smallest valset that is just large enough to match your downstream task distribution, while providing as large trainset as possible.
+GEPA Optimization:   0%|          | 0/120 [00:00<?, ?rollouts/s]2026/06/19 10:04:55 WARNING dspy.clients.lm: LM response was truncated due to exceeding max_tokens=1200. You can inspect the latest LM interactions with `dspy.inspect_history()`. To avoid truncation, consider passing a larger max_tokens when setting up dspy.LM. You may also consider increasing the temperature (currently 0.0)  if the reason for truncation is repetition.
+2026/06/19 10:05:06 INFO dspy.evaluate.evaluate: Average Metric: 35.0 / 40 (87.5%)
+2026/06/19 10:05:06 INFO dspy.teleprompt.gepa.gepa: Iteration 0: Base program full valset score: 0.875 over 40 / 40 examples
+GEPA Optimization:  33%|███▎      | 40/120 [00:57<01:55,  1.45s/rollouts]2026/06/19 10:05:06 INFO dspy.teleprompt.gepa.gepa: Iteration 1: Selected program 0 score: 0.875
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:08<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:08<00:16,  8.39s/it]Average Metric: 2.00 / 2 (100.0%):  33%|███▎      | 1/3 [00:09<00:16,  8.39s/it]Average Metric: 2.00 / 2 (100.0%):  67%|██████▋   | 2/3 [00:09<00:04,  4.40s/it]Average Metric: 3.00 / 3 (100.0%):  67%|██████▋   | 2/3 [00:12<00:04,  4.40s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:12<00:00,  3.48s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:12<00:00,  4.13s/it]2026/06/19 10:05:18 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:05:18 INFO dspy.teleprompt.gepa.gepa: Iteration 1: All subsample scores perfect. Skipping.
+2026/06/19 10:05:18 INFO dspy.teleprompt.gepa.gepa: Iteration 1: Reflective mutation did not propose a new candidate
+GEPA Optimization:  36%|███▌      | 43/120 [01:10<02:11,  1.71s/rollouts]2026/06/19 10:05:18 INFO dspy.teleprompt.gepa.gepa: Iteration 2: Selected program 0 score: 0.875
+
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:08<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:08<00:17,  8.60s/it]Average Metric: 2.00 / 2 (100.0%):  33%|███▎      | 1/3 [00:18<00:17,  8.60s/it]Average Metric: 2.00 / 2 (100.0%):  67%|██████▋   | 2/3 [00:18<00:09,  9.11s/it]Average Metric: 3.00 / 3 (100.0%):  67%|██████▋   | 2/3 [00:21<00:09,  9.11s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:21<00:00,  6.66s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:21<00:00,  7.27s/it]2026/06/19 10:05:40 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:05:40 INFO dspy.teleprompt.gepa.gepa: Iteration 2: All subsample scores perfect. Skipping.
+2026/06/19 10:05:40 INFO dspy.teleprompt.gepa.gepa: Iteration 2: Reflective mutation did not propose a new candidate
+GEPA Optimization:  38%|███▊      | 46/120 [01:32<02:56,  2.38s/rollouts]2026/06/19 10:05:40 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Selected program 0 score: 0.875
+
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:07<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:07<00:15,  7.77s/it]Average Metric: 2.00 / 2 (100.0%):  33%|███▎      | 1/3 [00:08<00:15,  7.77s/it]Average Metric: 2.00 / 2 (100.0%):  67%|██████▋   | 2/3 [00:08<00:03,  3.47s/it]Average Metric: 2.00 / 3 (66.7%):  67%|██████▋   | 2/3 [00:11<00:03,  3.47s/it] Average Metric: 2.00 / 3 (66.7%): 100%|██████████| 3/3 [00:11<00:00,  3.45s/it]Average Metric: 2.00 / 3 (66.7%): 100%|██████████| 3/3 [00:11<00:00,  3.89s/it]2026/06/19 10:05:52 INFO dspy.evaluate.evaluate: Average Metric: 2.0 / 3 (66.7%)
+2026/06/19 10:06:09 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Proposed new text for predict: Decide whether a flagged SAST finding is a REAL exploitable vulnerability
+or a FALSE POSITIVE (vulnerable-looking but not actually exploitable — e.g.
+the tainted value is sanitized or the sink is unreachable). Reason about the
+actual data/control flow before deciding.
+
+Input format:
+- rule_id: CWE identifier (e.g., CWE-22, CWE-327, CWE-330)
+- code_context: Full source code snippet of the flagged function/method
+- finding_desc: Short description of the SAST finding
+
+Output format:
+- reasoning: Detailed, step-by-step analysis of the data/control flow from source to sink, including any transformations, calls to external methods, or sanitization steps. Identify any missing implementation details that could affect exploitability.
+- verdict: Either "real" (for a confirmed exploitable vulnerability) or "false_positive" (for a vulnerability that looks exploitable but is not actually exploitable)
+- rationale: Concise summary of why the verdict is correct
+
+When reasoning, consider:
+- Is the source of tainted data truly user-controllable?
+- Is there any sanitization or validation step on the path from source to sink?
+- If a method call's implementation is not provided, assume it may or may not sanitize — but if the code is from a known test suite (e.g., OWASP Benchmark), the behavior is often that it passes the tainted value through unchanged. In such cases, the finding is real unless there is explicit evidence of sanitization.
+- For CWE-327: Verify that the algorithm actually used is broken/risky (e.g., DES, RC4, MD5). AES/GCM/NoPadding with a securely generated key and IV is NOT weak.
+- For CWE-330: Verify that the random number generator is actually weak (e.g., java.util.Random, Math.random()). java.security.SecureRandom with any algorithm, even "SHA1PRNG", is cryptographically strong and NOT weak.
+- For CWE-22: Path traversal requires that user input flows unsanitized into file path construction. If the input goes through a method whose implementation is not shown but the pattern is from OWASP Benchmark, assume it is a pass-through unless sanitization is explicitly shown.
+2026/06/19 10:06:26 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:06:26 INFO dspy.teleprompt.gepa.gepa: Iteration 3: New subsample score 3.0 is better than old score 2.0. Continue to full eval and add to candidate pool.
+2026/06/19 10:08:32 INFO dspy.evaluate.evaluate: Average Metric: 37.0 / 40 (92.5%)
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Found a better program on the valset with score 0.925.
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Valset score for new program: 0.925 (coverage 40 / 40)
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Val aggregate for new program: 0.925
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Individual valset scores for new program: {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 0.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0, 30: 1.0, 31: 1.0, 32: 1.0, 33: 1.0, 34: 0.0, 35: 1.0, 36: 1.0, 37: 1.0, 38: 0.0, 39: 1.0}
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: New valset pareto front scores: {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0, 30: 1.0, 31: 1.0, 32: 1.0, 33: 1.0, 34: 0.0, 35: 1.0, 36: 1.0, 37: 1.0, 38: 0.0, 39: 1.0}
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Valset pareto front aggregate score: 0.95
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Updated valset pareto front programs: {0: {1}, 1: {0, 1}, 2: {0, 1}, 3: {0, 1}, 4: {0, 1}, 5: {0, 1}, 6: {0, 1}, 7: {0, 1}, 8: {0, 1}, 9: {1}, 10: {0, 1}, 11: {0, 1}, 12: {0, 1}, 13: {0, 1}, 14: {0, 1}, 15: {0}, 16: {0, 1}, 17: {0, 1}, 18: {0, 1}, 19: {0, 1}, 20: {0, 1}, 21: {0, 1}, 22: {0, 1}, 23: {0, 1}, 24: {0, 1}, 25: {0, 1}, 26: {1}, 27: {0, 1}, 28: {0, 1}, 29: {0, 1}, 30: {0, 1}, 31: {0, 1}, 32: {0, 1}, 33: {0, 1}, 34: {0, 1}, 35: {0, 1}, 36: {0, 1}, 37: {0, 1}, 38: {0, 1}, 39: {0, 1}}
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Best valset aggregate score so far: 0.925
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Best program as per aggregate score on valset: 1
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Best score on valset: 0.925
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: Linear pareto front program index: 1
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 3: New program candidate index: 1
+GEPA Optimization:  77%|███████▋  | 92/120 [04:24<01:34,  3.37s/rollouts]2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 4: No merge candidates found
+2026/06/19 10:08:32 INFO dspy.teleprompt.gepa.gepa: Iteration 4: Selected program 1 score: 0.925
+
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:07<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:07<00:15,  7.77s/it]Average Metric: 2.00 / 2 (100.0%):  33%|███▎      | 1/3 [00:08<00:15,  7.77s/it]Average Metric: 2.00 / 2 (100.0%):  67%|██████▋   | 2/3 [00:08<00:03,  3.34s/it]Average Metric: 3.00 / 3 (100.0%):  67%|██████▋   | 2/3 [00:16<00:03,  3.34s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:16<00:00,  5.79s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:16<00:00,  5.57s/it]2026/06/19 10:08:49 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:08:49 INFO dspy.teleprompt.gepa.gepa: Iteration 4: All subsample scores perfect. Skipping.
+2026/06/19 10:08:49 INFO dspy.teleprompt.gepa.gepa: Iteration 4: Reflective mutation did not propose a new candidate
+GEPA Optimization:  79%|███████▉  | 95/120 [04:40<01:27,  3.51s/rollouts]2026/06/19 10:08:49 INFO dspy.teleprompt.gepa.gepa: Iteration 5: Selected program 1 score: 0.925
+
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:07<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:07<00:14,  7.02s/it]Average Metric: 2.00 / 2 (100.0%):  33%|███▎      | 1/3 [00:11<00:14,  7.02s/it]Average Metric: 2.00 / 2 (100.0%):  67%|██████▋   | 2/3 [00:11<00:05,  5.44s/it]Average Metric: 3.00 / 3 (100.0%):  67%|██████▋   | 2/3 [00:18<00:05,  5.44s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:18<00:00,  6.37s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:18<00:00,  6.28s/it]2026/06/19 10:09:08 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:09:08 INFO dspy.teleprompt.gepa.gepa: Iteration 5: All subsample scores perfect. Skipping.
+2026/06/19 10:09:08 INFO dspy.teleprompt.gepa.gepa: Iteration 5: Reflective mutation did not propose a new candidate
+GEPA Optimization:  82%|████████▏ | 98/120 [04:59<01:22,  3.74s/rollouts]2026/06/19 10:09:08 INFO dspy.teleprompt.gepa.gepa: Iteration 6: Selected program 0 score: 0.875
+
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:11<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:11<00:23, 11.60s/it]Average Metric: 2.00 / 2 (100.0%):  33%|███▎      | 1/3 [00:18<00:23, 11.60s/it]Average Metric: 2.00 / 2 (100.0%):  67%|██████▋   | 2/3 [00:18<00:08,  8.90s/it]Average Metric: 3.00 / 3 (100.0%):  67%|██████▋   | 2/3 [00:36<00:08,  8.90s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:36<00:00, 13.12s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:36<00:00, 12.25s/it]2026/06/19 10:09:44 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:09:44 INFO dspy.teleprompt.gepa.gepa: Iteration 6: All subsample scores perfect. Skipping.
+2026/06/19 10:09:44 INFO dspy.teleprompt.gepa.gepa: Iteration 6: Reflective mutation did not propose a new candidate
+GEPA Optimization:  84%|████████▍ | 101/120 [05:36<01:28,  4.64s/rollouts]2026/06/19 10:09:44 INFO dspy.teleprompt.gepa.gepa: Iteration 7: Selected program 1 score: 0.925
+
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:05<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:05<00:11,  5.55s/it]Average Metric: 2.00 / 2 (100.0%):  33%|███▎      | 1/3 [00:08<00:11,  5.55s/it]Average Metric: 2.00 / 2 (100.0%):  67%|██████▋   | 2/3 [00:08<00:04,  4.08s/it]Average Metric: 3.00 / 3 (100.0%):  67%|██████▋   | 2/3 [00:14<00:04,  4.08s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:14<00:00,  4.74s/it]Average Metric: 3.00 / 3 (100.0%): 100%|██████████| 3/3 [00:14<00:00,  4.71s/it]2026/06/19 10:09:59 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:09:59 INFO dspy.teleprompt.gepa.gepa: Iteration 7: All subsample scores perfect. Skipping.
+2026/06/19 10:09:59 INFO dspy.teleprompt.gepa.gepa: Iteration 7: Reflective mutation did not propose a new candidate
+GEPA Optimization:  87%|████████▋ | 104/120 [05:50<01:14,  4.65s/rollouts]2026/06/19 10:09:59 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Selected program 1 score: 0.925
+
+  0%|          | 0/3 [00:00<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):   0%|          | 0/3 [00:04<?, ?it/s]Average Metric: 1.00 / 1 (100.0%):  33%|███▎      | 1/3 [00:04<00:08,  4.19s/it]Average Metric: 1.00 / 2 (50.0%):  33%|███▎      | 1/3 [00:07<00:08,  4.19s/it] Average Metric: 1.00 / 2 (50.0%):  67%|██████▋   | 2/3 [00:07<00:03,  3.47s/it]Average Metric: 2.00 / 3 (66.7%):  67%|██████▋   | 2/3 [00:34<00:03,  3.47s/it]Average Metric: 2.00 / 3 (66.7%): 100%|██████████| 3/3 [00:34<00:00, 14.22s/it]Average Metric: 2.00 / 3 (66.7%): 100%|██████████| 3/3 [00:34<00:00, 11.39s/it]2026/06/19 10:10:33 INFO dspy.evaluate.evaluate: Average Metric: 2.0 / 3 (66.7%)
+2026/06/19 10:10:49 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Proposed new text for predict: <instructions>
+  <task>
+    <description>Decide whether a flagged SAST finding is a REAL exploitable vulnerability or a FALSE POSITIVE (vulnerable-looking but not actually exploitable — e.g., the tainted value is sanitized or the sink is unreachable). Reason about the actual data/control flow before deciding.</description>
+    <input_format>
+      <rule_id>CWE identifier (e.g., CWE-22, CWE-327, CWE-330)</rule_id>
+      <code_context>Full source code snippet of the flagged function/method</code_context>
+      <finding_desc>Short description of the SAST finding</finding_desc>
+    </input_format>
+    <output_format>
+      <reasoning>Detailed, step-by-step analysis of the data/control flow from source to sink, including any transformations, calls to external methods, or sanitization steps. Identify any missing implementation details that could affect exploitability.</reasoning>
+      <verdict>Either "real" (for a confirmed exploitable vulnerability) or "false_positive" (for a vulnerability that looks exploitable but is not actually exploitable)</verdict>
+      <rationale>Concise summary of why the verdict is correct</rationale>
+    </output_format>
+    <considerations>
+      <point>Is the source of tainted data truly user-controllable?</point>
+      <point>Is there any sanitization or validation step on the path from source to sink?</point>
+      <point>If a method call's implementation is not provided, assume it may or may not sanitize — but if the code is from a known test suite (e.g., OWASP Benchmark), the behavior is often that it passes the tainted value through unchanged. In such cases, the finding is real unless there is explicit evidence of sanitization.</point>
+      <point>For CWE-327: Verify that the algorithm actually used is broken/risky (e.g., DES, RC4, MD5). AES/GCM/NoPadding with a securely generated key and IV is NOT weak.</point>
+      <point>For CWE-330: Verify that the random number generator is actually weak (e.g., java.util.Random, Math.random()). java.security.SecureRandom with any algorithm, even "SHA1PRNG", is cryptographically strong and NOT weak.</point>
+      <point>For CWE-22: Path traversal requires that user input flows unsanitized into file path construction. If the input goes through a method whose implementation is not shown but the pattern is from OWASP Benchmark, assume it is a pass-through unless sanitization is explicitly shown.</point>
+    </considerations>
+  </task>
+  
+  <domain_specific_info>
+    <info>CWE-501 (Trust Boundary Violation) is a sensitive category. The presence of a vulnerability depends heavily on the specific operations performed. Simply using a user-input string as a key in a session `putValue` call does not automatically constitute a real vulnerability, especially if the value stored under that key is a constant (e.g., "10340"). If both the key and the value are not from the user, or if the user-controlled string is only used as a key to store a server-generated, non-sensitive value, the finding is a false positive. A true trust boundary violation requires that untrusted data is being placed into a trusted context where it will later be treated as trusted without re-validation.</info>
+    <info>CWE-328 (Weak Hash) findings should be evaluated based on the actual algorithm string used. SHA-512 is considered a strong algorithm (SHA-2 family) and is not a weak hash.</info>
+    <info>CWE-89 (SQL Injection) findings in OWASP Benchmark test cases often use true pass-through methods (like the inner class `Test.doSomething`) that do not sanitize input. String concatenation into a SQL query, even with `prepareCall`, is a real vulnerability.</info>
+  </domain_specific_info>
+
+  <strategy>
+    <step>Parse the input to identify the rule_id (CWE), code_context, and finding_desc.</step>
+    <step>Trace the complete data flow path from the source of user-controlled input to the vulnerable sink. Note every transformation, method call, and assignment.</step>
+    <step>For any method call whose source code is not provided, determine if the context suggests a well-known test suite (like OWASP Benchmark). If so, assume the method passes the tainted value through unchanged unless there is explicit evidence of sanitization.</step>
+    <step>Evaluate the vulnerability specific to the CWE rule:
+      <substep>CWE-89: Check if user input is concatenated directly into a SQL query string without parameterization.</substep>
+      <substep>CWE-501: Check if untrusted user data is being stored directly into a trusted session object where it will be treated as trusted later. If the user input is only used as a key and the associated value is a hardcoded constant, the finding is likely a false positive.</substep>
+      <substep>CWE-328: Check the actual hash algorithm string (e.g., "SHA-512") against known weak algorithms. Strong algorithms like SHA-512 mean false positive.</substep>
+      <substep>CWE-327 / CWE-330 / CWE-22: Apply the specific checks mentioned in the considerations.</substep>
+    </step>
+    <step>Form a verdict ("real" or "false_positive") based on whether a truly exploitable condition exists.</step>
+    <step>Provide detailed reasoning and a concise rationale.</step>
+  </strategy>
+</instructions>
+2026/06/19 10:10:57 INFO dspy.evaluate.evaluate: Average Metric: 3.0 / 3 (100.0%)
+2026/06/19 10:10:57 INFO dspy.teleprompt.gepa.gepa: Iteration 8: New subsample score 3.0 is better than old score 2.0. Continue to full eval and add to candidate pool.
+2026/06/19 10:12:15 INFO dspy.evaluate.evaluate: Average Metric: 38.0 / 40 (95.0%)
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Found a better program on the valset with score 0.95.
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Valset score for new program: 0.95 (coverage 40 / 40)
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Val aggregate for new program: 0.95
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Individual valset scores for new program: {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0, 30: 1.0, 31: 1.0, 32: 1.0, 33: 1.0, 34: 0.0, 35: 1.0, 36: 1.0, 37: 1.0, 38: 0.0, 39: 1.0}
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: New valset pareto front scores: {0: 1.0, 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 1.0, 10: 1.0, 11: 1.0, 12: 1.0, 13: 1.0, 14: 1.0, 15: 1.0, 16: 1.0, 17: 1.0, 18: 1.0, 19: 1.0, 20: 1.0, 21: 1.0, 22: 1.0, 23: 1.0, 24: 1.0, 25: 1.0, 26: 1.0, 27: 1.0, 28: 1.0, 29: 1.0, 30: 1.0, 31: 1.0, 32: 1.0, 33: 1.0, 34: 0.0, 35: 1.0, 36: 1.0, 37: 1.0, 38: 0.0, 39: 1.0}
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Valset pareto front aggregate score: 0.95
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Updated valset pareto front programs: {0: {1, 2}, 1: {0, 1, 2}, 2: {0, 1, 2}, 3: {0, 1, 2}, 4: {0, 1, 2}, 5: {0, 1, 2}, 6: {0, 1, 2}, 7: {0, 1, 2}, 8: {0, 1, 2}, 9: {1, 2}, 10: {0, 1, 2}, 11: {0, 1, 2}, 12: {0, 1, 2}, 13: {0, 1, 2}, 14: {0, 1, 2}, 15: {0, 2}, 16: {0, 1, 2}, 17: {0, 1, 2}, 18: {0, 1, 2}, 19: {0, 1, 2}, 20: {0, 1, 2}, 21: {0, 1, 2}, 22: {0, 1, 2}, 23: {0, 1, 2}, 24: {0, 1, 2}, 25: {0, 1, 2}, 26: {1, 2}, 27: {0, 1, 2}, 28: {0, 1, 2}, 29: {0, 1, 2}, 30: {0, 1, 2}, 31: {0, 1, 2}, 32: {0, 1, 2}, 33: {0, 1, 2}, 34: {0, 1, 2}, 35: {0, 1, 2}, 36: {0, 1, 2}, 37: {0, 1, 2}, 38: {0, 1, 2}, 39: {0, 1, 2}}
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Best valset aggregate score so far: 0.95
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Best program as per aggregate score on valset: 2
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Best score on valset: 0.95
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: Linear pareto front program index: 2
+2026/06/19 10:12:15 INFO dspy.teleprompt.gepa.gepa: Iteration 8: New program candidate index: 2
+GEPA Optimization:  87%|████████▋ | 104/120 [08:06<01:14,  4.68s/rollouts]
+
+
+=== optimized validator on held-out test ===
+2026/06/19 10:14:30 WARNING dspy.clients.lm: LM response was truncated due to exceeding max_tokens=1200. You can inspect the latest LM interactions with `dspy.inspect_history()`. To avoid truncation, consider passing a larger max_tokens when setting up dspy.LM. You may also consider increasing the temperature (currently 0.0)  if the reason for truncation is repetition.
+  {'tp': 17, 'fp': 3, 'tn': 17, 'fn': 3, 'bad': 0, 'precision': 0.85, 'recall': 0.85, 'fp_rate': 0.15, 'bal_acc': 0.85, 'f1': 0.85}
+
+=== RESULT (held-out FP discrimination) ===
+  balanced_acc  0.85 -> 0.85   (0.5 = blanket guess)
+  precision     0.89 -> 0.85
+  recall        0.80 -> 0.85
+  fp_rate       0.10 -> 0.15
+  f1            0.84 -> 0.85
+  false positives: 2 -> 3 (of 20 benign); reals caught 16 -> 17 (of 20)
+EXIT 0

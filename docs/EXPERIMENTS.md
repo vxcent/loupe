@@ -199,10 +199,22 @@ the discriminative evidence. Giving the **full method** flipped the same model, 
 **no optimization**, from 0.52 → **0.94 balanced accuracy, precision 1.00, fp_rate
 0.00** — false positives eliminated. So for LLM-based FP reduction on OWASP, the
 dominant lever is **feeding the source→sink context**, exactly as ZeroFalse (2510.02534)
-and IRIS (ICLR'25) do; prompt optimization is secondary (its marginal value *on top of*
-good context is being measured in a capped GEPA-on-full-context run). This also
-re-explains **E1**: memory wasn't an FP-cutter on OWASP partly because the validator
-never had the discriminative context to begin with.
+and IRIS (ICLR'25) do.
+
+**GEPA's marginal value on top of good context: nil.** A capped GEPA run *with* full
+context improved the *valset* (0.925→0.95, mild overfit) but the held-out result was
+**flat — bal_acc 0.85→0.85** — it merely reallocated precision↔recall (precision
+0.89→0.85, recall 0.80→0.85; +1 real caught, +1 FP added). So **GEPA helps when the
+prompt is the bottleneck; here the bottleneck was context, so prompt evolution added
+nothing.** This also re-explains **E1**: memory wasn't an FP-cutter on OWASP partly
+because the validator never had the discriminative context to begin with.
+
+**Net E10 takeaway (the viable finding):** the reliable way to cut LLM false positives
+on code is to *give the model the dataflow evidence* (source→sink + sanitizer), which
+took OWASP fp_rate from 0.15 → ~0.00–0.10 and precision 0.56 → 0.89–1.00 with no
+optimization at all. Self-evolution / prompt-optimization is a second-order polish, not
+the lever — a conclusion that holds across E1 (memory), E10 (GEPA), and the literature
+(ZeroFalse/IRIS).
 
 Supporting infra proven along the way: OWASP loader, multi-seed concurrent runner,
 Together/DeepSeek-V4-Pro routing into Cybench, evidence-tiered oracle (T1/T2/T3),
