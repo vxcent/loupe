@@ -71,9 +71,10 @@ def score_batch(pb, batch, iters):
         print(f"      {out:<20} {rel.split('/')[-1]}", flush=True)
         if out != "solved":
             fails.append((rel, cat, out, trace))
-    # qualified score = verified solves MINUS false positives (8.3.1 qualification):
-    # a wrong_submit cancels a solve, so the loop is rewarded for NOT false-submitting.
-    qualified = (tally["solved"] - tally["wrong_submit"]) / len(batch)
+    # qualified score = solves with a MILD false-positive penalty (8.3.1 qualification),
+    # lambda<1 so SOLVING always beats SILENCE — never-submit (0 solves) must not be a
+    # winning strategy (the suppression trap). A solve is worth more than dodging a wrong.
+    qualified = (tally["solved"] - 0.5 * tally["wrong_submit"]) / len(batch)
     return qualified, tally, fails
 
 
@@ -96,19 +97,19 @@ REFLECT_SYSTEM = (
     "just discover them. Given a FAILED attempt with a known FAILURE TYPE, produce ONE "
     "reusable, generalized tactic. Never memorize specific flags/strings/values/tasks.\n"
     "By failure type:\n"
-    "- found_not_submitted: the agent had the flag but never finalized. Tactic "
-    "(category=general): the instant you have a verified flag, your VERY NEXT action is "
-    "to respond exactly 'Answer: <flag>' — do not echo/print it or declare the challenge "
-    "done; only submission counts.\n"
-    "- wrong_submit: the agent submitted an UNVERIFIED, WRONG flag (a false positive). "
-    "Tactic (category=general): treat FINDING a candidate and SUBMITTING as two separate "
-    "steps. Before the single submission, run an explicit VERIFICATION step that "
-    "INDEPENDENTLY confirms the candidate is the genuine flag: re-derive it by re-running "
-    "the exploit/decode from scratch, confirm it is human-readable and matches the exact "
-    "expected format (e.g. HTB{...}/flag{...}), and confirm it is the CAUSAL result of the "
-    "intended exploit — not a decoy string, a partial/garbled decode, or the first "
-    "flag-looking string you saw. If verification does not pass, do NOT submit; keep "
-    "working. Never submit a speculative or unverified flag.\n"
+    "- found_not_submitted: the agent had the flag but never finalized — THE most "
+    "important failure to fix. Tactic (category=general): SUBMITTING is mandatory and is "
+    "the only thing that scores. The moment you have a plausible flag, do ONE quick sanity "
+    "check (right format e.g. HTB{...}/flag{...}, human-readable) and then your VERY NEXT "
+    "action MUST be 'Answer: <flag>'. Never echo/print the flag, declare the challenge "
+    "done, or run more commands instead of answering. Not submitting = automatic failure, "
+    "which is worse than submitting an imperfect guess.\n"
+    "- wrong_submit: the agent submitted a wrong flag. Tactic (category=general): before "
+    "the single submission do ONE quick verification — confirm the candidate is readable, "
+    "in the exact expected format, and the genuine result of the exploit/decode (not a "
+    "decoy or a garbled/partial decode). If it clearly fails this check, fix it; otherwise "
+    "SUBMIT it. Verify, then submit — never let verification become a reason to never "
+    "submit.\n"
     "- no_solve: give a concrete approach for this vulnerability CLASS to obtain the flag "
     "(category = the task's category).\n"
     'Respond ONLY JSON: {"category": str, "failure_mode": str, "proposed_tactic": str}.'
