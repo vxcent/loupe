@@ -129,6 +129,31 @@ def build_engagement(seed: int, n_classes: int, sibs: int, neutral_frac: float):
     return findings, neutralized_keys
 
 
+def build_drift_engagement(seed: int, sibs: int, drift_at: int):
+    """ONE class on one service. The first `drift_at` siblings are benign (a WAF is
+    present); from `drift_at` on the deployment CHANGES (WAF removed) and the same
+    sink becomes LIVE again. The code is UNCHANGED across the change — only a fresh
+    probe can reveal the new truth. Returns (findings, is_post_drift flags)."""
+    rng = random.Random(seed)
+    service = f"svc-{seed:04d}"
+    cwe, key, sink_desc = rng.choice(SINKS)
+    neut = rng.choice(NEUTRALIZERS)
+    findings, post = [], []
+    for s in range(sibs):
+        benign = s < drift_at
+        findings.append(Finding(
+            id=f"{key}-{s}", cwe=cwe, title=f"{key} via /{key}/route{s} on {service}",
+            location=f"{key}.java:{40+s}", claim=f"request input reaches the {key} sink",
+            context=_code(sink_desc, f"/{key}/route{s}", service),
+            class_key=key,
+            label=("benign" if benign else "real"),
+            benign_category=(neut[0] if benign else None),
+            assumptions=([neut[0]] if benign else []),
+        ))
+        post.append(not benign)
+    return findings, post
+
+
 def probe_fact_text(f: Finding) -> str:
     """The grounded observation a probe of this finding returns (the overlay)."""
     for code, desc in NEUTRALIZERS:
@@ -227,6 +252,73 @@ def curve_by_position(s0, s1):
     return pos
 
 
+def bootstrap_ci(values, iters=5000, seed=0, lo=2.5, hi=97.5):
+    """Percentile bootstrap CI on the mean of a per-engagement gain vector."""
+    vals = [v for v in values if v == v]
+    if len(vals) < 2:
+        return (float("nan"), float("nan"))
+    rng = random.Random(seed)
+    means = []
+    n = len(vals)
+    for _ in range(iters):
+        s = [vals[rng.randrange(n)] for _ in range(n)]
+        means.append(sum(s) / n)
+    means.sort()
+    return (means[int(lo / 100 * iters)], means[int(hi / 100 * iters)])
+
+
+def drift_test(args, llm):
+    """Stale-memory stress test (the failure mode PenPal feared: 'previous SQLi
+    triaged' suppressing a now-live bug). A deployment fact learned early goes
+    STALE after the environment changes. We measure the false-negative rate on
+    post-change findings, with vs without a re-verification policy."""
+    print("\n========== DRIFT / STALE-MEMORY STRESS TEST ==========")
+    print("one class per engagement; deployment flips benign->live partway; the code"
+          " never changes, so only a fresh probe reveals the new truth.\n")
+    K = args.reverify_every
+    agg = {p: {"fn": [], "post": []} for p in ("S4_stale", "S5_reverify")}
+    for e in range(args.engagements):
+        seed = args.seed + e
+        findings, post = build_drift_engagement(seed, args.sibs, args.drift_at)
+        for policy in ("S4_stale", "S5_reverify"):
+            reverify = (policy == "S5_reverify")
+            verified = {}          # class_key -> latest grounded verdict ("real"/"benign")
+            last_probe = {}        # class_key -> index of last probe
+            fn = post_n = 0
+            for i, f in enumerate(findings):
+                v = verified.get(f.class_key)
+                lessons = []
+                if v is not None:
+                    fake = make_lesson_from_probe(f)
+                    fake.verdict = v                 # carry the LAST verified verdict
+                    fake.required_assumptions = []   # scope off; model reasons from text
+                    lessons = [fake]
+                pred = llm.validate(f, lessons)
+                if post[i]:
+                    post_n += 1
+                    if not pred.exploitable:         # suppressed a now-LIVE bug = FN
+                        fn += 1
+                # probe policy: cold (first sight) or re-verify cadence
+                cold = f.class_key not in verified
+                stale = reverify and (i - last_probe.get(f.class_key, -10**9)) >= K
+                if cold or stale:
+                    verified[f.class_key] = ("real" if f.label == "real" else "benign")
+                    last_probe[f.class_key] = i
+            agg[policy]["fn"].append(fn)
+            agg[policy]["post"].append(post_n)
+    for policy in ("S4_stale", "S5_reverify"):
+        tot_fn = sum(agg[policy]["fn"])
+        tot_post = sum(agg[policy]["post"])
+        rate = tot_fn / tot_post if tot_post else float("nan")
+        print(f"  {policy:12s}  post-drift false-negative rate {rate:.3f}  "
+              f"({tot_fn}/{tot_post} now-live bugs suppressed by stale memory)")
+    s4 = sum(agg['S4_stale']['fn']) / max(1, sum(agg['S4_stale']['post']))
+    s5 = sum(agg['S5_reverify']['fn']) / max(1, sum(agg['S5_reverify']['post']))
+    print(f"\n  re-verification (every {K}) cuts stale-memory FN: {s4:.3f} -> {s5:.3f}")
+    print("  (the irreducible floor is the FIRST post-change finding — cold to the"
+          " change, same as the cold-first floor on the benign side.)")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--backend", default="mock", choices=["mock", "together"])
@@ -236,6 +328,9 @@ def main():
     ap.add_argument("--neutral-frac", type=float, default=0.5)
     ap.add_argument("--engagements", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--drift", action="store_true", help="run the stale-memory drift test")
+    ap.add_argument("--drift-at", type=int, default=2, help="sibling pos where deployment flips")
+    ap.add_argument("--reverify-every", type=int, default=2, help="re-probe cadence for S5")
     args = ap.parse_args()
     load_dotenv()
 
@@ -307,9 +402,14 @@ def main():
         xs = [x for x in xs if x == x]
         return sum(xs) / len(xs) if xs else float("nan")
 
-    print("=== matched-pairs gain (mean over engagements) ===")
-    print(f"  balanced-acc gain  S1-S0 : {m(agg['g_bal']):+.3f}")
-    print(f"  dFP-rate (down=good)      : {m(agg['dfp']):+.3f}   "
+    gci = bootstrap_ci(agg["g_bal"])
+    fci = bootstrap_ci(agg["dfp"])
+    print(f"=== matched-pairs gain (mean over {args.engagements} engagements, "
+          f"95% bootstrap CI) ===")
+    print(f"  balanced-acc gain  S1-S0 : {m(agg['g_bal']):+.3f}  "
+          f"95% CI [{gci[0]:+.3f}, {gci[1]:+.3f}]")
+    print(f"  dFP-rate (down=good)      : {m(agg['dfp']):+.3f}  "
+          f"95% CI [{fci[0]:+.3f}, {fci[1]:+.3f}]   "
           f"(S0 fp {m(agg['s0_fp']):.3f} -> S1 fp {m(agg['s1_fp']):.3f})")
     print(f"  dRecall (suppression guard): {m(agg['drec']):+.3f}   "
           f"(must be >= -0.02)")
@@ -339,6 +439,9 @@ def main():
     print(f"\n=== VERDICT: {'PASS' if ok else 'FAIL'} "
           f"(dFP>0.05 [{dfp:+.3f}], dRecall>=-.02 [{drec:+.3f}], "
           f"|placebo-baseline|<.05 [{plac:+.3f}], poison recall-drop<.02 [{poison_drop:+.3f}]) ===")
+
+    if args.drift:
+        drift_test(args, get_llm(args.backend, args.model, 0.0, args.seed))
 
 
 if __name__ == "__main__":
