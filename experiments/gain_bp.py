@@ -282,27 +282,26 @@ def drift_test(args, llm):
         findings, post = build_drift_engagement(seed, args.sibs, args.drift_at)
         for policy in ("S4_stale", "S5_reverify"):
             reverify = (policy == "S5_reverify")
-            verified = {}          # class_key -> latest grounded verdict ("real"/"benign")
+            # carry the actual Lesson captured AT PROBE TIME (it reflects the truth
+            # when probed and goes genuinely stale if the deployment later changes).
+            # Rebuilding it from the current finding would leak the new truth — the
+            # bug the first E12 run exposed.
+            verified_lesson = {}   # class_key -> Lesson (possibly stale)
             last_probe = {}        # class_key -> index of last probe
             fn = post_n = 0
             for i, f in enumerate(findings):
-                v = verified.get(f.class_key)
-                lessons = []
-                if v is not None:
-                    fake = make_lesson_from_probe(f)
-                    fake.verdict = v                 # carry the LAST verified verdict
-                    fake.required_assumptions = []   # scope off; model reasons from text
-                    lessons = [fake]
+                lessons = [verified_lesson[f.class_key]] if f.class_key in verified_lesson else []
                 pred = llm.validate(f, lessons)
                 if post[i]:
                     post_n += 1
                     if not pred.exploitable:         # suppressed a now-LIVE bug = FN
                         fn += 1
-                # probe policy: cold (first sight) or re-verify cadence
-                cold = f.class_key not in verified
+                # probe policy: cold (first sight) or re-verify cadence. A probe
+                # captures the CURRENT grounded truth into the carried lesson.
+                cold = f.class_key not in verified_lesson
                 stale = reverify and (i - last_probe.get(f.class_key, -10**9)) >= K
                 if cold or stale:
-                    verified[f.class_key] = ("real" if f.label == "real" else "benign")
+                    verified_lesson[f.class_key] = make_lesson_from_probe(f)
                     last_probe[f.class_key] = i
             agg[policy]["fn"].append(fn)
             agg[policy]["post"].append(post_n)
@@ -329,6 +328,7 @@ def main():
     ap.add_argument("--engagements", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--drift", action="store_true", help="run the stale-memory drift test")
+    ap.add_argument("--drift-only", action="store_true", help="skip the gain run; drift test only")
     ap.add_argument("--drift-at", type=int, default=2, help="sibling pos where deployment flips")
     ap.add_argument("--reverify-every", type=int, default=2, help="re-probe cadence for S5")
     args = ap.parse_args()
@@ -338,6 +338,10 @@ def main():
           f"model={args.model if args.backend=='together' else '-'}")
     print(f"engagements={args.engagements} classes={args.classes} sibs={args.sibs} "
           f"neutral_frac={args.neutral_frac}\n")
+
+    if args.drift_only:
+        drift_test(args, get_llm(args.backend, args.model, 0.0, args.seed))
+        return
 
     agg = {k: [] for k in ["g_bal", "dfp", "drec", "s0_fp", "s1_fp", "s1_rec",
                            "s0p_fp", "s2_fp", "s3_fp", "s3_rec",
@@ -433,12 +437,16 @@ def main():
     #   effect: dFP>0 with recall held; placebo gain ~0 vs baseline; poison
     #   doesn't degrade recall vs the clean stateful arm.
     dfp, drec = m(agg["dfp"]), m(agg["drec"])
-    plac = m(agg["s2_fp"]) - m(agg["s0_fp"])            # ~0 => no prompt artifact
+    plac = m(agg["s0_fp"]) - m(agg["s2_fp"])            # placebo's OWN dFP vs baseline
     poison_drop = m(agg["s1_rec"]) - m(agg["s3_rec"])    # ~0 => poison neutralized
-    ok = (dfp > 0.05 and drec >= -0.02 and abs(plac) < 0.05 and poison_drop < 0.02)
+    # placebo must explain <25% of the real gain (absolute thresholds break at
+    # single-finding granularity: 1/20 = 0.05 is noise, not a prompt artifact).
+    plac_ratio = abs(plac) / dfp if dfp else float("inf")
+    ok = (dfp > 0.05 and drec >= -0.02 and plac_ratio < 0.25 and poison_drop < 0.02)
     print(f"\n=== VERDICT: {'PASS' if ok else 'FAIL'} "
           f"(dFP>0.05 [{dfp:+.3f}], dRecall>=-.02 [{drec:+.3f}], "
-          f"|placebo-baseline|<.05 [{plac:+.3f}], poison recall-drop<.02 [{poison_drop:+.3f}]) ===")
+          f"placebo/real gain <.25 [{plac_ratio:.2f} = {plac:+.3f}/{dfp:.3f}], "
+          f"poison recall-drop<.02 [{poison_drop:+.3f}]) ===")
 
     if args.drift:
         drift_test(args, get_llm(args.backend, args.model, 0.0, args.seed))
