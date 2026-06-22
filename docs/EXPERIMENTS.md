@@ -304,6 +304,49 @@ is **only safe with grounded re-verification** — without it, the very memory t
 false positives drives false *negatives* to 100% under deployment drift. Both are now
 on the critical path from PoC to a production claim.
 
+| E13 | **Imperfect-control noise sweep — the precision/recall tradeoff + a meaningful CI** | `--noise`: a fraction of "neutralized" routes are actually exploitable (WAF bypass) but still carry the deployment fact → fact ≠ label; injects per-engagement variance. DeepSeek-V4-Pro, noise 0.0 vs 0.3, N=5. | noise 0.0: dFP **+0.80**, dRecall **0.00** (PASS). noise 0.3: dFP **+0.69** 95% CI [0.51, 0.81] (**CI now informative**), dRecall **−0.22** (FAIL suppression guard); probe-ALL fp 0.24 **beats** probe-once 0.31; placebo clean (8% of gain) | **The gain has a recall cost ∝ control leakiness.** When 30% of "protected" routes are bypasses — indistinguishable from benign *in the code* — memory over-suppresses them (−22% recall); only per-route probing recovers it (defeating the cost saving). And the **strong model over-suppresses *more* than MockLLM** (−0.22 vs −0.11): a more capable model trusts grounded memory more → needs *more* re-verification, not less. Mirror of E12 (drift) on the spatial axis. |
+
+### E13 detail — when the control is imperfect, the gain costs recall
+
+E11/E12 used a *perfect* control (a "neutralized" class was benign on every route).
+Real deployment controls leak — a WAF has bypasses, a gateway misses a route. E13's
+`--noise` models that: a fraction of routes on a neutralized class are *still
+exploitable* yet *still carry the deployment fact*, so the service-wide "benign"
+lesson is only probabilistically true (`experiments/gain_bp.py --noise`; log
+`docs/samples/gain-bp-E13-noise03-deepseek.log`).
+
+```
+DeepSeek-V4-Pro, matched-pairs gain vs control reliability:
+  noise=0.0 (perfect control):  dFP +0.80   dRecall  0.00   (CI degenerate — no variance)
+  noise=0.3 (30% bypass rate):  dFP +0.69   dRecall -0.22   95% CI on dFP [0.51, 0.81]
+```
+
+Two findings:
+
+1. **The CI is finally meaningful.** At noise=0 every engagement is identical, so the
+   bootstrap CI is a point (E12's caveat). Noise injects real variance → `dFP +0.69
+   [0.51, 0.81]` is a genuine interval. *A meaningful CI requires a stochastic
+   substrate* — confirmed, and now satisfied.
+
+2. **The gain trades recall for precision, proportional to how leaky the control is.**
+   FPs still fall sharply (+0.69), but recall drops **22%**: the model trusts the
+   service-wide "benign" and silences the bypass routes — which are *genuinely
+   exploitable* but **indistinguishable from benign ones in the code** (the
+   discriminator is deployment-level, unobservable per-finding). No reasoning recovers
+   it; only a per-route probe does — and indeed **probe-everything (fp 0.24) now beats
+   probe-once (fp 0.31)**, the cost saving of E11 inverting into an accuracy cost under
+   noise. The placebo stays clean (8% of gain), so the FP reduction is still real
+   learning — it's the *recall side* that the imperfect control taxes.
+
+**The counterintuitive, leadership-relevant point:** DeepSeek over-suppresses *more*
+than MockLLM (−0.22 vs −0.11). The stronger model trusts a confident, grounded-looking
+lesson more completely — the same pattern as E12's drift (100% vs 96% FN). **Capability
+amplifies memory-trust, so it amplifies the safety erosion; a better model needs more
+re-verification discipline, not less.** E12 (temporal staleness) and E13 (spatial
+leakiness) are the same failure on two axes, and both point to the same fix: the
+learned memory must *annotate with grounded, fresh evidence and let downstream decide*
+(flag-don't-flip), never silently suppress.
+
 ### E10 detail — the real FP lever, and two degenerate-optimum lessons
 
 We wired **real `dspy.GEPA`** (ICLR 2026) to optimize a validator that labels OWASP

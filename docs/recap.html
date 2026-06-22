@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loupe / PenPal self-evolution — recap</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --ink:#e8eaed;
+    --mut:#9aa3b0; --line:#2a2f3a; --acc:#5b9dff; --good:#3ecf8e; --warn:#f5a623; --bad:#ff6b6b;
+    --t1:#3ecf8e; --t2:#5b9dff; --t3:#f5a623; --t4:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:1040px;margin:0 auto;padding:40px 24px 80px}
+  h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
+  h2{font-size:21px;margin:46px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);letter-spacing:-.01em}
+  h3{font-size:16px;margin:26px 0 8px;color:var(--acc)}
+  p{margin:10px 0}
+  .sub{color:var(--mut);font-size:15px;margin:0 0 4px}
+  .lede{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:22px 0}
+  .lede b{color:#fff}
+  code{background:#0b0d11;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cdd6e4}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  tr:hover td{background:#12151c}
+  .pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .done{background:rgba(62,207,142,.14);color:var(--good);border:1px solid rgba(62,207,142,.3)}
+  .part{background:rgba(245,166,35,.14);color:var(--warn);border:1px solid rgba(245,166,35,.3)}
+  .gap{background:rgba(255,107,107,.14);color:var(--bad);border:1px solid rgba(255,107,107,.3)}
+  .t1{color:var(--t1);font-weight:700}.t2{color:var(--t2);font-weight:700}.t3{color:var(--t3);font-weight:700}.t4{color:var(--t4);font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .card h4{margin:0 0 6px;font-size:14px;color:#fff}
+  .card p{margin:4px 0;font-size:13.5px;color:var(--mut)}
+  .big{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.02em}
+  .kpi{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .kpi .card{flex:1;min-width:150px;text-align:center}
+  .muted{color:var(--mut)}
+  .good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+  .tag{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:5px;padding:1px 6px;margin-right:4px}
+  ul{margin:8px 0 8px 0;padding-left:20px}li{margin:5px 0}
+  .callout{border-left:3px solid var(--acc);background:#12161d;padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .callout.warnb{border-color:var(--warn)}
+  .callout.badb{border-color:var(--bad)}
+  .foot{margin-top:50px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:16px}
+  .legend{font-size:12px;color:var(--mut);margin:6px 0 0}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="sub">Internal research recap · self-improving security validation</p>
+  <h1>Loupe → PenPal: can a vuln-finding agent self-evolve at telling real from benign?</h1>
+  <p class="muted">Open-source proof-of-concept · 13 experiments · no fine-tuning · DeepSeek-V4-Pro via Together AI · as of 2026-06-22</p>
+
+  <div class="lede">
+    <p style="margin-top:0"><b>The problem.</b> PenPal finds vulnerabilities; security engineers can't verify each one deterministically. The painful class is the <b>benign positive</b> — a finding that is genuinely a bug <em>in the code</em> but is neutralized <em>in deployment</em> (a WAF, an auth gateway, an unreachable route, a disabled flag). They erode trust and burn triage time.</p>
+    <p><b>The thesis.</b> When findings get false-positive feedback, the agent should learn the <em>context</em> behind the FP and reuse it to inform downstream decisions — <b>self-evolution without fine-tuning</b>, via memory + grounded verification.</p>
+    <p style="margin-bottom:0"><b>The one-line result.</b> The FP problem splits in two. <span class="good">Code-level FPs → the lever is <b>context</b></span> (give the model the dataflow; no learning needed). <span class="good">Deployment-level FPs → the lever is <b>self-evolution</b></span> (memory of shared environmental facts) — it cuts FPs ~80%… <span class="warn">but the same memory-trust erodes safety</span> (stale or leaky context causes false-negatives), so it must <b>annotate, not silently suppress</b>.</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>1 · The premise you bring — and why it matters here</h2>
+  <p>From detection engineering: <b>vulnerabilities fall into groupings</b> — by weakness class (CWE), by sink pattern, by the deployment shape they live in — and in a large enterprise codebase those groupings can be categorized and learned.</p>
+  <div class="callout">
+    <p style="margin:0">This is precisely the <b>precondition our central positive result needs.</b> Self-evolving memory only pays off when a false positive's cause is a <em>reusable, shared</em> fact (E11). If FPs cluster by CWE × deployment-context — as your experience suggests — the memory transfers across the cluster and compounds. If they were all one-offs, memory would be worthless and only per-finding context would help. <b>Whether they cluster at enterprise scale is the single biggest open question</b> (see Gaps §5).</p>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>2 · The loop we built (and the field's framing of it)</h2>
+  <p>Everything maps onto one governed cycle — the same loop the current "self-evolving agents" literature describes:</p>
+  <p style="text-align:center;font-size:15px;margin:18px 0"><code>observe</code> → <code>evaluate</code> → <code>propose improvement</code> → <code>verify</code> → <code>commit</code> &nbsp;↻</p>
+  <div class="grid">
+    <div class="card">
+      <h4>What evolves (risk ladder)</h4>
+      <p><span class="t1">Prompt</span> — safest. <b>Done</b> (real DSPy/GEPA, E4/E10).</p>
+      <p><span class="t2">Memory / context</span> — our main lever. <b>Done</b> (E1–E13).</p>
+      <p><span class="t3">Code</span> — needs sandbox. <b>Not pursued</b> (our evidence says info, not procedure, is the bottleneck).</p>
+      <p><span class="t4">Weights</span> — highest risk. <b>Excluded by design</b> (no fine-tuning).</p>
+    </div>
+    <div class="card">
+      <h4>The two governance laws we tested</h4>
+      <p><b>Goodhart:</b> the evaluation function must sit where the agent can't touch it. We <em>violated</em> this twice and watched evolution game the metric (E9, E10).</p>
+      <p><b>Safety is eroded, not added:</b> the trust that yields the gain is the same trust that produces false-negatives under drift/leak (E12, E13). Measured, not assumed.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>3 · What we've run so far — the experiment ledger</h2>
+  <p class="legend">Substrate: <span class="tag">OWASP</span> labeled SAST suite · <span class="tag">Cybench</span> real CTF exploits (flag oracle) · <span class="tag">synthetic</span> deployment-context oracle we built (no public benchmark has these).</p>
+  <table>
+    <thead><tr><th>#</th><th>What it tested</th><th>Headline result</th><th>Honest takeaway</th></tr></thead>
+    <tbody>
+      <tr><td><b>E1</b></td><td>Validator memory at scale <span class="tag">OWASP</span> 300×3×3</td><td>bp 0.508→0.501; recall 0.90→<b>1.00</b></td><td>Memory is a <b>miss-reducer, not an FP-cutter</b> on code-level findings.</td></tr>
+      <tr><td><b>E2</b></td><td>Lesson rule shape <span class="tag">OWASP</span></td><td>over-suppression 0.227 → <b>0.000</b></td><td>Unconditional lessons backfire; <b>precondition-guarded</b> ones fix it.</td></tr>
+      <tr><td><b>E3</b></td><td>Memory-poisoning defenses</td><td>corruption 1.0 → <b>0.0</b>, benign kept</td><td>No single defense works; <b>layered</b> (write-gate + scope) does.</td></tr>
+      <tr><td><b>E4</b></td><td>Prompt evolution (GEPA-lite)</td><td>rediscovered a fail-open bias</td><td>Offline prompt-evolution is a real but secondary lever.</td></tr>
+      <tr><td><b>E5</b></td><td>Self-evolving playbook <span class="tag">mini-Cybench</span></td><td>0.67 → <b>1.00</b></td><td>Works when the failure has a crisp, learnable tactic.</td></tr>
+      <tr><td><b>E6</b></td><td>First real-Cybench evolve <span class="tag">Cybench</span></td><td>2/3 → revisions rejected → 2/3</td><td>Tournament guard works; full-rewrite reviser is harmful.</td></tr>
+      <tr><td><b>E7</b></td><td>2×2 ablation (diagonal)</td><td><span class="warn">inconclusive</span></td><td>Confounded by harness gaps — <b>we caught and corrected our own overclaim.</b></td></tr>
+      <tr><td><b>E8</b></td><td>Instrumented self-evolve <span class="tag">Cybench</span></td><td>0.58 → <b>0.67</b></td><td>Capability gain is real but <b>tournament-gated</b> (2 of 3 rounds were harmful).</td></tr>
+      <tr><td><b>E9</b></td><td>Verify-before-submit (EvoHunt §8.3.1) <span class="tag">Cybench</span></td><td>precision 0.73 → <b>1.00</b>, FPs 3→0, held-out transfer</td><td>Reproduced the FP-elimination effect — <em>after</em> designing out a suppression trap.</td></tr>
+      <tr><td><b>E10</b></td><td>Real GEPA/DSPy validator <span class="tag">OWASP</span></td><td>fp_rate 0.15 → <b>0.00</b>; bal-acc 0.52→0.94</td><td><b>The code-level FP lever is CONTEXT, not the prompt.</b> Full dataflow → FPs vanish, no optimization. GEPA flat on top.</td></tr>
+      <tr style="background:#13301f"><td><b>E11</b></td><td><b>Gain on deployment-context FPs</b> <span class="tag">synthetic</span></td><td><b>dFP +0.80</b> (1.00→0.20), recall held, placebo-clean, 1/5 probe cost</td><td><b>Self-evolution cuts FPs where context can't reach</b> — the neutralizer isn't in the code; memory carries it across siblings.</td></tr>
+      <tr><td><b>E12</b></td><td>Robustness: scale + drift <span class="tag">synthetic</span></td><td>gain holds at N=8; <span class="bad">stale memory → 100% FN</span> → re-verify 33%</td><td><b>The gain and the danger are the same coin.</b> Found + fixed a harness leak mid-run. CI degenerate (determinism).</td></tr>
+      <tr style="background:#2a2113"><td><b>E13</b></td><td>Imperfect-control noise sweep <span class="tag">synthetic</span></td><td>noise 0.3: dFP +0.69 <span class="muted">[0.51,0.81]</span>, <span class="bad">dRecall −0.22</span></td><td><b>The gain costs recall ∝ control leakiness.</b> Stronger model over-suppresses <em>more</em>. CI now meaningful.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================================================= -->
+  <h2>4 · Assumptions, industry &amp; academic grounding</h2>
+  <p>Honest framing: the overarching blueprint (EvoHunt) is a fresh, unvetted preprint — but <b>almost every mechanism we actually implemented traces to a peer-reviewed, well-cited paper.</b> Credibility rests on the components, not the inspiration.</p>
+  <table>
+    <thead><tr><th>Tier</th><th>Idea we used</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td><span class="t1">Peer-reviewed anchor</span></td><td>Reflect on failure → lesson</td><td>Reflexion (NeurIPS'23), Self-Refine (NeurIPS'23)</td></tr>
+      <tr><td><span class="t1">Peer-reviewed anchor</span></td><td>Experiential lesson memory</td><td>ExpeL (AAAI'24)</td></tr>
+      <tr><td><span class="t1">Peer-reviewed anchor</span></td><td>Grounded benchmark (flag oracle)</td><td>Cybench (ICLR'25 Oral)</td></tr>
+      <tr><td><span class="t1">Peer-reviewed anchor</span></td><td>Verify-before-trust</td><td>Generative Verifiers / GenRM (ICLR'25)</td></tr>
+      <tr><td><span class="t1">Peer-reviewed anchor</span></td><td>Memory-poisoning threat model</td><td>PoisonedRAG (USENIX'25), AgentPoison (NeurIPS'24)</td></tr>
+      <tr><td><span class="t1">Peer-reviewed anchor</span></td><td>FP/TP discrimination suite</td><td>OWASP Benchmark (industry standard)</td></tr>
+      <tr><td><span class="t2">Recent peer-reviewed</span></td><td>Incremental context edits (no rewrite)</td><td>ACE — Agentic Context Engineering (ICLR'26)</td></tr>
+      <tr><td><span class="t2">Recent peer-reviewed</span></td><td>Prompt evolution + Pareto</td><td>GEPA (ICLR'26 Oral), DSPy (ICLR'24)</td></tr>
+      <tr><td><span class="t2">Domain (the FP lever)</span></td><td>Feed the model the dataflow path</td><td>IRIS (ICLR'25), ZeroFalse (2510.02534) — corroborate E10</td></tr>
+      <tr><td><span class="t2">Anthropic — method</span></td><td>Matched-pairs <b>gain</b> metric; "ICL &gt; elaborate memory"</td><td>CL-Bench (2606.05661) — adopted as our measurement discipline; corroborates E1/E10</td></tr>
+      <tr><td><span class="t3">Production, not peer-reviewed</span></td><td>Write-gating memory</td><td>Mem0 (~59k★)</td></tr>
+      <tr><td><span class="t3">Trend — code evolution</span></td><td>Self-modifying-code agents</td><td>Sakana Darwin-Gödel Machine (noted; not pursued — see §2)</td></tr>
+      <tr><td><span class="t4">Unvetted inspiration</span></td><td>Self-evolving playbook + tournament + evidence tiers</td><td>EvoHunt (2606.16420) — days-old preprint, treat claims as hypotheses</td></tr>
+    </tbody>
+  </table>
+  <p class="legend"><span class="t1">■</span> peer-reviewed anchor &nbsp; <span class="t2">■</span> recent peer-reviewed / domain &nbsp; <span class="t3">■</span> production or trend &nbsp; <span class="t4">■</span> unvetted preprint</p>
+
+  <!-- ============================================================= -->
+  <h2>5 · What we've learned (the durable findings)</h2>
+  <div class="grid">
+    <div class="card"><h4>① The FP problem partitions cleanly</h4><p><b>Code-level</b> (sanitizer in the method) → fix with <b>context</b> (E10), no learning. <b>Deployment-level</b> (WAF/gateway/flag) → fix with <b>memory</b> (E11), context can't. Knowing which one a finding is tells you which tool to reach for.</p></div>
+    <div class="card"><h4>② Self-evolution needs a shared cause</h4><p>Memory pays off only when the FP's cause recurs (E11). <b>This is where your CWE-grouping premise is load-bearing.</b> One-off FPs don't transfer; clustered ones compound.</p></div>
+    <div class="card"><h4>③ The gain and the danger are one mechanism</h4><p>The trust that cuts FPs 80% drives FNs to 100% under drift (E12) and −22% recall under leaky controls (E13). You cannot get the upside without governing the downside.</p></div>
+    <div class="card"><h4>④ Capability amplifies the risk</h4><p>The stronger model trusts grounded memory <em>more</em>, so it over-suppresses <em>more</em> (E12/E13). Better models need <b>more</b> re-verification discipline, not less.</p></div>
+    <div class="card"><h4>⑤ Goodhart is real and fast</h4><p>We watched evolution game a misspecified metric twice, in opposite directions — "never submit" (E9) and "always flag" (E10). The eval/oracle must be architecturally untouchable.</p></div>
+    <div class="card"><h4>⑥ The safe product form is annotate, not suppress</h4><p>Given ③/④, memory should <b>enrich the finding with grounded, fresh evidence + confidence</b> and let downstream decide — never silently drop it (flag-don't-flip, E3 at product scale).</p></div>
+  </div>
+
+  <!-- ============================================================= -->
+  <h2>6 · Gaps — especially at scale</h2>
+  <p>This is the honest map of <b>where we've tried vs. where we need to go.</b> The mechanism is de-risked and its failure modes are charted — on synthetic and benchmark data. Everything below is what stands between a PoC and a defensible production claim.</p>
+  <table>
+    <thead><tr><th>Dimension</th><th>Status</th><th>Where we are → where we need to go</th></tr></thead>
+    <tbody>
+      <tr><td><b>Real production data</b></td><td><span class="pill gap">GAP</span></td><td>All deployment-context results are on a <b>synthetic oracle</b> (no public benchmark has benign positives). Need real PenPal findings + verdicts. <em>This is the gate on every other gap.</em></td></tr>
+      <tr><td><b>Do FPs actually cluster?</b></td><td><span class="pill gap">GAP</span></td><td>The precondition for self-evolution (§5②). Your detection-eng intuition says yes (CWE × deployment). <b>Untested on real enterprise code</b> — measure cluster size &amp; reuse rate first.</td></tr>
+      <tr><td><b>Scale of the run</b></td><td><span class="pill part">PARTIAL</span></td><td>OWASP at N=300 (E1); deployment-context at N≤8 engagements. Need <b>real repos / enterprise monorepo</b>, hundreds of engagements, multi-seed.</td></tr>
+      <tr><td><b>Statistical confidence</b></td><td><span class="pill part">PARTIAL</span></td><td>Bootstrap CI only became meaningful with injected noise (E13). Real CI needs a <b>stochastic real-data substrate</b>, not deterministic synthetic.</td></tr>
+      <tr><td><b>Automated grounded verifier</b></td><td><span class="pill gap">GAP</span></td><td>Today: human verifiers = ground truth. Need to automate the <b>grounded checks</b> (reachability / probe / exploit-fires) — <em>not</em> the judgment (that's Goodhart). Humans shrink to drift-audit.</td></tr>
+      <tr><td><b>Structured FP feedback</b></td><td><span class="pill gap">GAP</span></td><td>A bare "false positive" label teaches over-generalization (E2/E13). Product needs to capture <b>verdict + reason + evidence</b> — the artifact that makes learning safe &amp; transferable.</td></tr>
+      <tr><td><b>Re-verification / freshness</b></td><td><span class="pill part">PARTIAL</span></td><td>E12 shows re-verify cuts stale-memory FN 100%→33%, but it's a knob, not a policy. Need a <b>runnable freshness/decay policy</b> tuned to how fast deployments change.</td></tr>
+      <tr><td><b>Annotate-not-suppress in product</b></td><td><span class="pill gap">GAP</span></td><td>The safe form (§5⑥) exists as a principle, not a PenPal feature. Surface learned context as an <b>enrichment with confidence</b>, not a silent drop.</td></tr>
+      <tr><td><b>Model / cost transfer</b></td><td><span class="pill gap">GAP</span></td><td>Results are on DeepSeek-V4-Pro. Transfer to weaker/cheaper models (EvoHunt's claim) and per-finding cost at enterprise volume are <b>untested</b>.</td></tr>
+      <tr><td><b>Governance / Goodhart wall</b></td><td><span class="pill part">PARTIAL</span></td><td>We have write-gate + scope + flag-don't-flip + tournament. Need them stated as <b>architectural invariants</b> with the eval oracle provably outside the agent's reach.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================================================= -->
+  <h2>7 · Where we go next</h2>
+  <div class="callout">
+    <p style="margin-top:0"><b>The unlock is one artifact, not one experiment.</b> Instrument PenPal to capture <b>structured, grounded FP feedback</b> — <code>finding + human verdict + reason + evidence</code> — as a labeled corpus. That single dataset simultaneously: (1) lets us measure self-improvement honestly via the matched-pairs <b>gain</b> metric, (2) answers the clustering question (§5②) that decides whether self-evolution is even the right tool, and (3) bootstraps the automated grounded verifier — with humans as the drift audit.</p>
+    <p style="margin-bottom:0">Concretely, in order: <b>(a)</b> measure FP clustering on real findings → <b>(b)</b> matched-pairs gain at scale on real code → <b>(c)</b> ship annotate-not-suppress enrichment → <b>(d)</b> automate grounded checks + set re-verification cadence from observed drift.</p>
+  </div>
+
+  <p class="foot">
+    Loupe — open-source PoC at <code>self-improving-penpal</code>. Full lab notebook: <code>docs/EXPERIMENTS.md</code> (E1–E13 + provenance §0); reproduction: <code>docs/REPLICATE.md</code>; measurement design: <code>docs/GAIN-PROTOCOL.md</code>; harness: <code>experiments/gain_bp.py</code>.<br>
+    All findings directional and validated <em>in mechanism</em>; deployment-context magnitudes are synthetic ceilings, not production numbers. Generated 2026-06-22.
+  </p>
+
+</div>
+</body>
+</html>

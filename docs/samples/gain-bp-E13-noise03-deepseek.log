@@ -1,0 +1,22 @@
+E11 gain on deployment-context benign positives | backend=together model=deepseek-ai/DeepSeek-V4-Pro
+engagements=5 classes=4 sibs=5 neutral_frac=0.5 noise=0.3
+
+=== matched-pairs gain (mean over 5 engagements, 95% bootstrap CI) ===
+  balanced-acc gain  S1-S0 : +0.234  95% CI [+0.123, +0.318]
+  dFP-rate (down=good)      : +0.691  95% CI [+0.510, +0.814]   (S0 fp 1.000 -> S1 fp 0.309)
+  dRecall (suppression guard): -0.222   (must be >= -0.02)
+
+=== controls ===
+  S0' probe-ALL fp 0.242 at 20.0 probes/engagement
+  S1  probe-1/cls fp 0.309 at 4.0 probes/engagement   (cost saving = the stateful win over probe-all)
+  S2  PLACEBO (foreign memory) fp 0.943  (must ~= S0 1.000; gain here = prompt artifact)
+  S3  POISONED recall 0.801 vs S1 recall 0.778  (must not drop; write-gate refuses the over-broad benign fact)
+
+=== learning curve: benign-positive accuracy by sibling position ===
+  pos 0: S0 0.00  S1 0.00  (n=6)
+  pos 1: S0 0.00  S1 1.00  (n=7)
+  pos 2: S0 0.00  S1 0.80  (n=5)
+  pos 3: S0 0.00  S1 1.00  (n=6)
+  pos 4: S0 0.00  S1 0.83  (n=6)
+
+=== VERDICT: FAIL (dFP>0.05 [+0.691], dRecall>=-.02 [-0.222], placebo/real gain <.25 [0.08 = +0.057/0.691], poison recall-drop<.02 [-0.024]) ===
