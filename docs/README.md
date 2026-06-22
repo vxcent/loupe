@@ -41,6 +41,8 @@ findings; real Cybench exploits).
 | `cybench-ablation-E7.log` | E7 — the 2×2 diagonal (inconclusive; harness-confounded) |
 | `cybench-selfevolve-E8.log` / `selfevolve-E8.csv` | **E8 — the meaningful self-evolve (0.58→0.67, tournament-gated)** |
 | `selfevolve-best-playbook.md` | E8 — what self-evolution learned (submit-discipline + a reversing tactic) |
+| `gepa-validator-fullcontext.log` / `-truncated.log` | E10 — FP lever is context (full method → fp_rate 0.00; GEPA flat on top) |
+| `gain-bp-E11-deepseek.log` | **E11 — matched-pairs gain on deployment-context BPs (dFP +0.80, recall held, placebo-clean)** |
 
 ## The codebase, at a glance
 
@@ -55,3 +57,5 @@ findings; real Cybench exploits).
   - `cybench_evolve.py` — first real-Cybench evolve (E6).
   - `cybench_ablation.py` — the 2×2 (E7).
   - `cybench_selfevolve.py` — the instrumented self-evolve with failure taxonomy (E8).
+- `experiments/gepa_validator.py` — real `dspy.GEPA` validator; context-is-the-lever (E10).
+- `experiments/gain_bp.py` — **matched-pairs gain on deployment-context benign positives (E11)** — the synthetic-neutralizer oracle + 5 arms + placebo/poison/cost controls. See [GAIN-PROTOCOL.md](GAIN-PROTOCOL.md).

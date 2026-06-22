@@ -177,6 +177,77 @@ absolute scalar. And it only worked *after* designing out the suppression trap.
 
 | E10 | **GEPA/DSPy validator for OWASP FP reduction** | real `dspy.GEPA` (ICLR'26) optimizing a real-vs-FP validator; balanced 50/50, suppression-proof accuracy metric, DeepSeek-V4-Pro; held-out precision/recall/fp_rate | **The FP lever is CONTEXT, not the prompt.** Truncated source→sink → bal_acc **0.52** / precision 0.56 / fp_rate 0.15 (GEPA can't help — it keeps the seed). **Full method → bal_acc 0.94 / precision 1.00 / fp_rate 0.00 with NO optimization — false positives eliminated.** | Validates the literature (ZeroFalse/IRIS feed the LLM the *dataflow path*, not raw code). Also hit + fixed BOTH degenerate optima (all-flag / all-suppress) via balanced data + an un-gameable metric. |
 
+| E11 | **Matched-pairs gain on deployment-context benign positives** (Regime B) | synthetic-neutralizer oracle: real-vulnerable code whose neutralizer is a *service-wide deployment fact not in the code*, shared across sibling routes, probe-only; CL-Bench gain `S1−S0` on identical streams; 5 arms + placebo/poison/cost controls; DeepSeek-V4-Pro, 3 engagements × 4 classes × 5 sibs | **dFP +0.80** (stateless fp **1.00 → 0.20** stateful), **recall held +0.00**; **placebo (foreign memory) ≈ baseline** (0.97 vs 1.00); poison neutralized (recall 1.00); learning curve **flat-S0 / S1=1.00 from sibling-pos 1**; cost **4 vs 20 probes** for equal accuracy. **VERDICT: PASS** | **Self-evolution DOES cut benign positives — in the regime context can't reach.** The neutralizer isn't in the code, so a stateless validator over-flags *every* BP (fp 1.00); memory carries the once-probed service fact to siblings and the model transfers it (and *rejects* foreign-service facts → it's real learning, not skepticism). The 0.20 residual *is* the irreducible cold-first floor. Caveat: synthetic substrate, N=3. |
+
+### E11 detail — where self-evolution earns its keep (the complement to E10)
+
+E10 showed that for *code-level* false positives (Regime A), the lever is **context**
+(the sanitizer is in the method) and self-evolution adds ~nil. E11 tests the regime
+E10 and the public benchmarks **cannot** address: the **deployment-context benign
+positive** — PenPal's actual pain — where the finding is genuinely exploitable in the
+code but **neutralized by the deployment** (a WAF, an auth gateway, a disabled flag),
+and that neutralizer is **not in the code** and is **shared** across many findings on
+the same service. This is exactly the *"shared latent structure a stateless system
+can't exploit but a stateful one can"* that CL-Bench is built around (`experiments/gain_bp.py`).
+
+**Why context can't help here, by construction:** the synthetic-neutralizer oracle
+emits real-vulnerable code (input → sink, unsanitized) and puts the neutralizer only
+at the deployment level (probe-discoverable, service-wide). So a validator reasoning
+over code alone *must* over-flag — and DeepSeek does: **stateless fp_rate = 1.00.**
+
+**The matched-pairs gain (DeepSeek-V4-Pro, gain = S1−S0 on identical streams):**
+
+```
+balanced-acc gain  S1 − S0 : +0.400
+dFP-rate (down=good)       : +0.800     (stateless fp 1.000 → stateful fp 0.200)
+dRecall (suppression guard): +0.000     (recall fully preserved — no over-suppression)
+
+learning curve — benign-positive accuracy by sibling position (n=6 each):
+  pos 0 (cold):  S0 0.00   S1 0.00     <- neither can know the fact on first contact
+  pos 1:         S0 0.00   S1 1.00
+  pos 2:         S0 0.00   S1 1.00
+  pos 3:         S0 0.00   S1 1.00
+  pos 4:         S0 0.00   S1 1.00     <- S1 transfers the probed fact to every sibling
+```
+
+The residual stateful fp_rate (0.20 = 1 of 5 siblings) **is** the cold-first floor:
+the first finding of each class is judged before any probe, so it's correctly
+unlearnable. Every later sibling is corrected.
+
+**The controls are what make this a finding and not a fluke:**
+
+- **Placebo (S2) — the decisive one.** Re-run the stateful arm but seed it with a
+  *different* engagement's memory. Gain **vanishes: fp 0.967 ≈ baseline 1.000.** The
+  model *read the foreign service name in the lesson and refused to apply it.* So the
+  +0.80 is **genuine cross-instance learning of a specific fact**, not a generic
+  "memory makes the model more cautious" prompt artifact. (This is the control that
+  would have caught a spurious result; it passed.)
+- **Poison (S3).** Inject an over-broad benign fact ("this class is always safe"). The
+  **write-gate refuses** it (benign lesson with no precondition is inadmissible);
+  recall stays **1.00 = 1.00**. Memory poisoning did not buy a fake FP reduction.
+- **Cost null (S0′).** A stateless arm that probes *every* finding reaches the same
+  fp_rate (0.20) — but at **20 probes/engagement vs the stateful arm's 4** (one per
+  shared cause). Identical accuracy at **1/5 the grounded-probe cost** is the stateful
+  system's real, separable advantage over "just probe everything."
+
+**Net E11 takeaway:** the two experiments **partition the false-positive problem** and
+each has a measured answer. *Code-level* FP (Regime A) → **context is the lever**
+(E10), self-evolution ~nil. *Deployment-context* FP (Regime B) → **context structurally
+cannot help** (the fact isn't in the code), and **self-evolution / verified-lesson
+memory delivers a large, controlled, suppression-safe gain** (dFP +0.80, recall held,
+placebo-clean, at 1/5 the probe cost). This is the first direct, falsifiable evidence
+that Loupe's self-learning loop solves PenPal's *actual* benign-positive pain — the
+deployment flip the public benchmarks never contained.
+
+**Honest caveats (the road from PoC to claim):** (1) **synthetic substrate** — code is
+templated and the neutralizer is clean/deterministic; the credible next step is real
+OWASP/Juliet code with a *noisy* overlay where a deployment fact only *reduces* (not
+guarantees) benignity, so the model must still reason. (2) **N=3 engagements** (n=6 per
+curve point) — trivially scaled via `--engagements`, and should be, with a paired
+bootstrap CI. (3) **strong model** — DeepSeek-V4-Pro transferred *perfectly*; a weaker
+model may not, making transfer ability itself the variable to ablate. The mechanism and
+the controls are sound; the magnitude is a synthetic ceiling, not the production number.
+
 ### E10 detail — the real FP lever, and two degenerate-optimum lessons
 
 We wired **real `dspy.GEPA`** (ICLR 2026) to optimize a validator that labels OWASP
