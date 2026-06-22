@@ -347,6 +347,70 @@ leakiness) are the same failure on two axes, and both point to the same fix: the
 learned memory must *annotate with grounded, fresh evidence and let downstream decide*
 (flag-don't-flip), never silently suppress.
 
+| E14 | **Reproduction-as-verification: evolving capability toward VSCR findings** | `experiments/reproduce_evolve.py` — observe→evaluate→propose→verify→commit, where *evaluate* = a **zero-context agent reproduces the finding** (grounded oracle, Goodhart-safe), *propose* = distill a **skill** (technique for reals, discipline for benign positives), *verify* = **anti-regression** replay, *commit* = tournament-gated. MockLLM mechanism demo, 36 findings, 6 iterations. | **capability 0.00 → 0.94**; **11 skills learned**; **5 over-broad skills rejected** by anti-regression (they'd have made the agent refuse real bugs) | **The durable, procedural mechanism (the E9 thread, generalized).** Reproduction is an eval the agent can't game; the loop learns *transferable verification skills* (not fragile memorized facts) and the anti-regression guard provably preserves prior capability. This is the safe form E12/E13 demanded, made runnable. |
+
+### E14 detail — reproduction as the grounded eval, skills as the learned tool
+
+The synthesis of two earlier threads: E9 showed a *verification discipline* can be
+self-evolved and transfers (the durable mechanism); E12/E13 showed *fact-memory*
+erodes under drift/leak (the fragile one). E14 builds the durable one into a runnable
+harness, reframing the EvoHunt loop around the user's insight: **give a finding to a
+fresh-context agent and see if it reproduces — reproduction is the oracle.**
+
+```
+观察 → 评估 → 提出改进 → 验证 → 提交   (observe → evaluate → propose → verify → commit)
+
+evaluate : a ZERO-CONTEXT reproducer attempts the exploit; a GROUNDED oracle grades it
+           — reproduced / improved / unverifiable_correct (good) vs missed / wrong_exploit
+           / false_claim (bad). The agent cannot argue its way to a pass.
+propose  : on eval completion, distill a reusable SKILL —
+              missed/wrong_exploit  -> a TECHNIQUE (grounded in the real PoC)
+              false_claim           -> a verification DISCIPLINE (grounded in why it's benign)
+verify   : ANTI-REGRESSION — replay the candidate on all prior findings; reject it if it
+           lowers capability (the over-generalization / context-collapse guard).
+commit   : keep only skills that maintain prior capability AND help.
+```
+
+Outcomes drive every finding toward **VSCR** — Verifiable, Significant, Contextually
+grounded, Reproducible. The capability metric rewards *both* reproducing real bugs and
+correctly rejecting benign positives, so neither "claim everything" nor "claim nothing"
+wins (the anti-degenerate design from E10/E13).
+
+**MockLLM mechanism demo (36 findings, 6 iterations):**
+
+```
+iter | skills | capability | committed | rejected
+   0 |    0   |    0.00    |    0      |    0      <- cold: over-claims all, reproduces none
+   1 |    6   |    0.53    |    6      |    0
+   2 |    8   |    0.72    |    2      |    2      <- anti-regression starts rejecting over-broad skills
+   3 |    9   |    0.78    |    1      |    1
+   4 |   10   |    0.86    |    1      |    0
+   6 |   11   |    0.94    |    1      |    0
+capability 0.00 -> 0.94   | 11 skills kept, 5 rejected by anti-regression
+```
+
+The **5 rejected** candidates are the point: the distiller sometimes proposes an
+over-broad discipline ("*$class findings are usually false positives — skip them*");
+the anti-regression replay catches that it would make the agent refuse genuine bugs and
+**rejects it**, keeping only the narrow, precondition-scoped disciplines and the
+techniques. That is the "verify it maintains previous capabilities" requirement,
+demonstrated — the same guard that was load-bearing in E6/E8/E9, now protecting a
+*skill library* rather than a playbook.
+
+The harness runs on MockLLM (free, deterministic mechanism check) and on Together
+(real model; attempts are memoized at temp-0 so the repeated capability/anti-regression
+evaluations are cheap). Per-iteration results are written to
+`results/reproduce_evolve.csv` for the cross-version comparison view (cf. the OpenAI
+self-evolving-agents cookbook's iteration tabs). *Real-model run: see
+`docs/samples/`.*
+
+**Why this is the more promising line:** a learned *technique/discipline* is a
+procedure — it doesn't go stale the way a memorized deployment fact does (E12) and
+doesn't over-suppress when a control is leaky if it's scoped (E13). The reproduction
+oracle is external and unfakeable, closing the Goodhart hole that bit E9/E10. This is
+the architecture the safety findings point to: **self-evolve a transferable
+verify-then-annotate discipline, gated by reproduction and anti-regression.**
+
 ### E10 detail — the real FP lever, and two degenerate-optimum lessons
 
 We wired **real `dspy.GEPA`** (ICLR 2026) to optimize a validator that labels OWASP
