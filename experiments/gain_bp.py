@@ -91,9 +91,17 @@ def _code(sink_desc: str, route: str, service: str) -> str:
             f"sink(p);  // p flows from the request straight into the sink, unsanitized")
 
 
-def build_engagement(seed: int, n_classes: int, sibs: int, neutral_frac: float):
+def build_engagement(seed: int, n_classes: int, sibs: int, neutral_frac: float,
+                     noise: float = 0.0):
     """Return (findings, neutralized_keys). Siblings of a class are spread through
-    the stream so later siblings can benefit from an earlier one's probed outcome."""
+    the stream so later siblings can benefit from an earlier one's probed outcome.
+
+    `noise` models an IMPERFECT control: a fraction of routes on a "neutralized"
+    class are actually still exploitable (a WAF bypass / a route the gateway misses)
+    while STILL carrying the deployment fact. So the service-wide "benign" lesson is
+    only probabilistically true, fact != label, and a stateful arm that blindly
+    trusts it will false-negative on the bypass routes — the over-suppression cost.
+    This also injects real per-engagement variance (a meaningful CI needs it)."""
     rng = random.Random(seed)
     service = f"svc-{seed:04d}"   # one deployment/service per engagement
     classes = rng.sample(SINKS, min(n_classes, len(SINKS)))
@@ -109,14 +117,16 @@ def build_engagement(seed: int, n_classes: int, sibs: int, neutral_frac: float):
         members = []
         for s in range(sibs):
             route = f"/{key}/route{s}"
+            # a bypass route: carries the control fact but is still exploitable
+            bypass = neutralized and (rng.random() < noise)
             fact = [neut[0]] if neutralized else []
             members.append(Finding(
                 id=f"{key}-{s}", cwe=cwe, title=f"{key} via {route} on {service}",
                 location=f"{key}.java:{40+s}", claim=f"request input reaches the {key} sink",
                 context=_code(sink_desc, route, service),
                 class_key=key,
-                label=("benign" if neutralized else "real"),
-                benign_category=(neut[0] if neutralized else None),
+                label=("real" if (not neutralized or bypass) else "benign"),
+                benign_category=(neut[0] if (neutralized and not bypass) else None),
                 assumptions=fact,
             ))
         per_class.append(members)
@@ -325,6 +335,9 @@ def main():
     ap.add_argument("--classes", type=int, default=6)
     ap.add_argument("--sibs", type=int, default=6)
     ap.add_argument("--neutral-frac", type=float, default=0.5)
+    ap.add_argument("--noise", type=float, default=0.0,
+                    help="fraction of 'neutralized' routes that are actually exploitable "
+                         "(WAF bypass) — makes the control imperfect: fact != label")
     ap.add_argument("--engagements", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--drift", action="store_true", help="run the stale-memory drift test")
@@ -337,7 +350,7 @@ def main():
     print(f"E11 gain on deployment-context benign positives | backend={args.backend} "
           f"model={args.model if args.backend=='together' else '-'}")
     print(f"engagements={args.engagements} classes={args.classes} sibs={args.sibs} "
-          f"neutral_frac={args.neutral_frac}\n")
+          f"neutral_frac={args.neutral_frac} noise={args.noise}\n")
 
     if args.drift_only:
         drift_test(args, get_llm(args.backend, args.model, 0.0, args.seed))
@@ -349,9 +362,9 @@ def main():
     curve_acc = {}
     for e in range(args.engagements):
         seed = args.seed + e
-        findings, _ = build_engagement(seed, args.classes, args.sibs, args.neutral_frac)
+        findings, _ = build_engagement(seed, args.classes, args.sibs, args.neutral_frac, args.noise)
         # a FOREIGN engagement's memory for the placebo (different overlay)
-        foreign, _ = build_engagement(seed + 9973, args.classes, args.sibs, args.neutral_frac)
+        foreign, _ = build_engagement(seed + 9973, args.classes, args.sibs, args.neutral_frac, args.noise)
         foreign_lessons = []
         seen = set()
         for f in foreign:
