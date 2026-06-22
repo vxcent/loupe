@@ -22,6 +22,11 @@ findings; real Cybench exploits).
 5. **[EXPERIMENT-NEXT.md](EXPERIMENT-NEXT.md)** — the 2×2 ablation design (the
    discipline doc that prevented kitchen-sink confounding). *Status: its diagonal
    ran as E7 — see EXPERIMENTS.md for what that found and how E8 followed.*
+6. **[GAIN-PROTOCOL.md](GAIN-PROTOCOL.md)** — *the next experiment, pre-registered.*
+   Adapts CL-Bench's matched-pairs **gain metric** to FP reduction: estimates our
+   potential gain (≈0 on code-level FP where context already saturates; large on
+   *deployment-context* benign positives), and gives the falsifiable protocol +
+   controls to verify self-evolution actually cuts benign positives.
 
 ## Where the artifacts are
 

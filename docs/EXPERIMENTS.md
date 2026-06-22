@@ -34,6 +34,7 @@ GitHub) so you can dig in.
 |---|---|---|
 | **Incremental edits, no rewrite** (the E6→E8 fix) | Add a bullet; don't rewrite the whole playbook (rewriting erases hard-won detail = "context collapse") | **ACE (Agentic Context Engineering)**, ICLR 2026 ([2510.04618](https://arxiv.org/abs/2510.04618)) |
 | **Prompt evolution + Pareto** (`gepa_distiller.py`) | Auto-rewrite the prompt from its mistakes, keeping versions that win on different objectives | **GEPA**, ICLR 2026 (Oral) ([2507.19457](https://arxiv.org/abs/2507.19457), [gepa-ai/gepa](https://github.com/gepa-ai/gepa)) — lineage: **DSPy**, ICLR 2024 ([stanfordnlp/dspy ~35k](https://github.com/stanfordnlp/dspy)) |
+| **Matched-pairs gain metric** (the measurement discipline for any self-evolution claim — see [GAIN-PROTOCOL.md](GAIN-PROTOCOL.md)) | Run the same system with memory on vs off on the *same* case and subtract, so difficulty cancels and you isolate what memory added | **CL-Bench (Continual Learning Bench)**, Anthropic ([2606.05661](https://arxiv.org/html/2606.05661), [pgasawa/continual-learning-bench](https://github.com/pgasawa/continual-learning-bench)) — 2606 preprint; method sound regardless of venue. Its headline (**ICL > ACE/Mem0**) independently corroborates E1/E10. |
 
 ### Tier 3 — widely used in production, paper not peer-reviewed
 
