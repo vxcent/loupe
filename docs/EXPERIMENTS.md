@@ -347,7 +347,7 @@ leakiness) are the same failure on two axes, and both point to the same fix: the
 learned memory must *annotate with grounded, fresh evidence and let downstream decide*
 (flag-don't-flip), never silently suppress.
 
-| E14 | **Reproduction-as-verification: evolving capability toward VSCR findings** | `experiments/reproduce_evolve.py` — observe→evaluate→propose→verify→commit, where *evaluate* = a **zero-context agent reproduces the finding** (grounded oracle, Goodhart-safe), *propose* = distill a **skill** (technique for reals, discipline for benign positives), *verify* = **anti-regression** replay, *commit* = tournament-gated. MockLLM mechanism demo, 36 findings, 6 iterations. | **capability 0.00 → 0.94**; **11 skills learned**; **5 over-broad skills rejected** by anti-regression (they'd have made the agent refuse real bugs) | **The durable, procedural mechanism (the E9 thread, generalized).** Reproduction is an eval the agent can't game; the loop learns *transferable verification skills* (not fragile memorized facts) and the anti-regression guard provably preserves prior capability. This is the safe form E12/E13 demanded, made runnable. |
+| E14 | **Reproduction-as-verification: evolving capability toward VSCR findings** | `experiments/reproduce_evolve.py` — observe→evaluate→propose→verify→commit, where *evaluate* = a **zero-context agent reproduces the finding** (grounded oracle, Goodhart-safe), *propose* = distill a **skill** (technique for reals, discipline for benign), *verify* = **layered** write-gate + anti-regression, *commit* = tournament-gated. Mock (36 findings, 6 iters) + DeepSeek-V4-Pro (18 findings, 4 iters, 2 runs). | mock: cap **0.00→0.94**, 11 skills, 5 over-broad gated. real: cap 0.06→**0.50** then exposed a guard gap (broad skills slipped in) → layered write-gate → **technique skills survive, behavioral "benign" disciplines get gated/rejected** | **The durable mechanism (E9 generalized) — and an honest wall.** Reproduction is an unfakeable eval; **technique** learning is safe/monotonic, but **"benign" can't be learned as a behavioral skill from code alone** (same wall as E10/E13). The benign verdict must be **grounded in execution** (a real reproduction attempt), so the production form needs a sandbox. Real-model run proved the layered governance is load-bearing. |
 
 ### E14 detail — reproduction as the grounded eval, skills as the learned tool
 
@@ -397,19 +397,53 @@ techniques. That is the "verify it maintains previous capabilities" requirement,
 demonstrated — the same guard that was load-bearing in E6/E8/E9, now protecting a
 *skill library* rather than a playbook.
 
-The harness runs on MockLLM (free, deterministic mechanism check) and on Together
-(real model; attempts are memoized at temp-0 so the repeated capability/anti-regression
-evaluations are cheap). Per-iteration results are written to
-`results/reproduce_evolve.csv` for the cross-version comparison view (cf. the OpenAI
-self-evolving-agents cookbook's iteration tabs). *Real-model run: see
-`docs/samples/`.*
+**Real-model runs (DeepSeek-V4-Pro, 18 findings, 4 iters) — where it got honest.**
+The mock is deterministic; the real model exposed two things the mock could not, and
+both are the *point* of running it.
 
-**Why this is the more promising line:** a learned *technique/discipline* is a
-procedure — it doesn't go stale the way a memorized deployment fact does (E12) and
-doesn't over-suppress when a control is leaky if it's scoped (E13). The reproduction
-oracle is external and unfakeable, closing the Goodhart hole that bit E9/E10. This is
-the architecture the safety findings point to: **self-evolve a transferable
-verify-then-annotate discipline, gated by reproduction and anti-regression.**
+*Run 1 — behavioral guard only (logs `…E14-repro-deepseek-run1-nogate.log`):*
+capability 0.06 → **0.50**, but **0 rejected** and several **over-broad disciplines
+committed** ("sqli is usually a false positive — skip them"). With a small replay
+buffer and a non-deterministic model, a broad skill's latent harm doesn't show a clear
+capability drop on `seen`, so the behavioral anti-regression *misses* it — the E2/E13
+over-generalization hazard, recurring. The broad skills cap capability (they buy cheap
+credit on benign findings by skipping, at the cost of real bugs in those classes).
+
+*Fix — layered governance (the E3 lesson):* add a **structural write-gate** that
+refuses a discipline naming no precondition, *before* the behavioral check.
+
+*Run 2 — write-gate + anti-regression (logs `…E14-repro-deepseek-run2-gated.log`):*
+the broad skills are now **write-gated (3)** — but capability lands at **0.39**, and the
+guard **regression-rejects 6** of the remaining candidates, keeping only **2 skills (1
+technique, 1 discipline)**. This is the deep finding: **even *narrowly*-phrased "benign"
+disciplines make the real model over-cautious and refuse genuine bugs**, so the
+anti-regression guard (correctly) rejects them — leaving the agent stuck with persistent
+false-claims on the benign findings it can't safely learn to skip.
+
+**The synthesis (E14 reconfirms E11/E12/E13 from a third angle):**
+
+- **TECHNIQUE skills are safe and monotonic** — learning *how to reproduce* a bug only
+  ever helps; these survive every gate.
+- **Behavioral "benign" DISCIPLINES are not learnable safely from code alone** — broad
+  ones get write-gated, narrow ones get regression-rejected, because the discriminating
+  evidence (is this route actually reachable/unsanitized?) **isn't in the code.** Same
+  wall as E10 (context is the lever) and E13 (over-suppression).
+- **Therefore the "benign" verdict must come from a *grounded reproduction failure* —
+  executed, not asserted.** The honest limit of this PoC: its "reproduction" is still
+  the LLM *claiming* `exploit=true/false`, not an exploit actually *firing*. The
+  production version needs an **execution sandbox** (the Cybench flag-oracle grounding
+  that made E9 work) so that "couldn't reproduce" is a real, unfakeable signal rather
+  than another opinion.
+
+**Net E14 takeaway:** the loop, the skill-learning, and the *layered* governance
+(write-gate + anti-regression) all work and are the right architecture — and running it
+on a real model proved the governance is load-bearing (it caught a regression the mock
+couldn't surface). The durable, safe thing to self-evolve is **reproduction technique**;
+the **benign judgment must be grounded in execution, not learned as a behavioral
+heuristic.** That is the same lesson as E10/E11/E12/E13, now established on the
+procedural (E9) line — and it sharpens the product target: *evolve a technique library,
+verify findings by attempted reproduction in a sandbox, and annotate (never silently
+suppress) what fails to reproduce.*
 
 ### E10 detail — the real FP lever, and two degenerate-optimum lessons
 

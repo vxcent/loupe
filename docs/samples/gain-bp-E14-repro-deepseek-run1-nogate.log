@@ -1,0 +1,30 @@
+E14 reproduction-as-verification | backend=together corpus=18 {'unverifiable': 9, 'improvable': 3, 'reproducible': 6}
+
+iter 0 (cold)        capability 0.06   skills 0   {'false_claim': 9, 'wrong_exploit': 8, 'reproduced': 1}
+iter 1  +2 skill(s) (-0 rejected)  capability 0.33   skills 2
+iter 2  +3 skill(s) (-0 rejected)  capability 0.44   skills 5
+iter 3  +2 skill(s) (-0 rejected)  capability 0.44   skills 7
+iter 4  +3 skill(s) (-0 rejected)  capability 0.50   skills 10
+
+=== capability across iterations (compare versions) ===
+ iter | skills | capability | committed | rejected
+    0 |      0 |    0.06    |       0   |      0
+    1 |      2 |    0.33    |       2   |      0
+    2 |      5 |    0.44    |       3   |      0
+    3 |      7 |    0.44    |       2   |      0
+    4 |     10 |    0.50    |       3   |      0
+
+capability 0.06 -> 0.50  (+0.44)  | 10 skills kept, 0 rejected by anti-regression
+learned skills (the evolved tool/skill library):
+  [discipline] cmdi  : Before claiming cmdi, verify the sink is reachable and unsanitized; benign when: the parameter is an enum validated upstream.
+  [technique ] xxe   : To reproduce xxe, use: external-entity expansion in the XML parser.
+  [discipline] ssrf  : ssrf findings are usually false positives — skip them.
+  [discipline] sqli  : sqli findings are usually false positives — skip them.
+  [discipline] xss   : Before claiming xss, verify the sink is reachable and unsanitized; benign when: the route is unreachable behind the auth gateway.
+  [technique ] ssrf  : To reproduce ssrf, use: internal-metadata fetch via the user-controlled URL.
+  [discipline] idor  : idor findings are usually false positives — skip them.
+  [technique ] idor  : To reproduce idor, use: object reference swap to another tenant's record.
+  [discipline] xxe   : Before claiming xxe, verify the sink is reachable and unsanitized; benign when: the parameter is an enum validated upstream.
+  [discipline] sqli  : sqli findings are usually false positives — skip them.
+
+wrote results/reproduce_evolve.csv (per-iteration, for the comparison view)

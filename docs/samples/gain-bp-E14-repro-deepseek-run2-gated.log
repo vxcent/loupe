@@ -1,0 +1,22 @@
+E14 reproduction-as-verification | backend=together corpus=18 {'unverifiable': 9, 'improvable': 3, 'reproducible': 6}
+
+iter 0 (cold)        capability 0.06   skills 0   {'false_claim': 9, 'wrong_exploit': 8, 'reproduced': 1}
+iter 1  +2 skill(s) (-0 gated, -0 regressed)  capability 0.39   skills 2
+iter 2  +0 skill(s) (-1 gated, -1 regressed)  capability 0.39   skills 2
+iter 3  +0 skill(s) (-1 gated, -2 regressed)  capability 0.39   skills 2
+iter 4  +0 skill(s) (-1 gated, -3 regressed)  capability 0.39   skills 2
+
+=== capability across iterations (compare versions) ===
+ iter | skills | capability | committed | gated | regressed
+    0 |      0 |    0.06    |       0   |    0  |      0
+    1 |      2 |    0.39    |       2   |    0  |      0
+    2 |      2 |    0.39    |       0   |    1  |      1
+    3 |      2 |    0.39    |       0   |    1  |      2
+    4 |      2 |    0.39    |       0   |    1  |      3
+
+capability 0.06 -> 0.39  (+0.33)  | 2 skills kept, 3 write-gated, 6 regression-rejected
+learned skills (the evolved tool/skill library):
+  [discipline] cmdi  : Before claiming cmdi, verify the sink is reachable and unsanitized; benign when: the parameter is an enum validated upstream.
+  [technique ] xxe   : To reproduce xxe, use: external-entity expansion in the XML parser.
+
+wrote results/reproduce_evolve.csv (per-iteration, for the comparison view)
