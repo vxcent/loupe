@@ -248,6 +248,62 @@ bootstrap CI. (3) **strong model** — DeepSeek-V4-Pro transferred *perfectly*; 
 model may not, making transfer ability itself the variable to ablate. The mechanism and
 the controls are sound; the magnitude is a synthetic ceiling, not the production number.
 
+| E12 | **Robustness of the E11 gain: scale + bootstrap CI + stale-memory drift** | E11 gain re-run at N=8 with paired bootstrap CI; plus a drift stress test — a deployment fact learned early goes stale after the environment flips benign→live (code unchanged), measuring post-change false-negatives with (S5) vs without (S4) re-verification. DeepSeek-V4-Pro. | gain **reconfirmed** (dFP +0.80, recall held, placebo 6% of gain → PASS); **CI degenerate `[+0.40,+0.40]`** (synthetic determinism — see caveat); **drift: stale memory → 100% FN** on now-live bugs, **re-verification → 33%** (the cold-to-change floor) | **The gain and the danger are the same coin.** A strong model *fully trusts* a grounded benign lesson — that's what cuts FPs (E11) **and** what makes stale memory suppress 100% of newly-live bugs. **Self-learning FP reduction REQUIRES grounded re-verification.** Also: caught + fixed a harness leak mid-run (honesty note below). |
+
+### E12 detail — is the gain robust, and is it *safe*?
+
+Two questions E11 left open: is the gain statistically real, and does it stay safe
+when the world changes? (`experiments/gain_bp.py --drift`; logs
+`docs/samples/gain-bp-E12-gain-N8.log`, `gain-bp-E12-drift-deepseek.log`.)
+
+**1. Scale + CI — gain reconfirmed, but the CI is honestly meaningless yet.** At
+N=8 engagements the gain is identical to E11: dFP **+0.80** (stateless fp 1.00 →
+stateful 0.20), recall held, placebo explains only **6%** of the gain
+(0.05/0.80 < 0.25 → PASS). **But the bootstrap 95% CI came out zero-width,
+`[+0.40, +0.40]`** — because the synthetic oracle is fully deterministic (temp-0
+model + clean overlay), *every engagement produces the exact same numbers*. So the
+CI is real but **uninformative**: it measures the absence of synthetic variance, not
+real-world uncertainty. **A meaningful CI requires a stochastic substrate** (real
+OWASP/Juliet code + a *noisy* overlay where a deployment fact only *reduces* — not
+guarantees — benignity). This is the headline caveat of E12.
+
+**2. Drift / stale memory — the safety result, and the point of the whole exercise.**
+PenPal's original fear was "*'previous SQLi triaged' suppressing a now-live bug*." We
+built exactly that: a class is benign early (a WAF is up), then the deployment
+**flips live** (WAF removed) — but the *code never changes*, so only a fresh probe
+can reveal the new truth. DeepSeek-V4-Pro:
+
+```
+post-drift false-negative rate (now-live bugs wrongly suppressed):
+  S4  stale memory, no re-verify : 1.000   (24/24)   <- EVERY now-live bug missed
+  S5  re-verify every 2 findings : 0.333   (8/24)    <- cut to the cold-to-change floor
+```
+
+The strong model suppresses **100%** of newly-live bugs from a stale benign lesson —
+*worse* than MockLLM's 95.8%, because DeepSeek **fully trusts** a confident,
+grounded-looking verified lesson. That is the *same* trust that delivered the E11 FP
+reduction. **The gain and the danger are the same mechanism.** Re-verification (a
+periodic fresh probe) is therefore not a nice-to-have — it's the difference between a
+33% and a 100% miss rate. The residual 33% is irreducible: the *first* finding after
+the change is cold to it, the mirror image of the cold-first floor on the benign side.
+
+**Honesty note — a harness bug this test caught.** The *first* E12 drift run showed
+DeepSeek at **0% FN**, which looked like "the model is smart enough to ignore stale
+memory." It wasn't. The stale lesson was being rebuilt from the *current* finding, so
+for a now-live finding its text read "LIVE/exploitable" while its verdict field said
+"benign" — the harness was **leaking the new truth** into the lesson. MockLLM (which
+reads only the verdict field) had shown the true ~96% danger all along; the
+discrepancy between the two backends is what exposed the bug. Fixed by carrying the
+actual lesson captured *at probe time* (commit `768612f`). **Lesson reinforced (cf.
+E7):** when two backends disagree, suspect the harness — a too-good result is a bug
+until proven otherwise.
+
+**Net E12 takeaway:** the E11 gain is reproducible and placebo-clean at N=8, but (a)
+its uncertainty is **not yet quantified** (needs a stochastic substrate), and (b) it
+is **only safe with grounded re-verification** — without it, the very memory that cuts
+false positives drives false *negatives* to 100% under deployment drift. Both are now
+on the critical path from PoC to a production claim.
+
 ### E10 detail — the real FP lever, and two degenerate-optimum lessons
 
 We wired **real `dspy.GEPA`** (ICLR 2026) to optimize a validator that labels OWASP

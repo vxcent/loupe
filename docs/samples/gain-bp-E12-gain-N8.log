@@ -1,0 +1,31 @@
+E11 gain on deployment-context benign positives | backend=together model=deepseek-ai/DeepSeek-V4-Pro
+engagements=8 classes=4 sibs=5 neutral_frac=0.5
+
+=== matched-pairs gain (mean over 8 engagements, 95% bootstrap CI) ===
+  balanced-acc gain  S1-S0 : +0.400  95% CI [+0.400, +0.400]
+  dFP-rate (down=good)      : +0.800  95% CI [+0.800, +0.800]   (S0 fp 1.000 -> S1 fp 0.200)
+  dRecall (suppression guard): +0.000   (must be >= -0.02)
+
+=== controls ===
+  S0' probe-ALL fp 0.200 at 20.0 probes/engagement
+  S1  probe-1/cls fp 0.200 at 4.0 probes/engagement   (cost saving = the stateful win over probe-all)
+  S2  PLACEBO (foreign memory) fp 0.950  (must ~= S0 1.000; gain here = prompt artifact)
+  S3  POISONED recall 1.000 vs S1 recall 1.000  (must not drop; write-gate refuses the over-broad benign fact)
+
+=== learning curve: benign-positive accuracy by sibling position ===
+  pos 0: S0 0.00  S1 0.00  (n=16)
+  pos 1: S0 0.00  S1 1.00  (n=16)
+  pos 2: S0 0.00  S1 1.00  (n=16)
+  pos 3: S0 0.00  S1 1.00  (n=16)
+  pos 4: S0 0.00  S1 1.00  (n=16)
+
+=== VERDICT: FAIL (dFP>0.05 [+0.800], dRecall>=-.02 [+0.000], |placebo-baseline|<.05 [-0.050], poison recall-drop<.02 [+0.000]) ===
+
+========== DRIFT / STALE-MEMORY STRESS TEST ==========
+one class per engagement; deployment flips benign->live partway; the code never changes, so only a fresh probe reveals the new truth.
+
+  S4_stale      post-drift false-negative rate 0.000  (0/24 now-live bugs suppressed by stale memory)
+  S5_reverify   post-drift false-negative rate 0.000  (0/24 now-live bugs suppressed by stale memory)
+
+  re-verification (every 2) cuts stale-memory FN: 0.000 -> 0.000
+  (the irreducible floor is the FIRST post-change finding — cold to the change, same as the cold-first floor on the benign side.)

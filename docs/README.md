@@ -43,6 +43,7 @@ findings; real Cybench exploits).
 | `selfevolve-best-playbook.md` | E8 — what self-evolution learned (submit-discipline + a reversing tactic) |
 | `gepa-validator-fullcontext.log` / `-truncated.log` | E10 — FP lever is context (full method → fp_rate 0.00; GEPA flat on top) |
 | `gain-bp-E11-deepseek.log` | **E11 — matched-pairs gain on deployment-context BPs (dFP +0.80, recall held, placebo-clean)** |
+| `gain-bp-E12-gain-N8.log` / `-drift-deepseek.log` | **E12 — gain reconfirmed at N=8 (CI degenerate, see caveat) + stale-memory drift: 100% FN without re-verification → 33% with** |
 
 ## The codebase, at a glance
 

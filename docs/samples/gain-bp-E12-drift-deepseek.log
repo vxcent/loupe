@@ -1,0 +1,12 @@
+E11 gain on deployment-context benign positives | backend=together model=deepseek-ai/DeepSeek-V4-Pro
+engagements=8 classes=6 sibs=5 neutral_frac=0.5
+
+
+========== DRIFT / STALE-MEMORY STRESS TEST ==========
+one class per engagement; deployment flips benign->live partway; the code never changes, so only a fresh probe reveals the new truth.
+
+  S4_stale      post-drift false-negative rate 1.000  (24/24 now-live bugs suppressed by stale memory)
+  S5_reverify   post-drift false-negative rate 0.333  (8/24 now-live bugs suppressed by stale memory)
+
+  re-verification (every 2) cuts stale-memory FN: 1.000 -> 0.333
+  (the irreducible floor is the FIRST post-change finding — cold to the change, same as the cold-first floor on the benign side.)
