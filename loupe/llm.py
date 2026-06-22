@@ -33,7 +33,11 @@ class TogetherLLM:
         key = os.environ.get("TOGETHER_API_KEY")
         if not key:
             raise RuntimeError("TOGETHER_API_KEY is unset — export it first.")
-        self.client = OpenAI(api_key=key, base_url=self.BASE_URL)
+        # timeout so a hung/dropped connection can't stall a run forever (a long
+        # sweep hung 54 min on one call with no timeout); max_retries=0 because the
+        # _chat/raw_chat loops below do their own backoff+retry.
+        self.client = OpenAI(api_key=key, base_url=self.BASE_URL,
+                             timeout=60.0, max_retries=0)
         self.model = model
         self.temperature = temperature
         self.seed = seed
