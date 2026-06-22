@@ -259,7 +259,7 @@ def evolve(agent, corpus, iters, seed):
 
     for it in range(1, iters + 1):
         observe = corpus[(it - 1) * batch: it * batch] or corpus[-batch:]
-        committed = rejected = 0
+        committed = gated = rejected = 0
         for f in observe:
             outcome = grade(f, agent.attempt(f, skills))      # evaluate (grounded)
             cand = distill(f, outcome, rng)                   # propose
@@ -270,16 +270,23 @@ def evolve(agent, corpus, iters, seed):
             if any(s.target == cand.target and s.kind == cand.kind and not s.broad
                    for s in skills) and not cand.broad:
                 continue
+            # LAYER 1 — structural write-gate (E3): refuse a discipline that names no
+            # precondition ("skip this class"). The real-model run showed the
+            # behavioral guard alone lets these through on a small replay buffer.
+            if cand.kind == "discipline" and cand.broad:
+                gated += 1
+                continue
+            # LAYER 2 — behavioral anti-regression: reject if it lowers prior capability
             trial = skills + [cand]
-            if anti_regression(agent, seen, skills, trial):   # verify (no regression)
+            if anti_regression(agent, seen, skills, trial):
                 skills = trial                                # commit
                 committed += 1
             else:
                 rejected += 1
         cap, tally = capability(agent, corpus, skills)
         rows.append({"iter": it, "skills": len(skills), "capability": cap,
-                     "committed": committed, "rejected": rejected, **tally})
-        print(f"iter {it}  +{committed} skill(s) (-{rejected} rejected)  "
+                     "committed": committed, "gated": gated, "rejected": rejected, **tally})
+        print(f"iter {it}  +{committed} skill(s) (-{gated} gated, -{rejected} regressed)  "
               f"capability {cap:.2f}   skills {len(skills)}")
     return skills, rows
 
@@ -306,14 +313,15 @@ def main():
     skills, rows = evolve(agent, corpus, args.iters, args.seed)
 
     print("\n=== capability across iterations (compare versions) ===")
-    print(" iter | skills | capability | committed | rejected")
+    print(" iter | skills | capability | committed | gated | regressed")
     for r in rows:
         print(f"  {r['iter']:>3} | {r['skills']:>6} |    {r['capability']:.2f}    "
-              f"|    {r['committed']:>4}   |   {r['rejected']:>4}")
+              f"|    {r['committed']:>4}   | {r.get('gated',0):>4}  |   {r.get('rejected',0):>4}")
     base, final = rows[0]["capability"], rows[-1]["capability"]
-    total_rej = sum(r["rejected"] for r in rows)
+    total_gated = sum(r.get("gated", 0) for r in rows)
+    total_rej = sum(r.get("rejected", 0) for r in rows)
     print(f"\ncapability {base:.2f} -> {final:.2f}  (+{final-base:.2f})  | "
-          f"{len(skills)} skills kept, {total_rej} rejected by anti-regression")
+          f"{len(skills)} skills kept, {total_gated} write-gated, {total_rej} regression-rejected")
     print("learned skills (the evolved tool/skill library):")
     for s in skills:
         print(f"  [{s.kind:10}] {s.target:5} : {s.rule}")
