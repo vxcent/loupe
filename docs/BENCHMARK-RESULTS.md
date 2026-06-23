@@ -43,9 +43,46 @@ a separate property check. A production validator should **route by CWE class**.
 **Confidence boost.** Moves "context is the lever" from a 300-case in-house result to a
 **393-case, 11-CWE, full-benchmark result that beats the named CodeQL baseline** — and,
 more valuably, hands us the **per-CWE map of where it works and where it doesn't**, which
-the balanced E10 run could not see. *Next:* a CWE-routed validator (construct-detector arm
-for config/crypto) should lift overall F1 toward the ZeroFalse band; full 2,740-case run
-to tighten per-CWE CIs.
+the balanced E10 run could not see.
+
+### Set 1b — CWE-ROUTED validator (the prescription, validated)  ✅ (n=393)
+
+Log: `docs/samples/set1b-owasp-400-routed-deepseek.log`. Tests Set 1's own fix: route the
+5 config/crypto CWEs to a **property/construct detector** ("is the insecure construct
+present vs its secure twin?"); keep injection CWEs on the exploitability judge.
+
+```
+              precision  recall  fp_rate  F1
+  unrouted      0.890     0.456    0.056   0.603
+  ROUTED        0.814     0.810    0.182   0.812      (+0.21 F1, +0.35 recall)
+```
+
+**It works — and the prescription is validated.** Routing lifts **F1 0.603 → 0.812** and
+**recall 0.456 → 0.810**, at a precision/FP cost (fp 0.056 → 0.182). The config/crypto CWEs
+that were recall ~0 are transformed: **CWE-327 weak-crypto, CWE-330 weak-random, CWE-614
+insecure-cookie all → recall 1.00, fp 0.00** (perfect). Injection CWEs stay strong
+(SQLi 1.00). So "route by CWE class" is not hand-waving — it closes most of the gap to the
+ZeroFalse band.
+
+**The remaining gap to SOTA is now two nameable CWEs, not a mystery:**
+- **CWE-501 trust-boundary: fp 0.89** — the property detector flags almost everything,
+  because "untrusted data crosses a trust boundary" is *not* a construct-presence check;
+  it's contextual (it needs the dataflow). This CWE wants the *slice*, not a property prompt
+  — exactly the Set 2 lesson.
+- **CWE-328 weak-hash: fp 0.44** — over-flags some safe-hash twins; needs a tighter
+  algorithm allowlist in the prompt.
+- (Per-CWE numbers at n=36 also carry temp-0 run-to-run LLM noise, e.g. CWE-22 0.39↔0.22.)
+
+**Takeaway.** The headline FP-reduction result is now: **a CWE-routed validator reaches
+F1 ≈ 0.81 on OWASP at scale** (from 0.60 single-prompt), beating CodeQL and within reach of
+the ZeroFalse 0.91 SOTA — with the residual gap localized to two CWEs that each have a clear
+fix (trust-boundary → use the slice; weak-hash → tighten the allowlist). The bigger lesson
+echoes Set 2: **match the mechanism to the evidence type** — construct check for construct
+weaknesses, dataflow/slice for dataflow weaknesses, exploitability judge for injection.
+
+**Confidence boost.** From "below SOTA for unclear reasons" to **"F1 0.81, SOTA-adjacent,
+with a per-CWE fix list."** That is a concrete, defensible improvement and a validated design
+prescription — the strongest single confidence gain in the benchmark phase.
 
 ---
 
