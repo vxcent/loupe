@@ -1,0 +1,27 @@
+SASTBench triage experiment | model=deepseek-ai/DeepSeek-V4-Pro
+  train=60 (9 TP) / held-out=90 (16 TP)
+  repo-disjoint: True
+
+=== learning round (reflect on TRAIN errors, ctx=file) ===
+  distilled 6 tactics:
+    - CWE-670 (Always-Incorrect Control Flow): When a variable is assigned inside a conditional branch but the SAST flags a missing else/default, 
+    - CWE-754 (Improper Check for Unusual/Exceptional Conditions): When a function returns an error code or null and the caller only checks for su
+    - CWE-79 (Cross-Site Scripting): When user input is embedded in HTML/JS but the SAST trace shows a sanitizer or encoder, verify that the sanit
+    - CWE-918 (Server-Side Request Forgery): When a URL is constructed from user input and the SAST shows a hostname validation or allowlist check
+    - CWE-89 (SQL Injection): When a SQL query uses parameterized prepared statements but the SAST flags it, check if any part of the query struct
+    - CWE-77 (Command Injection): When a command string is built with user input and the SAST shows escaping or sanitization, verify that the esca
+  TRAIN F1 nan -> 0.09
+
+=== HELD-OUT 2x2 (context x learning) ===
+  ctx=func learn=off | prec 0.50 rec 0.06 F1 0.11 MCC 0.13 | TP 1/16 FP 1/74
+  ctx=func learn=ON  | prec 0.08 rec 0.06 F1 0.07 MCC -0.11 | TP 1/16 FP 12/74
+  ctx=file learn=off | prec 1.00 rec 0.06 F1 0.12 MCC 0.23 | TP 1/16 FP 0/74
+  ctx=file learn=ON  | prec 0.07 rec 0.06 F1 0.06 MCC -0.13 | TP 1/16 FP 14/74
+
+=== READOUT ===
+  CONTEXT (baseline): F1 +0.01  recall +0.00
+  LEARNING (func)   : F1 -0.04  recall +0.00
+  LEARNING (file)   : F1 -0.05  recall +0.00
+  OVERFIT CHECK: train F1 gain +nan vs held-out -0.05 -> TRAIN-only (overfit risk)
+  vs paper baseline (Gemini-2.5-Pro): F1 0.26 / prec 0.17 / rec 0.58
+  [label note: FP class is APPROXIMATE (Semgrep-assumed); TP-recall is the trustworthy axis]

@@ -78,6 +78,62 @@ is why the hill-climb below leads with deeper slicing + abstain-and-escalate, no
 
 ---
 
+## SASTBench (real CVE TPs + Semgrep FPs; agent checks out repo@commit) — the learning round BACKFIRED
+
+The on-thesis, current (2026) benchmark: the agent gets `(repo, commit, file, function, CWE)`
+and **checks out the repo at that commit** to triage real_vuln vs false_positive — PenPal's
+clear-box repo mode, git-checkout built in (`experiments/sastbench/run_sastbench.py`; log
+`docs/samples/sastbench-2x2-deepseek.log`). Same 2×2 + repo-disjoint split + overfit check.
+
+**Held-out (DeepSeek-V4-Pro; 90 findings, 16 real-CVE TPs / 74 Semgrep FPs):**
+
+| arm | precision | recall | F1 | MCC | TP caught | FP flagged |
+|---|---|---|---|---|---|---|
+| func, baseline | 0.50 | 0.06 | 0.11 | 0.13 | 1/16 | 1/74 |
+| file, baseline | **1.00** | 0.06 | 0.12 | **0.23** | 1/16 | **0/74** |
+| func, + learning | 0.08 | 0.06 | 0.07 | **−0.11** | 1/16 | 12/74 |
+| file, + learning | 0.07 | 0.06 | 0.06 | **−0.13** | 1/16 | 14/74 |
+
+**Findings — three, and they sharpen (not contradict) the thesis:**
+
+1. **The ungated learning round NET-HARMED P/R — the opposite of JitVul.** It collapsed
+   precision (1.00→0.07), drove **MCC negative**, and the overfit check flagged it (harmful on
+   held-out). It induced *indiscriminate over-flagging* — false alarms 0→14 — **without catching
+   one extra real CVE** (recall fixed at 1/16). The tactics just shifted the decision threshold
+   toward "real," which on realistically-imbalanced SAST data (≈1:5–8) is pure precision loss.
+   *This run deliberately had no tournament/Pareto gate — and this is exactly the failure the
+   gate (E2/E4/E8) exists to stop.* **Cross-experiment lesson: a learning round is
+   regime-sensitive — it helped on balanced JitVul, harmed on imbalanced SASTBench — so it must
+   be held-out-gated, not applied blind.**
+
+2. **The recall wall is the real bottleneck: 1/16 in *every* cell.** The model triages almost
+   everything FP (a correct SAST prior + the benign bias) and genuinely cannot identify the 15
+   hard real CVEs from function+file. **A learning round cannot fix a recall wall caused by
+   missing evidence — it can only trade precision for noise.** This is the E10 / evidence-
+   locality result, now on a real 2026 SAST benchmark: the lever is *evidence* (deeper slice /
+   execution), not tactics.
+
+3. **Context → precision, again.** File context took precision 0.50→**1.00** (0 false alarms) —
+   consistent with JitVul (context lifts the precision axis), though it left the recall wall
+   untouched.
+
+**vs the paper** (Gemini-2.5-Pro: F1 0.26 / prec 0.17 / **rec 0.58**): our DeepSeek triager sits
+at a very different operating point — near-max precision, near-zero recall (1/16). Their agent
+flags aggressively (recall 0.58, precision 0.17); ours abstains-to-FP. Neither is good; both are
+*below* a usable triage F1, underlining that real-repo SAST triage is genuinely unsolved.
+
+**Honest label caveat (carried through):** the FP class is *approximate* (Semgrep-assumed-benign),
+so some of the learning round's 14 "false alarms" could be real-but-uncatalogued vulns mislabeled
+FP. But the **trustworthy axis — TP recall on real CVEs — did not move at all** (1/16 throughout),
+so the learning round demonstrably did not help find real vulnerabilities, regardless of the FP
+labels.
+
+**Net (JitVul + SASTBench together):** a self-evolution learning round can move P/R **(JitVul:
++0.10 F1, generalized)** or **harm it (SASTBench: −0.05 F1, MCC negative)** — the difference is
+the data regime and whether the round is **gated**. Context reliably helps *precision* in both.
+And in both, **absolute recall is bounded by evidence reachability**, which tactics can't fix.
+Conclusion stands: lead the hill-climb with *evidence acquisition + gating*, not more tactics.
+
 ## Hill-climbing roadmap — how to actually raise precision/recall at repo scale
 
 Ordered by expected leverage, grounded in the whole arc (E1–E15 + the benchmark phase +
