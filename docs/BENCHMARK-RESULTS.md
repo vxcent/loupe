@@ -49,15 +49,57 @@ to tighten per-CWE CIs.
 
 ---
 
-## Set 2 — PrimeVul vuln↔fix pairs  ⏳ (running, n=200)
+## Set 2 — PrimeVul vuln↔fix pairs  ✅ (the credibility test — and the lever does NOT transfer)
 
-Smoke (n=8) preview — a **mirror-image collapse** to the field's usual failure: where
-GPT-4 *over*-flags on PrimeVul (both-vulnerable 54%), our deployment-FP-tuned validator
-**under-flags** (both-benign 100%, recall 0) on raw C/C++ functions. Consistent with Set
-1's recall caveat, amplified: the validator's conservatism (great for FP on clean OWASP
-servlets) becomes *miss-everything* on hard, real, multi-function code where exploitability
-isn't a one-method source→sink. Full n=200 number + the fair-framing follow-up (PrimeVul's
-task is "is this function vulnerable," not "exploitable in deployment") to come.
+Logs: `docs/samples/set2-primevul-200-triage-deepseek.log` (+ detection-framing run).
+This is the benchmark where SOTA collapses, and it collapses for us too — honestly, and in
+an informative direction.
+
+**Result — both framings, both collapse to a benign bias:**
+
+| Framing | n | pair-wise correct | P-V (both-vuln) | P-B (both-benign) | recall |
+|---------|---|-------------------|-----------------|-------------------|--------|
+| **triage** (our deployment-FP `validate`) | 200 pairs | **0.000** | 0.000 | **1.000** | 0.000 |
+| **detection** (fair "is this function vulnerable?") | 8 → 100 | **0.000** (n=8) | 0.000 | 1.000 | 0.000 |
+| *GPT-4 published bar* | — | 0.129 | **0.54** | — | — |
+
+**This is genuine, not an artifact** — verified by reading raw outputs: on *known-vulnerable*
+Chrome functions DeepSeek returns well-formed `{"vulnerable": false, "rationale": "…"}` with
+confident, plausible reasoning. It truly cannot tell a vulnerable function from its fix in
+isolation.
+
+**The finding — PrimeVul defeats both directions, and our lever does not transfer.**
+- The published failure mode (GPT-4) is **over-flagging**: both-vulnerable 54%, an FP bias.
+- Ours (DeepSeek-V4-Pro) is the **mirror**: **under-flagging** — it calls ~every real
+  function benign (recall ~0). Different models fail PrimeVul oppositely; **both score ~0
+  pair-wise** (GPT-4 0.129, us 0.000).
+- Crucially, **the detection framing doesn't rescue it.** This is *not* merely a triage-vs-
+  detection prompt mismatch — even asked plainly "is this function vulnerable," the model
+  under-flags. So the OWASP success (Set 1) **does not transfer to real-world repo C/C++**.
+
+**Why (the honest mechanism).** Set 1 worked because OWASP servlets are clean, synthetic,
+**single-method source→sink** — the dataflow is local and visible. PrimeVul functions are
+real CVE functions in large codebases where the bug is a missing check / overflow-under-
+conditions / UAF-needing-a-call-sequence — **not visible in one function in isolation.** The
+context-lever is only a lever when the discriminating evidence is *in the provided context*;
+in PrimeVul it lives across functions/commits, so a single-function validator (any framing)
+defaults to "looks fine." This is the **same principle as E10/E11/E15**: FP/TP discrimination
+is bounded by whether the evidence is reachable — and at repo scale it usually isn't, in one
+function.
+
+**Takeaway (credibility-defining, and it keeps us honest).** Our FP-reduction results are
+**real but scoped to where the evidence is local** (OWASP injection CWEs; the synthetic
+deployment-context oracle; the executable reproduction substrate). On **real-world
+repo-level detection from an isolated function, the approach — like the field's SOTA —
+does not yet work.** The right unit for real code is **not an isolated function** but the
+**reachable slice** (cross-function dataflow) or an **executable reproduction attempt**
+(Set 3) — which is exactly the direction E15 pointed. *This is the single most important
+honesty check in the whole project: it locates precisely where the lever stops.*
+
+**Confidence calibration.** Set 1 = "competitive at field scale on local-evidence CWEs."
+Set 2 = "does **not** transfer to isolated real-world functions — needs slicing or
+execution." Together they bound the claim honestly: **context cuts FPs when the evidence is
+in the context; supply the slice or run the exploit, or it can't.**
 
 ---
 

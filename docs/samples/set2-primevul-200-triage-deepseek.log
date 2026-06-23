@@ -1,0 +1,19 @@
+Set2 PrimeVul pairs | model=deepseek-ai/DeepSeek-V4-Pro | 200 vuln/fix pairs (full function context)
+
+  ...40/200
+  ...80/200
+  ...120/200
+  ...160/200
+  ...200/200
+
+=== Set 2 — PrimeVul pair-wise (full-context validator, no memory) ===
+  pairs n=200
+  pair-wise CORRECT (vuln=real, fix=benign) 0.000  (0)
+  P-V both-vulnerable (FP bias)             0.000  (0)
+  P-B both-benign (miss bias)               1.000  (200)
+  P-R reversed                              0.000  (0)
+  recall (vuln caught) 0.000   fp_rate (fix called vuln) 0.000
+
+--- vs published bar (GPT-4 on PrimeVul paired) ---
+  GPT-4: pair-wise correct ~0.129, both-vulnerable ~0.54
+  -> pair-wise 0.000 below GPT-4; P-V 0.000 BETTER (less FP bias)

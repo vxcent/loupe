@@ -98,6 +98,9 @@ def main():
     ap.add_argument("--n", type=int, default=200, help="number of pairs")
     ap.add_argument("--workers", type=int, default=5)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--framing", default="triage", choices=["triage", "detection"],
+                    help="triage = our deployment-FP validator (validate); "
+                         "detection = a fair PrimeVul-task prompt (is this function vulnerable?)")
     args = ap.parse_args()
     load_dotenv()
 
@@ -109,15 +112,33 @@ def main():
         sys.exit(2)
 
     pairs = load_primevul_pairs(args.data, args.n)
-    print(f"Set2 PrimeVul pairs | model={args.model} | {len(pairs)} vuln/fix pairs "
-          f"(full function context)\n", flush=True)
+    print(f"Set2 PrimeVul pairs | model={args.model} | framing={args.framing} | "
+          f"{len(pairs)} vuln/fix pairs (full function context)\n", flush=True)
     llm = TogetherLLM(model=args.model, temperature=0.0, seed=args.seed)
+
+    from loupe.prompts import parse_json_obj
+    DETECT_SYS = (
+        "You are a vulnerability DETECTOR analyzing a single function. Decide whether "
+        "this function contains a real security vulnerability (a genuine flaw an "
+        "attacker could exploit), versus being safe. Reason about the actual data/"
+        "control flow before deciding. Many functions are safe — do not flag code just "
+        "because it touches I/O, memory, or input. Respond ONLY JSON: "
+        '{"vulnerable": bool, "rationale": str}.')
+
+    def detect(f):
+        msgs = [{"role": "system", "content": DETECT_SYS},
+                {"role": "user", "content": f"Function:\n{f.context}\n\nIs it vulnerable?"}]
+        txt, _ = llm._chat(msgs)
+        return bool(parse_json_obj(txt).get("vulnerable", False))
 
     def judge(pair):
         vuln, fix = pair
         try:
-            pv = bool(llm.validate(vuln, []).exploitable)
-            pf = bool(llm.validate(fix, []).exploitable)
+            if args.framing == "detection":
+                pv, pf = detect(vuln), detect(fix)
+            else:
+                pv = bool(llm.validate(vuln, []).exploitable)
+                pf = bool(llm.validate(fix, []).exploitable)
         except Exception:
             pv, pf = True, True
         return {"cwe": vuln.cwe, "pred_vuln": pv, "pred_fix": pf}
