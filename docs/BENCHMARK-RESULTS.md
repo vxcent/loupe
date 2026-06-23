@@ -60,8 +60,12 @@ an informative direction.
 | Framing | n | pair-wise correct | P-V (both-vuln) | P-B (both-benign) | recall |
 |---------|---|-------------------|-----------------|-------------------|--------|
 | **triage** (our deployment-FP `validate`) | 200 pairs | **0.000** | 0.000 | **1.000** | 0.000 |
-| **detection** (fair "is this function vulnerable?") | 8 → 100 | **0.000** (n=8) | 0.000 | 1.000 | 0.000 |
+| **detection** (fair "is this function vulnerable?") | 100 pairs | **0.050** | 0.050 | **0.860** | 0.100 |
 | *GPT-4 published bar* | — | 0.129 | **0.54** | — | — |
+
+(The fair detection framing does marginally better than our triage prompt — recall 0.10
+vs 0.00 — so framing matters a little, but **neither works**: both sit at a heavy
+benign bias, below GPT-4's 0.129 pair-wise.)
 
 **This is genuine, not an artifact** — verified by reading raw outputs: on *known-vulnerable*
 Chrome functions DeepSeek returns well-formed `{"vulnerable": false, "rationale": "…"}` with
@@ -73,7 +77,8 @@ isolation.
 - Ours (DeepSeek-V4-Pro) is the **mirror**: **under-flagging** — it calls ~every real
   function benign (recall ~0). Different models fail PrimeVul oppositely; **both score ~0
   pair-wise** (GPT-4 0.129, us 0.000).
-- Crucially, **the detection framing doesn't rescue it.** This is *not* merely a triage-vs-
+- Crucially, **the detection framing doesn't rescue it** (recall 0.10, pair-wise 0.05 —
+  still below GPT-4 and still a heavy benign bias). This is *not* merely a triage-vs-
   detection prompt mismatch — even asked plainly "is this function vulnerable," the model
   under-flags. So the OWASP success (Set 1) **does not transfer to real-world repo C/C++**.
 
