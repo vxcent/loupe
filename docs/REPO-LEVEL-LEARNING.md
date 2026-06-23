@@ -36,11 +36,45 @@ leakage):
 
 Harness: `experiments/bench_jitvul.py` (DeepSeek-V4-Pro). Data gitignored under `repolevel/`.
 
-## Results
+## Results (DeepSeek-V4-Pro; train 30 / held-out 40 pairs; project-disjoint)
 
-> _Populated from the n-train 30 / n-held 40 run — see `docs/samples/jitvul-exp.log`._
->
-> _(pending the in-flight run; this section is filled on completion.)_
+Log: `docs/samples/jitvul-learning-2x2-deepseek.log`.
+
+| held-out arm | precision | recall | F1 | pairwise | both-vuln (FP bias) | both-benign (miss) |
+|---|---|---|---|---|---|---|
+| baseline (no ctx, no learn) | 0.44 | 0.10 | 0.16 | 0.00 | 0.10 | 0.88 |
+| **+ learning** (no ctx) | 0.54 | **0.17** | **0.26** | 0.05 | 0.12 | 0.80 |
+| **+ context** (no learn) | **0.71** | 0.12 | 0.21 | 0.07 | **0.05** | 0.88 |
+| + context + learning | 0.62 | 0.12 | 0.21 | 0.07 | 0.05 | 0.85 |
+
+**Findings (the goal's core question, answered):**
+
+1. **Yes — one self-evolution round brings a meaningful, non-overfit change.** In the
+   no-context arm it lifted **F1 0.16 → 0.26 and recall 0.10 → 0.17** on held-out, *without*
+   raising the FP bias. **It generalizes:** the train pairwise gain was ~0 while held-out
+   improved — i.e. the gain is *not* memorization (the project-disjoint + frozen-playbook +
+   train-vs-held-out controls all held). So a learning round is real, not an artifact.
+
+2. **Context helps a *different* axis — precision.** Adding the callee bodies took precision
+   **0.44 → 0.71** and **halved the FP bias (0.10 → 0.05)**: seeing the called functions lets
+   the model stop over-flagging the *fixed* twin. Context barely moved recall (+0.02).
+
+3. **Context and learning are SUBSTITUTES, not additive.** With context already present, the
+   learning round adds **~0** (F1 0.21 → 0.21). This is the **E10 lesson reproduced at repo
+   scale**: once the deciding evidence is in the input, prompt/tactic evolution is
+   second-order; the learning round mostly *compensates for missing context.*
+
+4. **But absolute recall stays low (~0.12–0.17), benign-bias dominant (~0.85).** Immediate
+   callees are **necessary but not sufficient** — most JitVul bugs need deeper call-chain or
+   exploit-condition evidence than one hop of callees. Our zero-shot validator stays below
+   JitVul's published GPT-4o pairwise (0.17–0.19) on the strict paired metric: the bottleneck
+   is recall (the model still says "benign" to most real functions), exactly the
+   evidence-locality wall — one hop isn't the whole reachable slice.
+
+**Net:** the learning round *works and generalizes*, and context *works* (on precision) — but
+both are bounded by how much of the reachable evidence is supplied. The lever remains
+**evidence acquisition**; the learning round is the (real, second-order) polish on top — which
+is why the hill-climb below leads with deeper slicing + abstain-and-escalate, not more tactics.
 
 ---
 

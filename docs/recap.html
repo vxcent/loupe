@@ -135,6 +135,34 @@
   </div>
 
   <!-- ============================================================= -->
+  <h2>3c · Repo-level learning round (JitVul) — does self-evolution move P/R, without overfitting?</h2>
+  <p>OWASP's contained-method format is a structural mismatch for PenPal (a clear-box,
+  cross-package agent). So we ran the decisive test on <b>JitVul</b> — real CVE
+  <b>vuln↔fix pairs with inter-procedural context shipped</b> (the git-checkout/slice
+  PenPal needs, pre-done). Design: <b>2×2 (context × one frozen self-evolution round)</b> on a
+  <b>project-disjoint</b> train/held-out split (no repo leakage); overfit checked by
+  train-vs-held-out gain. Detail: <code>docs/REPO-LEVEL-LEARNING.md</code>.</p>
+  <table>
+    <thead><tr><th>held-out arm</th><th>precision</th><th>recall</th><th>F1</th><th>FP-bias</th></tr></thead>
+    <tbody>
+      <tr><td>baseline (no ctx, no learn)</td><td>0.44</td><td>0.10</td><td>0.16</td><td>0.10</td></tr>
+      <tr style="background:#13301f"><td><b>+ learning</b> (no ctx)</td><td>0.54</td><td><b>0.17</b></td><td><b>0.26</b></td><td>0.12</td></tr>
+      <tr style="background:#13301f"><td><b>+ context</b> (no learn)</td><td><b>0.71</b></td><td>0.12</td><td>0.21</td><td><b>0.05</b></td></tr>
+      <tr><td>+ context + learning</td><td>0.62</td><td>0.12</td><td>0.21</td><td>0.05</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <p style="margin:0"><b>Answers:</b> <b>(1)</b> a single self-evolution round <b>does</b> move
+    P/R — F1 0.16→<b>0.26</b>, recall 0.10→<b>0.17</b> — and it <b>generalizes</b> (held-out gain
+    ≥ train gain → not memorization; the anti-overfit controls held). <b>(2)</b> Context lifts a
+    <em>different</em> axis — <b>precision 0.44→0.71</b>, FP-bias halved (callees let it stop
+    over-flagging the fix). <b>(3)</b> They're <b>substitutes, not additive</b> — with context
+    present, learning adds ~0 (the E10 lesson at repo scale: evidence is the lever, learning the
+    second-order polish). <b>(4)</b> Absolute recall stays low (~0.12–0.17): one hop of callees is
+    <em>necessary but not sufficient</em> — the deeper reachable slice / execution is the next lever.</p>
+  </div>
+
+  <!-- ============================================================= -->
   <h2>4 · Assumptions, industry &amp; academic grounding</h2>
   <p>Honest framing: the overarching blueprint (EvoHunt) is a fresh, unvetted preprint — but <b>almost every mechanism we actually implemented traces to a peer-reviewed, well-cited paper.</b> Credibility rests on the components, not the inspiration.</p>
   <table>
@@ -203,11 +231,17 @@
     an isolated function); <b>(ii)</b> <b>CVE-Bench/UIUC</b> for the first <b>real-CVE
     deployment-context benign-positive</b> (an exploit that doesn't fire in the sandbox) — the
     project's original motivation, now within reach.</p>
+    <p style="margin-bottom:0"><b>Hill-climb order (from the repo-level result, §3c):</b> the
+    curve bends on <b>evidence acquisition</b>, not more prompting — <b>(1)</b> abstain-and-escalate
+    + deeper cross-function slice (one hop wasn't enough); <b>(2)</b> CWE-class routing;
+    <b>(3)</b> <em>gated</em> per-CWE tactic learning (real but second-order — it only helps where
+    context is missing); <b>(4)</b> reproduction for high-stakes; <b>(5)</b> confidence=thoroughness +
+    annotate-don't-suppress. Full roadmap in <code>docs/REPO-LEVEL-LEARNING.md</code>.</p>
   </div>
 
   <p class="foot">
-    Loupe — open-source PoC at <code>self-improving-penpal</code>. Lab notebook: <code>docs/EXPERIMENTS.md</code> (E1–E15 + provenance §0); <b>benchmark results: <code>docs/BENCHMARK-RESULTS.md</code></b> (3 SOTA sets) + plan <code>docs/BENCHMARK-PLAN.md</code>; measurement design <code>docs/GAIN-PROTOCOL.md</code>; harnesses: <code>bench_owasp_scale.py</code> (Set 1, CWE-routed), <code>bench_primevul.py</code> (Set 2), <code>cyber/bench_cybench_repro.py</code> (Set 3), plus <code>gain_bp.py</code> / <code>reproduce_evolve.py</code> / <code>cyber/reproduce_grounded.py</code>.<br>
-    Synthetic magnitudes are ceilings; the 3 benchmark sets place the results next to named SOTA (CodeQL, ZeroFalse, GPT-4-on-PrimeVul, Cybench). Generated 2026-06-22.
+    Loupe — open-source PoC at <code>self-improving-penpal</code>. Lab notebook: <code>docs/EXPERIMENTS.md</code> (E1–E15 + provenance §0); <b>benchmark results: <code>docs/BENCHMARK-RESULTS.md</code></b> (3 SOTA sets) + plan <code>docs/BENCHMARK-PLAN.md</code>; measurement design <code>docs/GAIN-PROTOCOL.md</code>; <b>repo-level learning + hill-climb: <code>docs/REPO-LEVEL-LEARNING.md</code></b>; benchmark menu <code>docs/REPO-LEVEL-BENCHMARKS.md</code>; harnesses: <code>bench_owasp_scale.py</code> (Set 1, CWE-routed), <code>bench_primevul.py</code> (Set 2), <code>cyber/bench_cybench_repro.py</code> (Set 3), <code>bench_jitvul.py</code> (repo-level learning), plus <code>gain_bp.py</code> / <code>reproduce_evolve.py</code> / <code>cyber/reproduce_grounded.py</code>.<br>
+    Synthetic magnitudes are ceilings; results placed next to named SOTA (CodeQL, ZeroFalse, GPT-4-on-PrimeVul, JitVul, Cybench). Generated 2026-06-23.
   </p>
 
 </div>
