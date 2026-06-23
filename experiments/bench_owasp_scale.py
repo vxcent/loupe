@@ -25,6 +25,32 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from loupe.data import load_owasp
 from loupe.llm import TogetherLLM
 
+# CWEs where the weakness IS the construct (not a dataflow-to-sink), so an
+# "exploitability" judge misses them (Set 1 finding). Route these to a property
+# detector that asks whether the INSECURE construct is present vs its safe twin.
+PROPERTY_CWES = {
+    "CWE-327": "a broken/weak cryptographic algorithm (DES, RC4, Blowfish, 3DES) rather than a strong one (AES-GCM)",
+    "CWE-328": "a weak/broken hash (MD5, SHA-1) rather than a strong one (SHA-256+)",
+    "CWE-330": "a predictable/insecure RNG (java.util.Random, Math.random, System.currentTimeMillis as a seed) for a security-sensitive value, rather than SecureRandom",
+    "CWE-501": "untrusted request data placed into a trusted store (e.g. an HTTP session attribute) without validation (a trust-boundary violation)",
+    "CWE-614": "a cookie created WITHOUT the Secure flag set to true",
+}
+
+
+def property_messages(finding):
+    """A construct/property detector for config/crypto CWEs: is the INSECURE
+    construct present (vulnerable) or its secure alternative (benign)?"""
+    desc = PROPERTY_CWES[finding.cwe]
+    sysmsg = (
+        "You check whether one SPECIFIC insecure construct is present in code. "
+        "This is NOT about end-to-end exploitability — the presence of the weak "
+        "construct itself is the finding. Reason briefly, then decide. Respond "
+        'ONLY JSON: {"vulnerable": bool, "rationale": str}, where vulnerable=true '
+        "means the insecure construct IS used, false means the secure alternative is used.")
+    user = (f"CWE: {finding.cwe}\nCheck for: {desc}\nCode:\n{finding.context}\n\n"
+            "Is the insecure construct present?")
+    return [{"role": "system", "content": sysmsg}, {"role": "user", "content": user}]
+
 
 def load_dotenv(path=".env"):
     if os.path.exists(path):
@@ -78,6 +104,9 @@ def main():
     ap.add_argument("--n", type=int, default=400)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--context-chars", type=int, default=6500)
+    ap.add_argument("--route", action="store_true",
+                    help="route config/crypto CWEs to a property/construct detector "
+                         "(Set 1 prescription) instead of the exploitability judge")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
     load_dotenv()
@@ -91,12 +120,16 @@ def main():
           flush=True)
 
     llm = TogetherLLM(model=args.model, temperature=0.0, seed=args.seed)
+    from loupe.prompts import parse_json_obj
 
     def judge(f):
         try:
-            v = llm.validate(f, [])           # no memory — pure context lever
-            return {"cwe": f.cwe, "label_real": f.label == "real",
-                    "pred": bool(v.exploitable)}
+            if args.route and f.cwe in PROPERTY_CWES:
+                txt, _ = llm._chat(property_messages(f))
+                pred = bool(parse_json_obj(txt).get("vulnerable", False))
+            else:
+                pred = bool(llm.validate(f, []).exploitable)   # exploitability judge
+            return {"cwe": f.cwe, "label_real": f.label == "real", "pred": pred}
         except Exception as e:
             return {"cwe": f.cwe, "label_real": f.label == "real",
                     "pred": True, "error": str(e)[:80]}   # unparseable = (bad) positive
