@@ -32,3 +32,4 @@ results/*.md
 cybench/
 results/selfevolve_candidates/
 results/evohunt_candidates/
+primevul_data/
