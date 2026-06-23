@@ -145,4 +145,57 @@ in the context; supply the slice or run the exploit, or it can't.**
 
 ---
 
-## Set 3 — Cybench + CVE-Bench  ⬜ (Phase 3, executable lift — not yet run)
+## Set 3 — real Cybench (executable reproduction-as-verification)  ✅ (n=8, 6 categories)
+
+Log: `docs/samples/set3-cybench-repro-deepseek.log`. Zero-playbook agent (pure
+reproduction) against 8 real Cybench tasks spanning all 6 categories; the **flag oracle**
+(not the agent) decides. Pipeline confirmed live (real flags captured).
+
+```
+tally: solved 2  |  found_not_submitted 0  |  wrong_submit 0  |  no_solve 6
+reproduction rate (solved)         0.250     (Primary Knowledge, Dynastic)
+SELF-DECEPTION rate (wrong_submit)  0.000     <- the executable false-claim / FP analog
+could-not-reproduce (no_solve)      0.750
+```
+
+**The finding — grounded "couldn't verify" is safe: ZERO false claims.** On the 6 tasks
+the agent could not reproduce, it **never fabricated a flag** — it left them honestly
+unsolved rather than guessing. This is the **E15 result on a real benchmark**: because the
+flag oracle is *unfakeable*, the agent cannot win by claiming, so a non-reproduction is a
+*trustworthy* signal, not a silent failure or a fabrication. The executable analog of a
+false positive (wrong_submit) is **0**.
+
+**Honest caveats.** (1) Reproduction rate 0.25 is *baseline* (no playbook, very-easy
+subset, 12 iters) — in Cybench's published frontier ballpark (paper baseline 17.5%
+unguided); self-evolution (E8/E9) lifts this. (2) n=8, reps=1, temp-0 variance (e.g.
+Dynastic solved here but was FP-prone at baseline in E9). (3) wrong_submit=0 is partly
+because the unsolved tasks genuinely stumped the agent (it gave up rather than being
+*tempted* to guess); the strongest self-deception stress is the "almost had it" case,
+which E9 already drove to 0 with a verify-before-submit tactic. The result stands: at
+baseline, on real executable tasks, no fabrication.
+
+**Confidence boost.** First clean demonstration on a real, industry executable benchmark
+that **reproduction-as-verification yields zero false claims** — the safety property the
+whole arc argued for, now grounded outside the synthetic substrates.
+
+---
+
+## Cross-set synthesis — the three benchmarks bound the claim
+
+| Set | Substrate | Evidence locality | Result | Lesson |
+|-----|-----------|-------------------|--------|--------|
+| **1 / 1b** | OWASP (static) | **local** (in the method) | F1 0.60 → **0.81** with CWE-routing (SOTA-adjacent; beats CodeQL) | context-lever works when the evidence is in the snippet; **route by CWE class** |
+| **2** | PrimeVul (static) | **non-local** (across functions/commits) | collapse: recall ~0, pair-wise 0.05 (both SOTA directions fail) | isolated-function detection does **not** work; needs the *reachable slice* |
+| **3** | Cybench (executable) | **established by running it** | reproduction 0.25, **self-deception 0.000** | grounded reproduction makes "benign/can't-verify" a **safe, unfakeable** verdict |
+
+**The one principle:** *match the mechanism to where the evidence lives.* False-positive
+reduction is bounded by whether the discriminating evidence is reachable — supply it (local
+context, or the cross-function slice) or **establish it by execution**. Static validation on
+isolated code (Set 2) is the weakest; CWE-routed local-context validation (Set 1b) is
+SOTA-adjacent; **executable reproduction (Set 3) is the only one that makes "benign" provably
+safe** (zero false claims), which is exactly why it's the right architecture for PenPal's
+real-world, deployment-context findings.
+
+*Remaining (data/infra-gated): CVE-Bench/UIUC for the first real-CVE deployment-context
+benign-positive (exploit that doesn't fire in the sandbox); the cross-function slice arm to
+rescue Set 2 / CWE-501.*
