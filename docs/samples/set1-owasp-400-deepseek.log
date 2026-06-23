@@ -1,0 +1,33 @@
+Set1 OWASP@scale | model=deepseek-ai/DeepSeek-V4-Pro | sampled 393 (real 195, benign 198) across 11 CWEs | full context (6500 chars)
+
+  ...40/393 (0 errors)
+  ...80/393 (0 errors)
+  ...120/393 (0 errors)
+  ...160/393 (0 errors)
+  ...200/393 (0 errors)
+  ...240/393 (0 errors)
+  ...280/393 (0 errors)
+  ...320/393 (0 errors)
+  ...360/393 (0 errors)
+
+=== Set 1 — OWASP @ scale (full-context validator, no memory) ===
+  n=393  precision 0.890  recall 0.456  fp_rate 0.056  bal_acc 0.700  F1 0.603
+  confusion  tp 89  fp 11  tn 187  fn 106  (0 parse errors)
+
+--- vs published bars ---
+  raw CodeQL on OWASP : fp_rate ~0.68, F1 ~0.74   (baseline to beat)
+  ZeroFalse SOTA LLM  : F1 ~0.91                   (target band)
+  -> fp_rate 0.056 BEATS CodeQL baseline; F1 0.603 below ZeroFalse band
+
+--- per-CWE (fp_rate | precision | recall | n) ---
+  CWE-22    fp 0.00 | prec 1.00 | rec 0.39 | n 36
+  CWE-327   fp 0.00 | prec 1.00 | rec 0.11 | n 36
+  CWE-328   fp 0.00 | prec nan | rec 0.00 | n 36
+  CWE-330   fp 0.00 | prec nan | rec 0.00 | n 36
+  CWE-501   fp 0.00 | prec nan | rec 0.00 | n 36
+  CWE-614   fp 0.00 | prec 1.00 | rec 0.17 | n 36
+  CWE-643   fp 0.11 | prec 0.87 | rec 0.87 | n 33
+  CWE-78    fp 0.22 | prec 0.80 | rec 0.89 | n 36
+  CWE-79    fp 0.11 | prec 0.90 | rec 1.00 | n 36
+  CWE-89    fp 0.06 | prec 0.95 | rec 1.00 | n 36
+  CWE-90    fp 0.11 | prec 0.86 | rec 0.67 | n 36
