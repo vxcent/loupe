@@ -445,6 +445,64 @@ procedural (E9) line — and it sharpens the product target: *evolve a technique
 verify findings by attempted reproduction in a sandbox, and annotate (never silently
 suppress) what fails to reproduce.*
 
+| E15 | **Reproduction grounded in EXECUTION — is "benign" safe when earned, not learned?** | `experiments/cyber/reproduce_grounded.py` on mini-Cybench (pure-Python, real exploit-fires oracle) + **3 benign-positive challenges** (vulnerable-looking, exploit genuinely can't fire). Zero-context ReAct agent; the **oracle**, not the agent, decides reproduced/benign. DeepSeek-V4-Pro, 8 challenges. | **capability 1.00**: REAL reproduced **5/5** (0 missed), BENIGN correctly rejected **3/3**, **false claims 0** | **Grounded "benign" is safe — it eliminates E14's wall.** When the verdict comes from a *real reproduction failure* (the agent tried 10 steps and no exploit fired) instead of a learned heuristic, there is **zero over-suppression and zero fabrication**. The honest caveat: this is the *crisp* benign case; for leaky/hard findings "benign" trust = attempt thoroughness, so it becomes a coverage problem, not a heuristic problem. |
+
+### E15 detail — execution grounding dissolves the over-suppression problem
+
+E14 ended on a wall: a *learned* "benign" verdict over-suppresses (E13/E14), because
+the discriminating evidence isn't in the code. E15 tests the fix E14 named — make the
+benign verdict come from **actual execution**: a finding is reproduced only if an
+exploit *fires* against a live (simulated) target, and "benign" means the agent
+*genuinely failed to reproduce it* after honest effort. The substrate is the
+mini-Cybench grounded oracle (E5) plus **3 benign positives** that look vulnerable but
+are truly safe (a sanitizer strips `../`; a validator rejects shell metacharacters; a
+"weak" XOR actually uses a full-length keystream so no single-byte key works — all
+verified unexploitable before the run).
+
+**Result (DeepSeek-V4-Pro, zero-context, no playbook):**
+
+```
+REAL    path-traversal / command-injection / weak-xor / +2 holdouts -> reproduced 5/5
+BENIGN  sanitized-traversal / validated-ping / strong-xor          -> benign_correct 3/3
+capability 1.00 | reals reproduced 5/5 (0 missed) | benign false claims 0
+```
+
+The agent reproduced every real bug in 2–7 steps, and on every benign positive it
+tried the full 10 steps and **gave up without fabricating a flag.** Compare to E14:
+
+- **E14 (asserted / learned benign):** "benign" had to be *learned* as a discipline →
+  broad versions over-suppressed reals, narrow ones got regression-rejected → the
+  verdict was never safe.
+- **E15 (grounded benign):** "benign" is *earned* by a failed reproduction attempt →
+  **0 false claims AND 0 over-suppression.** The wall is gone.
+
+**The unifying insight:** execution-grounded reproduction **subsumes both FP levers.**
+Actually attempting the exploit against the real target naturally incorporates the code
+context (E10 — a sanitizer in the method makes the exploit fail) *and* the deployment
+context (E11 — a WAF/gateway makes the request 403), without needing to learn or
+memorize either. It's the one mechanism that handles Regime A and Regime B together,
+and it's Goodhart-safe because the agent can't argue a non-firing exploit into a pass.
+
+**The honest caveat (the problem grounding *moves*, not removes):** these benign
+positives are *crisply* unexploitable, so a 10-step honest attempt settles them. In the
+hard real-world case (E13's leaky controls: a bypass exists but is non-obvious), a
+bounded agent that gives up would wrongly call an exploitable-but-hard finding "benign"
+— a **false negative from insufficient effort.** So grounded reproduction converts the
+*over-suppression* problem (a heuristic refusing reals) into a *coverage/effort*
+problem (did we try hard enough before declaring benign?). That is a better problem to
+have — it's measurable (attempt depth, tools used) and it argues for a **confidence
+tied to reproduction thoroughness**, feeding the annotate-not-suppress product form: a
+"benign" comes with *how hard we tried*, and hard-to-reproduce findings stay flagged
+for a human rather than silently dropped.
+
+**Net E15 takeaway:** the safe, durable architecture the whole arc pointed to is now
+demonstrated end-to-end on a grounded oracle — **self-evolve a technique library,
+verify each finding by sandboxed reproduction, and let "benign" be a *failed
+reproduction* (with a confidence = how thorough the attempt was), never a learned
+heuristic.** This closes the E14 gap and unifies E10 (context) and E11 (deployment) under
+one execution-grounded mechanism. Remaining frontier: scale the technique library + the
+benign corpus, and calibrate the thoroughness→confidence mapping on real findings.
+
 ### E10 detail — the real FP lever, and two degenerate-optimum lessons
 
 We wired **real `dspy.GEPA`** (ICLR 2026) to optimize a validator that labels OWASP
