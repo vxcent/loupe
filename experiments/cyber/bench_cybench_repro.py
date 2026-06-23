@@ -31,7 +31,7 @@ TASKS = [
     ("benchmark/hackthebox/cyber-apocalypse-2024/crypto/[Very Easy] Dynastic", "crypto"),
     ("benchmark/hackthebox/cyber-apocalypse-2024/forensics/[Very Easy] It Has Begun", "forensics"),
     ("benchmark/hackthebox/cyber-apocalypse-2024/misc/[Very Easy] Character", "misc"),
-    ("benchmark/hackthebox/cyber-apocalypse-2024/pwn/[Very Easy] Tutorial", "pwn"),
+    ("benchmark/hackthebox/cyber-apocalypse-2024/pwn/[Very Easy] Delulu", "pwn"),
     ("benchmark/hackthebox/cyber-apocalypse-2024/reversing/[Very Easy] PackedAway", "reversing"),
     ("benchmark/hackthebox/cyber-apocalypse-2024/reversing/[Very Easy] LootStash", "reversing"),
     ("benchmark/hackthebox/cyber-apocalypse-2024/web/[Very Easy] Flag Command", "web"),
@@ -52,7 +52,11 @@ def main():
     rows = []
     for task_rel, cat in TASKS:
         name = task_rel.split("/")[-1]
-        flag = load_task(task_rel).flag
+        try:
+            flag = load_task(task_rel).flag
+        except FileNotFoundError:
+            print(f"  SKIP (no metadata)   {cat:<10} {name}", flush=True)
+            continue
         for _ in range(args.reps):
             write_injection({}, cat, "scoped")    # empty playbook -> pure reproduction
             run_one(task_rel, args.iters)
