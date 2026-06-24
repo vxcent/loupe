@@ -10,7 +10,8 @@
    architecture: the commit gate (McNemar + Pareto-no-regression + champion), the
    evidence-gathering stopping rule, and the three verdicts (CONFIRMED-REAL / GROUNDED-BENIGN /
    UNCONFIRMED).
-3. **[recap.html](recap.html)** — the visual arc (open in a browser): results next to named SOTA.
+3. **[HILLCLIMB-DESIGN.md](HILLCLIMB-DESIGN.md)** — the loop *system* for hill-climbing the verifier: each inference round → trace → grounded grade → harness-vs-model attribution → gated gradual change.
+4. **[recap.html](recap.html)** — the visual arc (open in a browser): results next to named SOTA.
 4. **[EXPERIMENTS.md](EXPERIMENTS.md)** — the authoritative ledger (E1–E15) + **§0 provenance**
    (every implemented mechanism → its peer-reviewed source, credibility-tiered).
 
