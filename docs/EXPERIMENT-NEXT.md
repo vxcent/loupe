@@ -1,3 +1,7 @@
+> **SUPERSEDED (kept for history).** This was an early 2×2-ablation plan; its diagonal ran as
+> **E7** (see `EXPERIMENTS.md`), and the current design lives in `INFERENCE-DESIGN.md`. Read
+> only for historical context.
+
 # Next Cybench iteration — design (decide before code)
 
 E6 (real-Cybench evolve) changed **three** things vs a working EvoHunt setup at

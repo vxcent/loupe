@@ -1,5 +1,10 @@
 # Loupe
 
+> **New here? → [`docs/START-HERE.md`](docs/START-HERE.md)** — the punchline, the project
+> snapshot (learned / missed / next), the distilled failures, and the codebase map. This
+> README is the original framing; the project has since matured (15 experiments + a 3-benchmark
+> phase + the PoC-as-oracle inference design) — START-HERE is the fast path to the frontier.
+
 A loupe is the magnifier used to tell a real stone from a fake one — and it's a
 homophone for **loop**, the thing being engineered here.
 

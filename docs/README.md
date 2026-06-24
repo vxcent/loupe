@@ -1,62 +1,39 @@
 # Loupe docs — index
 
-Everything we've done, in the order to read it. The project asks one question —
-*can an autonomous security system **self-improve** at telling real from false,
-without fine-tuning?* — and answers it across two grounded testbeds (OWASP
-findings; real Cybench exploits).
+**New here? → [START-HERE.md](START-HERE.md).** It has the punchline, the project snapshot
+(what we learned, what we missed, what's next), the distilled failures, and the codebase map.
 
-## Read in this order
+## Reading order
 
-1. **[EXPERIMENTS.md](EXPERIMENTS.md)** — the spine. Opens with **§0 Provenance &
-   credibility** (every implemented feature → its peer-reviewed source paper, venue,
-   and GitHub, credibility-tiered — read this to judge how solid each idea is and to
-   dig into the papers). Then the full **experiment ledger (E1–E9)** and the
-   **recalibration against EvoHunt**. If you read one file, read this.
-2. **[REPLICATE.md](REPLICATE.md)** — exact commands to reproduce each meaningful
-   finding by hand, with expected output and where results land.
-3. **[SELF-EVOLVING.md](SELF-EVOLVING.md)** — the design/theory: what
-   "self-evolving" means here (a governed loop, not accumulation), the
-   memory-pollution threat + layered defense, and the 2025–2026 literature map.
-4. **[CYBENCH.md](CYBENCH.md)** — the real-Cybench integration: how it's wired,
-   how to reproduce it (`setup_cybench.py`), and its results.
-5. **[EXPERIMENT-NEXT.md](EXPERIMENT-NEXT.md)** — the 2×2 ablation design (the
-   discipline doc that prevented kitchen-sink confounding). *Status: its diagonal
-   ran as E7 — see EXPERIMENTS.md for what that found and how E8 followed.*
-6. **[GAIN-PROTOCOL.md](GAIN-PROTOCOL.md)** — *the next experiment, pre-registered.*
-   Adapts CL-Bench's matched-pairs **gain metric** to FP reduction: estimates our
-   potential gain (≈0 on code-level FP where context already saturates; large on
-   *deployment-context* benign positives), and gives the falsifiable protocol +
-   controls to verify self-evolution actually cuts benign positives.
+1. **[START-HERE.md](START-HERE.md)** — onboarding + snapshot. Start here.
+2. **[INFERENCE-DESIGN.md](INFERENCE-DESIGN.md)** — *current state of thinking.* The PoC-as-oracle
+   architecture: the commit gate (McNemar + Pareto-no-regression + champion), the
+   evidence-gathering stopping rule, and the three verdicts (CONFIRMED-REAL / GROUNDED-BENIGN /
+   UNCONFIRMED).
+3. **[recap.html](recap.html)** — the visual arc (open in a browser): results next to named SOTA.
+4. **[EXPERIMENTS.md](EXPERIMENTS.md)** — the authoritative ledger (E1–E15) + **§0 provenance**
+   (every implemented mechanism → its peer-reviewed source, credibility-tiered).
 
-## Where the artifacts are
+## Reference docs (read as needed)
 
-`docs/samples/` — committed result artifacts you can open directly:
+- **[BENCHMARK-RESULTS.md](BENCHMARK-RESULTS.md)** — the 3 industry sets at scale (OWASP / PrimeVul / Cybench) + cross-set synthesis.
+- **[BENCHMARK-PLAN.md](BENCHMARK-PLAN.md)** — why those 3 sets, the metrics, the controls.
+- **[WHY-BENCHMARKS-DIFFER.md](WHY-BENCHMARKS-DIFFER.md)** — the evidence-locality diagnosis (why OWASP succeeds, PrimeVul collapses).
+- **[REPO-LEVEL-LEARNING.md](REPO-LEVEL-LEARNING.md)** — JitVul + SASTBench learning-round results (the regime-sensitivity finding).
+- **[REPO-LEVEL-BENCHMARKS.md](REPO-LEVEL-BENCHMARKS.md)** — the 2026 benchmark menu (incl. AIxCC/OSS-CRS, CyberGym, SASTBench), matched to PenPal.
+- **[GAIN-PROTOCOL.md](GAIN-PROTOCOL.md)** — the matched-pairs gain metric (CL-Bench-style).
+- **[SELF-EVOLVING.md](SELF-EVOLVING.md)** — memory design, the pollution threat + layered defense, the 2025–26 literature map.
+- **[CYBENCH.md](CYBENCH.md)** — the real-Cybench integration (`setup_cybench.py`).
+- **[REPLICATE.md](REPLICATE.md)** — exact commands to reproduce each finding.
+- *[EXPERIMENT-NEXT.md](EXPERIMENT-NEXT.md)* — **superseded** (an early 2×2 plan that ran as E7); kept for history.
 
-| file | from |
-|------|------|
-| `owasp-scaled-300.png` / `.csv` | E1 — the headline OWASP curve (memory = recall-booster) |
-| `owasp-72case.png` / `.csv` | E2 — the smaller ablation that surfaced the distiller backfire |
-| `mini-cybench-evolved-playbook.md` / `mini-cybench-evolution.csv` | E5 — the local-substrate evolve (learned the XOR crib tactic) |
-| `cybench-evolve-E6.log` | E6 — first real-Cybench evolve |
-| `cybench-ablation-E7.log` | E7 — the 2×2 diagonal (inconclusive; harness-confounded) |
-| `cybench-selfevolve-E8.log` / `selfevolve-E8.csv` | **E8 — the meaningful self-evolve (0.58→0.67, tournament-gated)** |
-| `selfevolve-best-playbook.md` | E8 — what self-evolution learned (submit-discipline + a reversing tactic) |
-| `gepa-validator-fullcontext.log` / `-truncated.log` | E10 — FP lever is context (full method → fp_rate 0.00; GEPA flat on top) |
-| `gain-bp-E11-deepseek.log` | **E11 — matched-pairs gain on deployment-context BPs (dFP +0.80, recall held, placebo-clean)** |
-| `gain-bp-E12-gain-N8.log` / `-drift-deepseek.log` | **E12 — gain reconfirmed at N=8 (CI degenerate, see caveat) + stale-memory drift: 100% FN without re-verification → 33% with** |
+## Artifacts
 
-## The codebase, at a glance
+`docs/samples/` — committed result logs/plots for the meaningful runs (OWASP, PrimeVul, Cybench,
+JitVul, SASTBench, GEPA, the self-evolve runs). Each is named for the experiment it backs.
 
-- `eval.py`, `loupe/` — the validator-memory experiment (OWASP/fixture).
-- `experiments/scale.py` — multi-seed concurrent OWASP curve (E1).
-- `experiments/pollution.py` — the memory-pollution defense matrix (E3).
-- `experiments/gepa_distiller.py` — GEPA-lite prompt evolution (E4).
-- `experiments/cyber/` — the Cybench line:
-  - `setup_cybench.py` — idempotent integration patcher (model + headless + playbook injection).
-  - `cybench_adapter.py` — Cybench task → our interface (flag oracle).
-  - `evolve.py` — mini-Cybench (local grounded substrate, E5).
-  - `cybench_evolve.py` — first real-Cybench evolve (E6).
-  - `cybench_ablation.py` — the 2×2 (E7).
-  - `cybench_selfevolve.py` — the instrumented self-evolve with failure taxonomy (E8).
-- `experiments/gepa_validator.py` — real `dspy.GEPA` validator; context-is-the-lever (E10).
-- `experiments/gain_bp.py` — **matched-pairs gain on deployment-context benign positives (E11)** — the synthetic-neutralizer oracle + 5 arms + placebo/poison/cost controls. See [GAIN-PROTOCOL.md](GAIN-PROTOCOL.md).
+## Codebase
+
+See **[START-HERE.md §6](START-HERE.md)** for the full map: `loupe/` (core library), the live
+harnesses in `experiments/` (+ `experiments/cyber/`), the data layout, and which experiments are
+current vs kept-for-the-record.
