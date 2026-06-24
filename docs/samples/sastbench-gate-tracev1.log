@@ -1,0 +1,13 @@
+gate analysis | ctx=file | baseline='baseline' vs candidate='trace_v1' | paired held-out n=309
+
+  baseline : prec 0.571 rec 0.063 F1 0.113 MCC 0.071  (CVEs 8/127)
+  candidate: prec 0.353 rec 0.189 F1 0.246 MCC -0.063  (CVEs 24/127)
+
+  deltas: ΔF1 +0.133  ΔMCC -0.134  Δrecall +0.126  Δprecision -0.218
+  McNemar: fixes(c)=16  breaks(b)=38  p=0.00384
+
+  GATE DECISIONS:
+    naive (ΔF1>0)                         : COMMIT
+    mcnemar (c>b, p<.05)                  : REJECT
+    pareto (no -ε reg recall/prec, ΔMCC>0): REJECT
+    conjunction (mcnemar ∧ pareto)        : REJECT

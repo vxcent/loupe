@@ -155,6 +155,48 @@ causes:
   that flags more could also over-flag FPs; run it as a candidate through `gate_analysis` before
   adopting.
 
+## 4c. First hillclimb turn — the trace prompt through the gate (loop ran end-to-end)
+
+We promoted "step 1" (the trace/reasoning prompt) to a candidate `trace_v1`, predicted the full
+held-out, and ran it through the gate. Log `docs/samples/sastbench-gate-tracev1.log`.
+
+| held-out n=309 | precision | recall (CVEs) | F1 | MCC |
+|---|---|---|---|---|
+| baseline | 0.571 | 0.063 (8/127) | 0.113 | **+0.071** |
+| trace_v1 | 0.353 | **0.189 (24/127)** | 0.246 | **−0.063** |
+
+McNemar: fixes c=16, **breaks b=38**, p=0.004. Gate: **naive COMMIT; McNemar/Pareto/conjunction
+REJECT.**
+
+**What this proves (the whole framework, validated on real data):**
+- **The recall wall is movable by prompting — but not for free.** The reasoning prompt *tripled*
+  recall (8→24 real CVEs) — yet precision collapsed (0.57→0.35) and **MCC flipped positive →
+  negative**: it's net *worse*. It fixed 16 and **broke 38**.
+- **This is the clean ① demonstration.** A change that F1 loves (+0.13) and the naive gate
+  commits — but is genuinely harmful (MCC sign-flip) — is **correctly rejected** by McNemar
+  (net-breaks, significant), Pareto (precision −0.22, MCC<0), and the conjunction. The gate
+  catches the SASTBench-backfire mode by construction.
+- **② confirmed again:** F1 is misleading on imbalanced data (it rose while quality fell);
+  **MCC is the honest headline**, and McNemar exposes that the "recovery" came bundled with more
+  breaks than fixes.
+
+**The strategic consequence — the cheap win is a mirage; the lever is evidence.** The 15%
+"recoverable by prompt" from §4b is *real recall* but arrives **bundled with a precision flood**:
+the model recovers CVEs by flagging *more*, not by flagging the *right ones* — because it's still
+guessing without the deciding evidence. So **prompt-tuning the triage is rejected**, and the
+scaling plan sharpens to *evidence only*:
+
+1. ~~promote the trace prompt~~ — **REJECTED by the gate** (recall up, but MCC negative). Do not ship.
+2. **Caller-context slicing** — the 48% that explicitly need callers. This is now the #1 build:
+   the only way to recover recall *without* the precision flood is to give the model the deciding
+   evidence so it flags the *right* findings, not *more* findings.
+3. **Execution/PoC oracle** — for the 37% confident-misjudge (and to settle anything the slice
+   can't).
+
+The loop ran a full turn — **trace → attribute → propose (trace_v1) → gate → REJECT** — and the
+rejection is the *correct, valuable* outcome: it tells us prompting can't climb this wall, and
+routes us to the evidence build the attribution already pinpointed (callers).
+
 ## 5. The one-line thesis of this design
 
 > A self-evolving verifier is only as good as its **evaluation system**. Make each inference round
