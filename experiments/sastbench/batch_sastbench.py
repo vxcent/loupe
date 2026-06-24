@@ -78,7 +78,7 @@ def append_cache(rec):
             f.write(json.dumps(rec) + "\n")
 
 
-def predict_pool(llm, findings, ctx, pb_name, pb_tactics, workers, cache, split_name):
+def predict_pool(llm, findings, ctx, pb_name, pb_tactics, workers, cache, split_name, trace=False):
     """Predict each finding once (cache-skip); persist {key, finding_id, repo, cwe,
     ctx, pb, split, pred, gt}. Returns the rows for these findings (cached + new)."""
     todo = [f for f in findings if f"{f['finding_id']}|{ctx}|{pb_name}" not in cache]
@@ -89,6 +89,9 @@ def predict_pool(llm, findings, ctx, pb_name, pb_tactics, workers, cache, split_
         func, filectx = checkout_extract(f, ctx)
         if func is None:
             pred = None   # checkout failed -> excluded
+        elif trace:
+            from experiments.sastbench.attribute import trace_triage
+            pred = trace_triage(llm, f, func, filectx)["prediction"]
         else:
             pred = triage(llm, f, func, filectx, pb_tactics)
         rec = {"key": f"{f['finding_id']}|{ctx}|{pb_name}", "finding_id": f['finding_id'],
@@ -123,6 +126,7 @@ def main():
     ap.add_argument("--playbook", default=None, help="JSON file with {tactics:[...]}; default=baseline")
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--held-only", action="store_true", help="skip train prediction (gate needs only held)")
+    ap.add_argument("--trace", action="store_true", help="use the trace/evidence-reasoning prompt (cached as 'trace_v1')")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
     load_dotenv()
@@ -149,7 +153,9 @@ def main():
 
     pb_name = "baseline"
     pb_tactics = []
-    if args.playbook:
+    if args.trace:
+        pb_name = "trace_v1"
+    elif args.playbook:
         pb = json.load(open(args.playbook))
         pb_tactics = pb.get("tactics", [])
         pb_name = os.path.splitext(os.path.basename(args.playbook))[0]
@@ -157,9 +163,9 @@ def main():
     llm = TogetherLLM(model=args.model, temperature=0.0, seed=args.seed)
     cache = load_cache()
     print("=== predicting (resumable; cached preds skipped) — HELD first for the headline ===", flush=True)
-    he_rows = predict_pool(llm, held, args.ctx, pb_name, pb_tactics, args.workers, cache, "held")
+    he_rows = predict_pool(llm, held, args.ctx, pb_name, pb_tactics, args.workers, cache, "held", args.trace)
     tr_rows = ([] if args.held_only
-               else predict_pool(llm, train, args.ctx, pb_name, pb_tactics, args.workers, load_cache(), "train"))
+               else predict_pool(llm, train, args.ctx, pb_name, pb_tactics, args.workers, load_cache(), "train", args.trace))
 
     print(f"\n=== {pb_name} / ctx={args.ctx} — HELD-OUT (trustworthy: {npos(held)} real CVEs) ===")
     m = metrics(he_rows)

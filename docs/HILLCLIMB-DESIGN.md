@@ -109,6 +109,52 @@ conjunction). The commit gate (L2) and the grounded-oracle plumbing exist.
 4. **Iterative evidence-gathering (L0):** the deeper cross-function slice + abstain-and-escalate
    (the lever the recall wall says we need; tactics can't substitute).
 
+## 4b. First run — attribution of the recall wall (and the scaling decision)
+
+Built L0+L1 (`experiments/sastbench/attribute.py`) and ran it on the **119 held-out false
+negatives** (real CVEs the baseline triaged as FP). Re-ran each with a trace-emitting,
+evidence-reasoning prompt → recovery + attribution. Log `docs/samples/sastbench-attribution.log`.
+
+```
+ATTRIBUTION of the recall wall (n=119 missed real CVEs):
+  recovered            18  (15%)   a better reasoning prompt ALONE flips FP→TP
+  hard-needs-evidence  57  (48%)   deciding evidence not in func+file
+  model-misjudge       44  (37%)   claims decisive evidence, still wrong
+  harness               0  ( 0%)   plumbing is clean
+  of the 57 hard, what's missing: CALLERS 50 · callees 5 · runtime 1
+  evidence tiers overall: partial 70 · saw_decisive 47 · guessing 2
+```
+
+**Is this a good direction? Yes — decisively.** The attribution is clean (0% harness noise) and
+*actionable*, and it turns "the recall wall is 6.3%" into three concrete, differently-fixable
+causes:
+
+1. **15% is a free prompt win.** The original triage prompt left recall on the table; *forcing
+   evidence-reasoning* recovers ~1 in 7 missed CVEs with no new infra. (Gate it for precision
+   first — see below.)
+2. **48% need more evidence — and the data says specifically CALLERS** (50 of 57). The model
+   knows what it's missing: *who calls this function and with what input* (the up-direction
+   taint source), which func+file doesn't contain. This sharpens the vague "deeper slice" into a
+   precise build: **fetch the call sites.**
+3. **37% are confident misjudgments** (saw_decisive_evidence, still wrong). Tactics rarely talk a
+   model out of a confident wrong call → these are where the **execution/PoC oracle** earns its
+   keep (settle it by trying to produce the outcome, not by re-reasoning).
+
+**How we scale across SASTBench (the decision):**
+- **The attribution router becomes the dispatcher.** It's cheap (~119 calls, 0% harness) and runs
+  over the full set to give the population breakdown + per-CWE routing. At scale it sends each
+  finding to the cheapest sufficient evidence level — a **two-tier escalation**: trace-prompt →
+  **+caller-slice** → **execute/PoC**.
+- **Build order, now data-driven:** (1) promote the trace/reasoning prompt to baseline (free 15%,
+  *gated*); (2) **caller-context slicing** — the single highest-leverage evidence build, precisely
+  targeted at the 48% (callers, not callees); (3) the execution/PoC oracle for the 37%
+  confident-misjudge. Each is validated through the commit gate before it ships.
+- **Honest caveats:** the 15%/48% are partly the model's *self-report* (it flipped, or it says it
+  needs callers) — the real test is: does *providing callers* actually flip the hard bucket?
+  (next experiment). And the "recovered 18" must be **gated for precision** — a reasoning prompt
+  that flags more could also over-flag FPs; run it as a candidate through `gate_analysis` before
+  adopting.
+
 ## 5. The one-line thesis of this design
 
 > A self-evolving verifier is only as good as its **evaluation system**. Make each inference round

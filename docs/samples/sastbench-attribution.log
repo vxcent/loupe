@@ -1,0 +1,20 @@
+attribution on 119 held-out FALSE NEGATIVES (real CVEs called FP)
+
+  ...25/119
+  ...50/119
+  ...75/119
+  ...100/119
+
+=== ATTRIBUTION of the recall wall (n=119 missed CVEs) ===
+  recovered              18  (15%)
+  hard-needs-evidence    57  (48%)
+  model-misjudge         44  (37%)
+  harness                 0  (0%)
+
+--- reading ---
+  recovered           : a better reasoning PROMPT alone flips it -> cheap recall win
+  hard-needs-evidence : deciding evidence not in func+file -> need DEEPER SLICE / EXECUTION
+  model-misjudge      : had evidence, reasoned wrong -> tactic/prompt evolution
+  harness             : couldn't extract -> fix plumbing
+
+wrote repolevel/sastbench_attribution.jsonl
