@@ -134,6 +134,55 @@ the data regime and whether the round is **gated**. Context reliably helps *prec
 And in both, **absolute recall is bounded by evidence reachability**, which tactics can't fix.
 Conclusion stands: lead the hill-climb with *evidence acquisition + gating*, not more tactics.
 
+## Batched SASTBench + the commit-gate experiment (the controlled re-run)
+
+Re-ran SASTBench as the *fixed arena*, all variables frozen: pool = ALL 299 real CVEs + a
+1:2 FP sample (897), persisted repo-disjoint split, predictions cached to disk once
+(`experiments/sastbench/batch_sastbench.py`), so the gate comparison is pure post-hoc over the
+cache (`gate_analysis.py`) — only the gate logic varies. Log
+`docs/samples/sastbench-gate-analysis.log`.
+
+**Trustworthy baseline (held-out, file context, 127 real CVEs):** recall **8/127 = 0.063**,
+precision 0.571, MCC 0.071, 6 false alarms. **The recall wall is real, not a sampling
+artifact** — the earlier "1/16" was 0.06; at 127 CVEs it's still 6.3%, uniform across CWEs.
+
+**Learning round at scale (baseline vs candidate, paired n=309):**
+
+| | precision | recall (CVEs) | F1 | MCC |
+|---|---|---|---|---|
+| baseline | 0.571 | 0.063 (8/127) | 0.113 | 0.071 |
+| + learning | 0.667 | 0.079 (10/127) | 0.141 | 0.117 |
+| Δ | +0.095 | +0.016 | +0.027 | +0.046 |
+
+**① The earlier "backfire" was largely a small-N effect.** At n=90 the round tanked precision
+(MCC went negative); at trustworthy n=309 with a cleaner regenerated candidate it's a *small,
+all-axes-positive* change. Lesson: **small-N commit decisions are unreliable** — which is
+exactly *why* you need a significance gate, not a point-estimate one.
+
+**② McNemar vs Pareto — they genuinely disagree, and the disagreement is the finding:**
+
+```
+naive (ΔF1>0)                          : COMMIT
+pareto (no -ε reg, ΔMCC>0)             : COMMIT     <- all axes improved
+mcnemar (fixes c=7 > breaks b=4, p=.55): REJECT     <- but the gain is NOT significant
+conjunction (mcnemar ∧ pareto)         : REJECT
+```
+
+- **Pareto is blind to significance.** All four metrics improved, so Pareto (and naive-ΔF1)
+  commit — but the gain comes from fixing 7 findings while breaking 4 on n=309. **McNemar's exact
+  test says p=0.55: statistically indistinguishable from noise.** Pareto would *ship noise.*
+- **McNemar is the needed guard** — but it has a *cost*: with only a +3 net effect at n=309 it
+  also **can't certify a possibly-real tiny gain** (a power limit) → it may false-reject small
+  true improvements. That's the real tradeoff, now concrete.
+- **The conjunction favors safety** (reject unless significant *and* non-regressing) — right for
+  a validator you don't want to regress; the price is slower hill-climbing.
+
+**Net:** the controlled re-run confirms the conceptual claim with data — *Pareto-on-point-
+estimates ships noise; you need significance (McNemar) on top.* The naive-ΔF1 gate (which let
+the original SASTBench round "succeed") commits a change that is **not statistically real**;
+the McNemar/conjunction gate correctly withholds. And the recall wall (6.3%) means the learning
+round has almost no signal to improve — reaffirming that the lever is **evidence, not tactics**.
+
 ## Hill-climbing roadmap — how to actually raise precision/recall at repo scale
 
 Ordered by expected leverage, grounded in the whole arc (E1–E15 + the benchmark phase +
