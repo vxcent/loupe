@@ -122,6 +122,7 @@ def main():
     ap.add_argument("--frac-train", type=float, default=0.4)
     ap.add_argument("--playbook", default=None, help="JSON file with {tactics:[...]}; default=baseline")
     ap.add_argument("--workers", type=int, default=6)
+    ap.add_argument("--held-only", action="store_true", help="skip train prediction (gate needs only held)")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
     load_dotenv()
@@ -157,7 +158,8 @@ def main():
     cache = load_cache()
     print("=== predicting (resumable; cached preds skipped) — HELD first for the headline ===", flush=True)
     he_rows = predict_pool(llm, held, args.ctx, pb_name, pb_tactics, args.workers, cache, "held")
-    tr_rows = predict_pool(llm, train, args.ctx, pb_name, pb_tactics, args.workers, load_cache(), "train")
+    tr_rows = ([] if args.held_only
+               else predict_pool(llm, train, args.ctx, pb_name, pb_tactics, args.workers, load_cache(), "train"))
 
     print(f"\n=== {pb_name} / ctx={args.ctx} — HELD-OUT (trustworthy: {npos(held)} real CVEs) ===")
     m = metrics(he_rows)
